@@ -1,0 +1,50 @@
+<?php
+
+namespace App\Repository\utilisateurs;
+
+use App\Entity\utilisateurs\Roles;
+use App\Repository\utils\BaseRepository;
+use Doctrine\Persistence\ManagerRegistry;
+
+
+class RolesRepository extends BaseRepository
+{
+    public function __construct(ManagerRegistry $registry)
+    {
+        parent::__construct($registry, Roles::class);
+    }
+
+    //    /**
+    //     * @return Role[] Returns an array of Role objects
+    //     */
+    //    public function findByExampleField($value): array
+    //    {
+    //        return $this->createQueryBuilder('r')
+    //            ->andWhere('r.exampleField = :val')
+    //            ->setParameter('val', $value)
+    //            ->orderBy('r.id', 'ASC')
+    //            ->setMaxResults(10)
+    //            ->getQuery()
+    //            ->getResult()
+    //        ;
+    //    }
+
+    //    public function findOneBySomeField($value): ?Role
+    //    {
+    //        return $this->createQueryBuilder('r')
+    //            ->andWhere('r.exampleField = :val')
+    //            ->setParameter('val', $value)
+    //            ->getQuery()
+    //            ->getOneOrNullResult()
+    //        ;
+    //    }
+    public function findOneByName(string $name): ?Roles
+    {
+        return $this->createQueryBuilder('r')
+            ->andWhere('r.name = :name')
+            ->andWhere('r.deletedAt IS NULL')
+            ->setParameter('name', $name)
+            ->getQuery()
+            ->getOneOrNullResult();
+    }
+}
