@@ -23,7 +23,8 @@ class UtilisateurController extends BaseApiController
         $this->utilisateurService = $utilisateurService;
     }
     #[Route('', name: 'user', methods: ['GET'])]
-    #[TokenRequired(['Admin'])]
+    // #[TokenRequired(['Admin'])]
+    #[TokenRequired]
     public function getUtilisateur(): JsonResponse
     {
         try {

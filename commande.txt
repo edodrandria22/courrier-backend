@@ -29,3 +29,6 @@ composer require symfony/uid
 #Pour installer mercure la synchronisation en temps reelle
 
 composer require mercure
+
+#Pour creer Caddy
+mkdir %AppData%\Caddy
