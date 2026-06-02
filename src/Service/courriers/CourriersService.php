@@ -12,10 +12,9 @@ use App\Service\messages\HistoriquesService;
 use App\Service\utils\BaseService;
 use App\Service\utils\MailService;
 use App\Service\utils\ValidationService;
-use App\Service\utils\FichiersService;
 use Doctrine\ORM\EntityManagerInterface;
 use App\Dto\courriers\CourriersDto;
-
+use App\Service\mercure\MercureService;
 
 class CourriersService extends BaseService
 {
@@ -23,9 +22,9 @@ class CourriersService extends BaseService
         private readonly CourriersRepository $repo,
         private readonly ValidationService $validator,
         EntityManagerInterface $entityManager,
-        private readonly FichiersService $fichiersService,
         private readonly MailService $mailService,
-        private readonly HistoriquesService $historiquesService
+        private readonly HistoriquesService $historiquesService,
+        private readonly MercureService $mercureService
     ) {
         parent::__construct($entityManager);
     }
@@ -91,8 +90,14 @@ class CourriersService extends BaseService
             $destinataire = $courrier->getEmail();
             $subject = "Cloturation du courrier chez Espa";
             $this->mailService->sendEmail($destinataire, $subject, $this->genererDivClorer($courrier, $user));
+            $excludes = [ 'deletedAt'];
+            $data = $courrier->toArray($excludes);
+            $this->mercureService->sendNotification("clotureCourrier",$data);
+            $valiny= parent::save($courrier);
+
             $conn->commit(); // Commit de la transaction
-            return parent::save($courrier);
+            return $valiny;
+          
         } catch (\Throwable $th) {
             $conn->rollBack(); // Rollback de la transaction
             throw $th;

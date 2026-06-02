@@ -10,7 +10,6 @@ use App\Dto\utils\PaginationCriteria;
 use App\Service\courriers\CourriersService;
 use App\Service\courriers\VueHistoriqueDetailsService;
 use App\Service\messages\MessagesService;
-use App\Service\utils\MailService;
 use DateTimeImmutable;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
