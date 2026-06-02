@@ -57,7 +57,7 @@ class UtilisateurController extends BaseApiController
             return $this->jsonSuccess($data);
 
         } catch (\Throwable $e) {
-            return $this->jsonError($e->getMessage(), $e->getCode() ?: 400);
+            return $this->jsonError($e->getMessage(), 400);
         }
     }
 

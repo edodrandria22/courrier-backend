@@ -36,3 +36,7 @@ message
     ajouter date pour le courrier
     multiple fichier sur le piece jointe
     marquer comme non lu message
+
+02/06/2026
+    --ajouter mercure a la synchronisation de la finalisation -- a faire -- 10 mn
+    --utiliser rabbitMQ pour envoyerMail -- a faire -- 60 mn

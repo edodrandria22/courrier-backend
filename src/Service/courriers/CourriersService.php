@@ -6,7 +6,6 @@ use App\Dto\utils\ConditionCriteria;
 use App\Dto\utils\OrderCriteria;
 use App\Dto\utils\PaginationCriteria;
 use App\Entity\courriers\Courriers;
-use App\Entity\messages\Messages;
 use App\Entity\utilisateurs\Utilisateurs;
 use App\Repository\courriers\CourriersRepository;
 use App\Service\messages\HistoriquesService;
@@ -83,14 +82,22 @@ class CourriersService extends BaseService
 
     public function cloturerCourrier(int $id,Utilisateurs $user): object
     {
-        $courrier = $this->getValidatedCourrier($id);
+         $conn = $this->em->getConnection();
+        $conn->beginTransaction(); // Début de la transaction
+        try {
+            $courrier = $this->getValidatedCourrier($id);
+            $courrier->setDateValidation(new \DateTimeImmutable());
+            $courrier->setCloturePar($user);
+            $destinataire = $courrier->getEmail();
+            $subject = "Cloturation du courrier chez Espa";
+            $this->mailService->sendEmail($destinataire, $subject, $this->genererDivClorer($courrier, $user));
+            $conn->commit(); // Commit de la transaction
+            return parent::save($courrier);
+        } catch (\Throwable $th) {
+            $conn->rollBack(); // Rollback de la transaction
+            throw $th;
+        }
 
-        $courrier->setDateValidation(new \DateTimeImmutable());
-        $courrier->setCloturePar($user);
-        $destinataire = $courrier->getEmail();
-        $subject = "Cloturation du courrier chez Espa";
-        $this->mailService->sendEmail($destinataire, $subject, $this->genererDivClorer($courrier, $user));
-        return parent::save($courrier);
     }
 
     /**
