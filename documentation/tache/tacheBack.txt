@@ -38,5 +38,8 @@ message
     marquer comme non lu message
 
 02/06/2026
-    --ajouter mercure a la synchronisation de la finalisation -- a faire -- 10 mn
-    --utiliser rabbitMQ pour envoyerMail -- a faire -- 60 mn
+    --ajouter mercure a la synchronisation de la finalisation -- ok -- 10 mn
+    
+03/06/2026    
+    --installation -- ok -- 60 mn
+    --utiliser rabbitMQ pour envoyerMail -- ok -- 60 mn

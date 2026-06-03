@@ -1,0 +1,2 @@
+installer rabbitMq
+installer amqp sur php

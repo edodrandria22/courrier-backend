@@ -44,9 +44,8 @@ services:
     class: App\Service\utils\FileUploadService
     arguments:
       $uploadDir: "%kernel.project_dir%/public/uploads"
-
-  # On dit à Symfony d'injecter ces paramètres dans MailService
-  App\Service\utils\MailService:
+  
+  App\Handler\SendEmailMessageHandler:
     arguments:
       $mailFrom: '%app.mailer_from%'
       $mailName: '%app.mailer_name%'

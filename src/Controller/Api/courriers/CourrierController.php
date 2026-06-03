@@ -93,7 +93,7 @@ class CourrierController extends BaseApiController
 
     #[Route('/{id}', name: 'api_courriers_show', methods: ['GET'], requirements: ['id' => '\d+'])]
     #[TokenRequired]
-    public function show(int $id, Request $request): JsonResponse
+    public function show(int $id): JsonResponse
     {
         try {
             $courrier = $this->courriersService->getValidatedCourrier($id);
@@ -121,8 +121,8 @@ class CourrierController extends BaseApiController
             $data = $this->messagesService->transformerArray($messages, $excludes);
             return $this->jsonSuccess($data);
         } catch (\Throwable $e) {
-            throw $e;
-            // return $this->jsonError($e->getMessage(),  400);
+            // throw $e;
+            return $this->jsonError($e->getMessage(),  400);
         }
     }
 

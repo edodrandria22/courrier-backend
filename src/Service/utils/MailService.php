@@ -2,27 +2,21 @@
 
 namespace App\Service\utils;
 
-use Symfony\Component\Mailer\MailerInterface;
-use Symfony\Component\Mime\Email;
+use App\Dto\messages\SendEmailMessage;
+use Symfony\Component\Messenger\MessageBusInterface;
 
 class MailService
 {
     public function __construct(
-        private MailerInterface $mailer,
-        private string $mailFrom,
-        private string $mailName
+        private MessageBusInterface $bus // Remplacement du Mailer par le Bus Messenger
     ) {}
 
     public function sendEmail(string $to, string $subject, string $body): void
     {
-        $email = (new Email())
-            ->from($this->mailName.' <'.$this->mailFrom.'>')
-            ->to($to)
-            ->subject($subject)
-            ->html($body);
-
-        $this->mailer->send($email);
+        // Au lieu d'envoyer le mail, on met l'action en file d'attente RabbitMQ
+        $this->bus->dispatch(new SendEmailMessage($to, $subject, $body));
     }
+
     public function getHtmlMail(string $nom, string $message): string
     {
         return "
@@ -36,5 +30,4 @@ class MailService
             </html>
         ";
     }
-    
 }

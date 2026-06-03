@@ -120,7 +120,7 @@ class CourriersService extends BaseService
         try {
             // Génération de la référence si elle est nulle
             $courrier->setReference($courrier->getReference() ?? $this->generateReference());
-            $courrier->setNumero($this->countYearlyCourriers());
+            $courrier->setNumero($this->countYearlyCourriers()+1);
             // Normalisation des identités
             $courrier->setNom($courrier->getNom() ? mb_strtoupper($courrier->getNom()) : null);
             $courrier->setPrenom($courrier->getPrenom() ? mb_convert_case($courrier->getPrenom(), MB_CASE_TITLE) : null);

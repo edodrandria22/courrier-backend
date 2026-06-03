@@ -32,3 +32,7 @@ composer require mercure
 
 #Pour creer Caddy
 mkdir %AppData%\Caddy
+
+
+#Pour consommer les messages
+php bin/console messenger:consume async_mail -vv
