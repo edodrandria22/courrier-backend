@@ -43,3 +43,11 @@ message
 03/06/2026    
     --installation -- ok -- 60 mn
     --utiliser rabbitMQ pour envoyerMail -- ok -- 60 mn
+
+
+05/06/2026
+    --modifier le model historique avec idMessage -- ok -- 10 mn
+    --changer la fonction getAllByUser pour recuperer le boite de reception -- ok -- 30 mn
+    --changer la fonction getAllByUser pour avoir le message lier au courrier -- ok -- 30 mn
+    --parametrage de rabbitMQ -- ok -- 30 mn
+    --changer css de l'envoyerMail pour le suivie de courrier -- ok -- 30 mn

@@ -8,7 +8,6 @@ use App\Dto\utils\PaginationCriteria;
 use App\Entity\courriers\Courriers;
 use App\Entity\utilisateurs\Utilisateurs;
 use App\Repository\courriers\CourriersRepository;
-use App\Service\messages\HistoriquesService;
 use App\Service\utils\BaseService;
 use App\Service\utils\MailService;
 use App\Service\utils\ValidationService;
@@ -23,7 +22,7 @@ class CourriersService extends BaseService
         private readonly ValidationService $validator,
         EntityManagerInterface $entityManager,
         private readonly MailService $mailService,
-        private readonly HistoriquesService $historiquesService,
+        private readonly VueHistoriqueDetailsService $vueHistoriqueDetailsService,
         private readonly MercureService $mercureService
     ) {
         parent::__construct($entityManager);
@@ -157,15 +156,18 @@ class CourriersService extends BaseService
     {
         return $this->repo->getAllCourierDisponible();
     }
-    public function getAllByUser(Utilisateurs $user,OrderCriteria $orderCriteria,PaginationCriteria $paginationCriteria): array
+    public function getAllByUser(Utilisateurs $user,OrderCriteria $orderCriteria,PaginationCriteria $paginationCriteria,bool $isSend): array
     {
-        $result = [];
-        $listeHistoriques = $this->historiquesService->getHistoriques($user, $orderCriteria,$paginationCriteria);
-        foreach ($listeHistoriques as $historique) {
-            $result[] = $this->cloneCourrier($historique->getCourrier());
-        }
+        $result = $this->vueHistoriqueDetailsService->getHistoriques($user, $orderCriteria,$paginationCriteria,$isSend);
         return $result;
     }
+    public function getAllByUserJson(Utilisateurs $user,OrderCriteria $orderCriteria,PaginationCriteria $paginationCriteria,bool $isSend): array
+    {
+        $exclude = ['deletedAt','utilisateurId','destinataireId','expediteurId'];
+        $historique = $this->getAllByUser($user, $orderCriteria, $paginationCriteria, $isSend);
+        return $this->vueHistoriqueDetailsService->transformerArrayUtilisateur($historique, $exclude);
+    }
+
     public function cloneCourrier(Courriers $courrierOriginal): Courriers
     {
         $clone = new Courriers();

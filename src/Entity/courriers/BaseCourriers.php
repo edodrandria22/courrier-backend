@@ -173,7 +173,7 @@ abstract class BaseCourriers extends BaseValidation
     {
         $data = parent::toArray($exclude);
 
-        $data['createur'] = $this->getCreateur()?->toArray($exclude);
+        // $data['createur'] = $this->getCreateur()?->toArray($exclude);
         $data['cloturePar'] = $this->getCloturePar()?->toArray($exclude);
         $data['statut'] = $this->getDateValidation() !== null ? 'finalise' : 'en_cours';
 

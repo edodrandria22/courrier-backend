@@ -9,13 +9,14 @@ use App\Dto\utils\PaginationCriteria;
 use App\Entity\utilisateurs\Utilisateurs;
 use App\Repository\courriers\VueHistoriqueDetailsRepository;
 use App\Service\utils\BaseService;
+use App\Service\utilisateurs\UtilisateursService;
 use Doctrine\ORM\EntityManagerInterface;
-
 
 class VueHistoriqueDetailsService extends BaseService
 {
     public function __construct(
         private readonly VueHistoriqueDetailsRepository $repo,
+        private readonly UtilisateursService $utilisateurService,
         EntityManagerInterface $entityManager
     ) {
         parent::__construct($entityManager);
@@ -92,7 +93,30 @@ class VueHistoriqueDetailsService extends BaseService
         
         return $this->search($conditions, $orderCriteria, $paginationCriteria);
     }
+    public function getHistoriques(Utilisateurs $user, OrderCriteria $orderCriteria,PaginationCriteria $paginationCriteria,bool $isSend): array
+    {
+        $conditions = [
+            new ConditionCriteria('utilisateurId', $user->getId(), '='),
+            new ConditionCriteria('createdAt', $paginationCriteria->getValue(), '<'),
+            new ConditionCriteria('isSend', $isSend, '='),
+        ];
+        return $this->search($conditions, $orderCriteria, $paginationCriteria);
+    }
+    
+    public function transformerArrayUtilisateur(array $entities, array $exclude = []): array
+    {
+        $valiny = [];
+        $excludeUtilisateur = array_merge($exclude, ['mdp','id','idRole','role','createdAt']);
+        for ($i = 0; $i < count($entities); $i++) {
+            $valiny[$i] = $entities[$i]->toArray($exclude); 
 
+            $expediteur = $this->utilisateurService->getById($entities[$i]->getExpediteurId() ?: 0);
+            $destinataire = $this->utilisateurService->getById($entities[$i]->getDestinataireId() ?: 0);
+            $valiny[$i]['expediteur'] = $expediteur?->toArray($excludeUtilisateur) ?? null;
+            $valiny[$i]['destinataire'] = $destinataire?->toArray($excludeUtilisateur) ?? null;
+        }
+        return $valiny;
+    }
     
     
     

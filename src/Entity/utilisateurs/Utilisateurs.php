@@ -2,7 +2,7 @@
 
 namespace App\Entity\utilisateurs;
 
-use App\Repository\UtilisateursRepository;
+use App\Repository\utilisateurs\UtilisateursRepository;
 use Doctrine\ORM\Mapping as ORM;
 use App\Entity\utils\BaseEntite;
 
@@ -98,9 +98,13 @@ class Utilisateurs extends BaseEntite
     {
         $data = parent::toArray($exclude);
 
-        $data['role'] = $this->getRole() ? $this->getRole()->getName() : null;
+        if (!in_array('role', $exclude, true)) {
+            $data['role'] = $this->getRole() ? $this->getRole()->getName() : null;
+        }
 
-        $data['idRole'] = $this->getRole() ? $this->getRole()->getId() : null;
+        if (!in_array('idRole', $exclude, true)) {
+            $data['idRole'] = $this->getRole() ? $this->getRole()->getId() : null;
+        }
 
         return $data;
     }

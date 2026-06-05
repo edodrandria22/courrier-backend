@@ -60,11 +60,9 @@ class CourrierController extends BaseApiController
             $limit = $_ENV['LIMIT_PAGINATIONS'] ?? 10;  
             $paginationCriteria = new PaginationCriteria($date, $limit);
             $orderCriteria = new OrderCriteria();
-            $courriers = $this->courriersService->getAllByUser($user, $orderCriteria, $paginationCriteria);
-            $excludes = ['deletedAt','dateMessage','dateValidation'];
-            $data = $this->courriersService->transformerArray($courriers, $excludes);
+            $courriers = $this->courriersService->getAllByUserJson($user, $orderCriteria, $paginationCriteria,false);
             
-            return $this->jsonSuccess($data);
+            return $this->jsonSuccess($courriers);
         } catch (\Throwable $e) {
             return $this->jsonError($e->getMessage(),  400);
         }

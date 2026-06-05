@@ -6,6 +6,7 @@ use App\Entity\utilisateurs\Utilisateurs;
 use Doctrine\ORM\Mapping as ORM;
 
 use App\Entity\utils\BaseEntite;
+use App\Repository\messages\HistoriquesRepository;
 
 #[ORM\Entity(repositoryClass: HistoriquesRepository::class)]
 class Historiques extends BaseEntite
@@ -20,7 +21,10 @@ class Historiques extends BaseEntite
 
     #[ORM\Column(type:"boolean",nullable:false)]
     private bool $isSend;
-
+    
+    #[ORM\ManyToOne(targetEntity: Messages::class)]
+    #[ORM\JoinColumn(nullable: true)]
+    private ?Messages $message = null;
     public function getUtilisateur(): ?Utilisateurs
     {
         return $this->utilisateur;
@@ -49,6 +53,17 @@ class Historiques extends BaseEntite
     public function setCourrier(?Courriers $courrier): static
     {
         $this->courrier = $courrier;
+        return $this;
+    }
+    
+    public function getMessage(): ?Messages
+    {
+        return $this->message;
+    }
+    
+    public function setMessage(?Messages $message): static
+    {
+        $this->message = $message;
         return $this;
     }
 }

@@ -11,15 +11,13 @@ use App\Entity\messages\Messages;
 use App\Entity\utilisateurs\Utilisateurs;
 use App\Repository\messages\HistoriquesRepository;
 use App\Service\utils\BaseService;
-use App\Service\utils\ValidationService;
 use Doctrine\ORM\EntityManagerInterface;
 
 class HistoriquesService extends BaseService
 {
     public function __construct(
         private readonly HistoriquesRepository $repo,
-        EntityManagerInterface $em,
-        private readonly ValidationService $validationService
+        EntityManagerInterface $em
     ) {
         parent::__construct($em);
     }  
@@ -35,15 +33,16 @@ class HistoriquesService extends BaseService
         ];
         return $this->search($conditions)[0] ?? null;
     }
-    public function getHistoriques(Utilisateurs $user, OrderCriteria $orderCriteria,PaginationCriteria $paginationCriteria): array
+    public function getHistoriques(Utilisateurs $user, OrderCriteria $orderCriteria,PaginationCriteria $paginationCriteria,bool $isSend): array
     {
         $conditions = [
             new ConditionCriteria('utilisateur', $user->getId(), '='),
             new ConditionCriteria('createdAt', $paginationCriteria->getValue(), '<'),
+            new ConditionCriteria('isSend', $isSend, '='),
         ];
         return $this->search($conditions, $orderCriteria, $paginationCriteria);
     }
-    private function updateHistorique(Utilisateurs $utilisateur, Courriers $courrier, bool $isSend): void
+    private function updateHistorique(Utilisateurs $utilisateur, Courriers $courrier, bool $isSend,Messages $messages): void
     {
         // Supprimer ancien historique
         $dernierHistorique = $this->getByUserAndCourrier($utilisateur, $courrier);
@@ -54,6 +53,7 @@ class HistoriquesService extends BaseService
         $historique->setUtilisateur($utilisateur);
         $historique->setCourrier($courrier);
         $historique->setIsSend($isSend);
+        $historique->setMessage($messages);
 
         $this->save($historique);
     }
@@ -65,14 +65,16 @@ class HistoriquesService extends BaseService
         $this->updateHistorique(
             $messages->getExpediteur(),
             $courrier,
-            true
+            true,
+            $messages
         );
 
         #Ajouter une nouvelle historique pour le destinataire
         $this->updateHistorique(
             $messages->getDestinataire(),
             $courrier,
-            false
+            false,
+            $messages
         );
     }
 

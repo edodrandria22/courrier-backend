@@ -14,6 +14,22 @@ class VueHistoriqueDetails extends BaseCourriers
     private ?int $utilisateurId = null;
     
     
+    #[ORM\Column(type: "integer")]
+    private ?int $destinataireId = null;
+
+    #[ORM\Column(type: "integer")]
+    private ?int $expediteurId = null;
+    
+    
+    #[ORM\Column(type: "integer")]
+    private ?int $messageId = null;
+
+    #[ORM\Column(type: "datetime_immutable", nullable: true)]
+    private ?\DateTimeImmutable $isReadAt = null;
+
+    #[ORM\Column(type: "boolean", nullable: true)]
+    private ?bool $isSend = null;
+
     public function getUtilisateurId(): ?int
     {
         return $this->utilisateurId;
@@ -25,4 +41,54 @@ class VueHistoriqueDetails extends BaseCourriers
         return $this;
     }
     
+    public function getMessageId(): ?int
+    {
+        return $this->messageId;
+    }
+    
+    public function setMessageId(?int $messageId): self
+    {
+        $this->messageId = $messageId;
+        return $this;
+    }
+    
+    public function getIsReadAt(): ?\DateTimeImmutable
+    {
+        return $this->isReadAt;
+    }
+    
+    public function setIsReadAt(?\DateTimeImmutable $isReadAt): self
+    {
+        $this->isReadAt = $isReadAt;
+        return $this;
+    }
+    public function setExpediteurId(?int $expediteurId): self
+    {
+        $this->expediteurId = $expediteurId;
+        return $this;
+    }
+    public function getExpediteurId(): ?int 
+    {
+        return $this->expediteurId;
+    }
+    public function setDestinataireId(?int $destinataireId): self
+    {
+        $this->destinataireId = $destinataireId;
+        return $this;
+    }
+    public function getDestinataireId(): ?int
+    {
+        return $this->destinataireId;
+    }
+    
+    public function getIsSend(): ?bool
+    {
+        return $this->isSend;
+    }
+    
+    public function setIsSend(?bool $isSend): self
+    {
+        $this->isSend = $isSend;
+        return $this;
+    }
 }
