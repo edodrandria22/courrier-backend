@@ -37,4 +37,5 @@ class RechercheCourriersDto
     public ?string $statut = null;
     #[Assert\Type(\DateTimeInterface::class)]
     public ?\DateTimeInterface $date = null;
+    public ?bool $isConfidentiel = null;
 }

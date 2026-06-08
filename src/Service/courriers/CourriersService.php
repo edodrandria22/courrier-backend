@@ -111,7 +111,7 @@ class CourriersService extends BaseService
      */
     public function save(object $courrier, bool $flush = true): object
     {
-        $this->validator->throwIfNull($courrier->getNom(), "Le nom du déposant est obligatoire.");
+        // $this->validator->throwIfNull($courrier->getNom(), "Le nom du déposant est obligatoire.");
 
         $conn = $this->em->getConnection();
         $conn->beginTransaction(); // Début de la transaction
@@ -139,13 +139,19 @@ class CourriersService extends BaseService
     public function saveDto(Utilisateurs $utilisateur,CourriersDto $dto): Courriers
     {
         $courrier = new Courriers();
-        $courrier->setObject($dto->getObject());
-        $courrier->setDescription($dto->getDescription());
+        $object = $dto->getIsConfidentiel() ? "Pli fermé" : $dto->getObject();
+        $courrier->setObject($object);
+        $courrier->setIsConfidentiel($dto->getIsConfidentiel());
+        if(!$dto->getIsConfidentiel()){
+            $courrier->setDescription($dto->getDescription());
+            $courrier->setNom($dto->getNom());
+            $courrier->setPrenom($dto->getPrenom());
+            $courrier->setTelephone($dto->getTelephone());
+        }
         $courrier->setEmail($dto->getEmail());
-        $courrier->setNom($dto->getNom());
-        $courrier->setPrenom($dto->getPrenom());
-        $courrier->setTelephone($dto->getTelephone());
+        
         $courrier->setCreateur($utilisateur);
+        
 
         $result = $this->save($courrier);
         return $result;

@@ -35,7 +35,6 @@ class UtilisateursService extends BaseService
 
     /**
      * @param Utilisateurs $user L'utilisateur à créer
-     * @param string $plainPassword Le mot de passe en clair
      */
     public function createUserByRole(Utilisateurs $user): Utilisateurs
     {
@@ -123,7 +122,7 @@ class UtilisateursService extends BaseService
         
         return $this->createUser($user,$dto->getIdRole());
     }
-    public function changerMdp(Utilisateurs $user,$nouveauMdp): Utilisateurs
+    public function changerMdp(Utilisateurs $user,string $nouveauMdp): Utilisateurs
     {
         $hashedPassword = password_hash($nouveauMdp, PASSWORD_BCRYPT);
 
@@ -133,6 +132,18 @@ class UtilisateursService extends BaseService
         $this->em->flush();
 
         return $user;
+    }
+    public function cloneUtilisateur(Utilisateurs $user): Utilisateurs
+    {
+        $newUser = new Utilisateurs();
+        $newUser->setEmail($user->getEmail());
+        $newUser->setMdp($user->getMdp());
+        $newUser->setNom($user->getNom());
+        $newUser->setPrenom($user->getPrenom());
+        $newUser->setAdresse($user->getAdresse());
+        $newUser->setRole($user->getRole());
+        
+        return $newUser;
     }
     
 }

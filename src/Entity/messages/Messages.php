@@ -133,7 +133,7 @@ class Messages extends BaseValidation
     public function toArray(array $exclude = []): array
     {
         $data = parent::toArray($exclude);
-        $data['courrier'] = $this->courrier?->toArray($exclude);
+        // $data['courrier'] = $this->courrier?->toArray($exclude);
 
         $excludeUsers = array_merge($exclude, ['mdp','role']);
         $data['expediteur'] = $this->expediteur?->toArray($excludeUsers);

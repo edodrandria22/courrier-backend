@@ -67,6 +67,25 @@ class CourrierController extends BaseApiController
             return $this->jsonError($e->getMessage(),  400);
         }
     }
+    #[Route('/getAllbyUserSend', name: 'api_courriers_get_all_by_user_recu', methods: ['GET'])]
+    #[TokenRequired]
+    public function getAllbyUserRecu(Request $request): JsonResponse
+    {
+        try {
+            $user = $this->getUserFromRequest($request);
+
+            $dateParam = $request->query->get('date');
+            $date = $dateParam ? new DateTimeImmutable($dateParam) : new DateTimeImmutable();
+            $limit = $_ENV['LIMIT_PAGINATIONS'] ?? 10;  
+            $paginationCriteria = new PaginationCriteria($date, $limit);
+            $orderCriteria = new OrderCriteria();
+            $courriers = $this->courriersService->getAllByUserJson($user, $orderCriteria, $paginationCriteria,true);
+            
+            return $this->jsonSuccess($courriers);
+        } catch (\Throwable $e) {
+            return $this->jsonError($e->getMessage(),  400);
+        }
+    }
 
 
     #[Route('', name: 'api_courriers_creer', methods: ['POST'])]
@@ -115,7 +134,7 @@ class CourrierController extends BaseApiController
             $paginationCriteria = new PaginationCriteria($date, $limit);
             $orderCriteria = new OrderCriteria();
             $messages = $this->messagesService->getMessagesByCourrier($id, $orderCriteria, $paginationCriteria);
-            $excludes = ['deletedAt'];
+            $excludes = ['deletedAt','utilisateurId','destinataireId','expediteurId'];
             $data = $this->messagesService->transformerArray($messages, $excludes);
             return $this->jsonSuccess($data);
         } catch (\Throwable $e) {
@@ -170,7 +189,7 @@ class CourrierController extends BaseApiController
             $orderCriteria = new OrderCriteria();
             $result = $this->vueHistoriqueDetailsService->searchByDto($user, $dto, $orderCriteria, $paginationCriteria);
             $excludes = ['deletedAt','mdp'];
-            $data = $this->vueHistoriqueDetailsService->transformerArray($result, $excludes);
+            $data = $this->vueHistoriqueDetailsService->transformerArrayUtilisateur($result, $excludes);
             return $this->jsonSuccess($data);
         } catch (\Throwable $e) {
             return $this->jsonError($e->getMessage(),  400);

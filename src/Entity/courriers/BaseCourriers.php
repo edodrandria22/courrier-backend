@@ -44,6 +44,10 @@ abstract class BaseCourriers extends BaseValidation
     #[ORM\Column(type: "integer", nullable: true)]
     protected ?int $numero = null;
 
+
+    #[ORM\Column(type: "boolean", nullable: true)]
+    protected ?bool $isConfidentiel = false;
+
     public function __construct()
     {
     }
@@ -168,6 +172,15 @@ abstract class BaseCourriers extends BaseValidation
         $this->numero = $numero;
         return $this;
     }
+    public function setIsConfidentiel(?bool $isConfidentiel): self
+    {
+        $this->isConfidentiel = $isConfidentiel;
+        return $this;
+    }
+    public function getIsConfidentiel(): ?bool
+    {
+        return $this->isConfidentiel;
+    }
 
     public function toArray(array $exclude = []): array
     {
@@ -179,4 +192,5 @@ abstract class BaseCourriers extends BaseValidation
 
         return $data;
     }
+
 }

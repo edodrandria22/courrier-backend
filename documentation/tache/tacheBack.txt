@@ -49,5 +49,10 @@ message
     --modifier le model historique avec idMessage -- ok -- 10 mn
     --changer la fonction getAllByUser pour recuperer le boite de reception -- ok -- 30 mn
     --changer la fonction getAllByUser pour avoir le message lier au courrier -- ok -- 30 mn
+    --creer une api pour voir tous les courriers envoyer -- ok -- 10 mn
+    --changer le mercure message pour mettre avec le destinaire et recepteur -- a faire -- 30 mn
     --parametrage de rabbitMQ -- ok -- 30 mn
     --changer css de l'envoyerMail pour le suivie de courrier -- ok -- 30 mn
+
+08/06/2026
+    --ajouter type boulean isConfidentiel dans courrier -- a faire -- 30 mn

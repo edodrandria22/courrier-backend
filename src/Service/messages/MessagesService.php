@@ -11,6 +11,7 @@ use App\Entity\messages\Messages;
 use App\Entity\utilisateurs\Utilisateurs;
 use App\Repository\messages\MessagesRepository;
 use App\Service\courriers\CourriersService;
+use App\Service\courriers\VueHistoriqueDetailsService;
 use App\Service\mercure\MercureService;
 use App\Service\utilisateurs\UtilisateursService;
 use App\Service\utils\BaseService;
@@ -21,6 +22,7 @@ use Doctrine\ORM\EntityManagerInterface;
 
 
 use App\Service\utils\FichiersService;
+use Override;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 class MessagesService extends BaseService
@@ -33,6 +35,7 @@ class MessagesService extends BaseService
         private readonly FichiersService $fichiersService,
         private readonly ValidationService $validationService,
         private readonly HistoriquesService $historiquesService,
+        private readonly VueHistoriqueDetailsService $vueHistoriqueDetailService,
         private readonly MercureService $mercureService
     ) {
         parent::__construct($em);
@@ -136,6 +139,8 @@ class MessagesService extends BaseService
             $message->setExpediteur($expediteur);
             // $message->setCourrier($this->courriersService->cloneCourrier($courrier));
             $data = $message->toArray($excludes);
+            $vueCourrier = $this->vueHistoriqueDetailService->getVerifierById($message->getCourrier()->getId());
+            $data['courrier']= $this->vueHistoriqueDetailService->tranformerUtilisateur($vueCourrier,$excludes);
             $this->mercureService->sendNotification("message",$data);
 
             $this->em->getConnection()->commit();
@@ -157,7 +162,11 @@ class MessagesService extends BaseService
             return $message;
         }
         $message->setIsReadAt(new DateTimeImmutable());
-        $this->mercureService->sendNotification("lectureMessage",$message->toArray());
+        $excludes = ['deletedAt'];
+        $data = $message->toArray($excludes);
+        $vueCourrier = $this->vueHistoriqueDetailService->getVerifierById($message->getCourrier()->getId());
+        $data['courrier']= $this->vueHistoriqueDetailService->tranformerUtilisateur($vueCourrier,$excludes);
+        $this->mercureService->sendNotification("lectureMessage",$data);
         return $this->save($message);
     }
 
@@ -171,7 +180,12 @@ class MessagesService extends BaseService
             return $message;
         }
         $message->setIsReadAt(null);
-        $this->mercureService->sendNotification("lectureMessage",$message->toArray());
+        $excludes = ['deletedAt'];
+        $data = $message->toArray($excludes);
+        $vueCourrier = $this->vueHistoriqueDetailService->getVerifierById($message->getCourrier()->getId());
+        $excludesCourrier = array_merge($excludes, ['isSend','utilisateurId','dateMessage','cloturerPar','createdAt','expediteurId','destinataireId']);
+        $data['courrier']= $this->vueHistoriqueDetailService->tranformerUtilisateur($vueCourrier,$excludesCourrier);
+        $this->mercureService->sendNotification("lectureMessage",$data);
         return $this->save($message);
     }
 
@@ -278,8 +292,10 @@ class MessagesService extends BaseService
             $message->setExpediteur($utilisateur);
         
             $data = $nouveauMessage->toArray($excludes);
-            
+            $vueCourrier = $this->vueHistoriqueDetailService->getVerifierById($message->getCourrier()->getId());
+            $data['courrier']= $this->vueHistoriqueDetailService->tranformerUtilisateur($vueCourrier,$excludes);
             $this->mercureService->sendNotification("message",$data);
+
             $this->em->getConnection()->commit();
 
             return $nouveauMessage;
@@ -313,5 +329,18 @@ class MessagesService extends BaseService
         }
         $messages = $this->getAllMessagesByCourrier($courrier->getId(),new OrderCriteria());
         $this->courriersService->genererEmailSuiviMessage($courrier, $messages);
+    }
+    #[Override]
+    public function transformerArray(array $entities, array $exclude = []): array
+    {
+        $items = [];
+        for ($i=0; $i < count($entities) ; $i++) { 
+            $entity = $entities[$i];
+            $items[$i] = $entity->toArray($exclude);
+            $vueCourrier = $this->vueHistoriqueDetailService->getVerifierById($entity->getCourrier()->getId());
+            $items[$i]['courrier']= $this->vueHistoriqueDetailService->tranformerUtilisateur($vueCourrier,$exclude);
+        }
+
+        return $items;
     }
 }

@@ -7,7 +7,6 @@ use Symfony\Component\Validator\Constraints as Assert;
 class CourriersDto
 {
     #[Assert\NotBlank(message: "Object est obligatoire.")]
-    #[Assert\Length(max: 255)]
     private ?string $object = null;
 
     private ?string $description = null;
@@ -25,6 +24,8 @@ class CourriersDto
 
     #[Assert\Length(max: 255)]
     private ?string $telephone = null;
+    #[Assert\NotBlank(message:"Le champ confidentiel est obligatoire.")]
+    private ?bool $isConfidentiel = false;
 
     // ===== GETTERS =====
 
@@ -56,6 +57,11 @@ class CourriersDto
     public function getTelephone(): ?string
     {
         return $this->telephone;
+    }
+
+    public function getIsConfidentiel(): ?bool
+    {
+        return $this->isConfidentiel;
     }
 
     // ===== SETTERS =====
@@ -93,6 +99,12 @@ class CourriersDto
     public function setTelephone(?string $telephone): self
     {
         $this->telephone = $telephone;
+        return $this;
+    }
+    
+    public function setIsConfidentiel(?bool $isConfidentiel): self
+    {
+        $this->isConfidentiel = $isConfidentiel;
         return $this;
     }
 }

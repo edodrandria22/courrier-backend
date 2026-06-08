@@ -6,6 +6,7 @@ use App\Dto\courriers\RechercheCourriersDto;
 use App\Dto\utils\ConditionCriteria;
 use App\Dto\utils\OrderCriteria;
 use App\Dto\utils\PaginationCriteria;
+use App\Entity\courriers\VueHistoriqueDetails;
 use App\Entity\utilisateurs\Utilisateurs;
 use App\Repository\courriers\VueHistoriqueDetailsRepository;
 use App\Service\utils\BaseService;
@@ -69,6 +70,9 @@ class VueHistoriqueDetailsService extends BaseService
         if ($this->notEmpty($dto->numero)) {
             $conditions[] = new ConditionCriteria('numero', $dto->numero, '=');
         }
+        if ($dto->isConfidentiel !== null) {
+            $conditions[] = new ConditionCriteria('isConfidentiel', $dto->isConfidentiel, '=');
+        }
 
         // Date BETWEEN
         if ($dto->dateDebut && $dto->dateFin) {
@@ -102,18 +106,26 @@ class VueHistoriqueDetailsService extends BaseService
         ];
         return $this->search($conditions, $orderCriteria, $paginationCriteria);
     }
+    public function tranformerUtilisateur(VueHistoriqueDetails $entite,array $exclude = []): array
+    {
+        
+        $valiny = $entite->toArray($exclude); 
+        $excludeUtilisateur = array_merge($exclude, ['mdp','id','idRole','role','createdAt']);
+
+        $expediteur = $this->utilisateurService->cloneUtilisateur($this->utilisateurService->getById($entite->getExpediteurId() ?: 0));
+          
+        $destinataire = $this->utilisateurService->cloneUtilisateur($this->utilisateurService->getById($entite->getDestinataireId() ?: 0));
+            
+        $valiny['expediteur'] = $expediteur?->toArray($excludeUtilisateur) ?? null;
+        $valiny['destinataire'] = $destinataire?->toArray($excludeUtilisateur) ?? null;
+        return $valiny;
+    }
     
     public function transformerArrayUtilisateur(array $entities, array $exclude = []): array
     {
         $valiny = [];
-        $excludeUtilisateur = array_merge($exclude, ['mdp','id','idRole','role','createdAt']);
         for ($i = 0; $i < count($entities); $i++) {
-            $valiny[$i] = $entities[$i]->toArray($exclude); 
-
-            $expediteur = $this->utilisateurService->getById($entities[$i]->getExpediteurId() ?: 0);
-            $destinataire = $this->utilisateurService->getById($entities[$i]->getDestinataireId() ?: 0);
-            $valiny[$i]['expediteur'] = $expediteur?->toArray($excludeUtilisateur) ?? null;
-            $valiny[$i]['destinataire'] = $destinataire?->toArray($excludeUtilisateur) ?? null;
+            $valiny[$i] = $this->tranformerUtilisateur($entities[$i],$exclude); 
         }
         return $valiny;
     }
