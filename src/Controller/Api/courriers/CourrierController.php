@@ -108,6 +108,25 @@ class CourrierController extends BaseApiController
             return $this->jsonError($e->getMessage(),  400);
         }
     }
+    #[Route('/{id}', name: 'api_courriers_update', methods: ['PUT'], requirements: ['id' => '\d+'])]
+    #[TokenRequired]
+    public function update(Request $request, int $id): JsonResponse
+    {
+        try {
+            $user = $this->getUserFromRequest($request);
+            $dto = $this->deserializeAndValidate(
+                $request,
+                CourriersDto::class
+            );
+            $courrier = $this->courriersService->updateDtoId($user, $id, $dto);
+            $excludes = ['deletedAt','dateValidation','cloturerPar'];
+            $data = $courrier->toArray($excludes);
+            return $this->jsonSuccess($data);
+
+        } catch (\Throwable $e) {
+            return $this->jsonError($e->getMessage(),  400);
+        }
+    }
 
     #[Route('/{id}', name: 'api_courriers_show', methods: ['GET'], requirements: ['id' => '\d+'])]
     #[TokenRequired]

@@ -14,7 +14,6 @@ use App\Service\utils\ValidationService;
 use Doctrine\ORM\EntityManagerInterface;
 use App\Dto\courriers\CourriersDto;
 use App\Service\mercure\MercureService;
-use Exception;
 
 class CourriersService extends BaseService
 {
@@ -155,7 +154,34 @@ class CourriersService extends BaseService
 
         $result = $this->save($courrier);
         return $result;
-    }   
+    }
+    public function updateDto(Utilisateurs $utilisateur,Courriers $courrier, CourriersDto $dto): Courriers
+    {
+        if($courrier->getCreateur()->getId() != $utilisateur->getId()){
+            throw new \Exception("Seule l'auteur du courrier peut le modifier son courrier");
+        }
+        if ($courrier->getDateMessage()) {
+            throw new \Exception("Le courrier a déjà été envoyé, vous ne pouvez plus le modifier");
+        }
+        $object = $dto->getIsConfidentiel() ? "Pli fermé" : $dto->getObject();
+        $courrier->setObject($object);
+        $courrier->setIsConfidentiel($dto->getIsConfidentiel());
+        if(!$dto->getIsConfidentiel()){
+            $courrier->setDescription($dto->getDescription());
+            $courrier->setNom($dto->getNom());
+            $courrier->setPrenom($dto->getPrenom());
+            $courrier->setTelephone($dto->getTelephone());
+        }
+        $courrier->setEmail($dto->getEmail());
+        
+        $result = $this->save($courrier);
+        return $result;
+    }
+    public function updateDtoId(Utilisateurs $utilisateur,int $id, CourriersDto $dto): Courriers
+    {
+        $courrier = $this->getVerifierById($id);
+        return $this->updateDto($utilisateur, $courrier, $dto);
+    }
 
    
     public function getAllCourierDisponible(Utilisateurs $utilisateurs): array
