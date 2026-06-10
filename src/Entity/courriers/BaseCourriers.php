@@ -41,10 +41,6 @@ abstract class BaseCourriers extends BaseValidation
     #[ORM\JoinColumn(nullable: true)]
     protected ?Utilisateurs $cloturePar = null;
 
-    #[ORM\Column(type: "integer", nullable: true)]
-    protected ?int $numero = null;
-
-
     #[ORM\Column(type: "boolean", nullable: true)]
     protected ?bool $isConfidentiel = false;
 
@@ -162,16 +158,7 @@ abstract class BaseCourriers extends BaseValidation
         return $this;
     }
 
-    public function getNumero(): ?int
-    {
-        return $this->numero;
-    }
-
-    public function setNumero(?int $numero): self
-    {
-        $this->numero = $numero;
-        return $this;
-    }
+    
     public function setIsConfidentiel(?bool $isConfidentiel): self
     {
         $this->isConfidentiel = $isConfidentiel;

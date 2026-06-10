@@ -14,6 +14,7 @@ use App\Service\utils\ValidationService;
 use Doctrine\ORM\EntityManagerInterface;
 use App\Dto\courriers\CourriersDto;
 use App\Service\mercure\MercureService;
+use Exception;
 
 class CourriersService extends BaseService
 {
@@ -119,7 +120,6 @@ class CourriersService extends BaseService
         try {
             // Génération de la référence si elle est nulle
             $courrier->setReference($courrier->getReference() ?? $this->generateReference());
-            $courrier->setNumero($this->countYearlyCourriers()+1);
             // Normalisation des identités
             $courrier->setNom($courrier->getNom() ? mb_strtoupper($courrier->getNom()) : null);
             $courrier->setPrenom($courrier->getPrenom() ? mb_convert_case($courrier->getPrenom(), MB_CASE_TITLE) : null);
@@ -158,9 +158,9 @@ class CourriersService extends BaseService
     }   
 
    
-    public function getAllCourierDisponible(): array
+    public function getAllCourierDisponible(Utilisateurs $utilisateurs): array
     {
-        return $this->repo->getAllCourierDisponible();
+        return $this->repo->getAllCourierDisponible($utilisateurs);
     }
     public function getAllByUser(Utilisateurs $user,OrderCriteria $orderCriteria,PaginationCriteria $paginationCriteria,bool $isSend): array
     {
@@ -189,7 +189,6 @@ class CourriersService extends BaseService
         $clone->setCreateur($courrierOriginal->getCreateur());
         $clone->setCreatedAt($courrierOriginal->getCreatedAt());
         $clone->setCloturePar($courrierOriginal->getCloturePar()); // le clone n’est pas encore clôturé
-        $clone->setNumero($courrierOriginal->getNumero());
         return $clone;
     }
     public function genererDivClorer(Courriers $courrier,Utilisateurs $utilisateur)

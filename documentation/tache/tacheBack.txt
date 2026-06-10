@@ -56,3 +56,8 @@ message
 
 08/06/2026
     --ajouter type boulean isConfidentiel dans courrier -- a faire -- 30 mn
+
+09/06/2026
+    --modifier historique avec numero courriers -- a faire -- 30mn
+
+    --mercure pour les envoies message

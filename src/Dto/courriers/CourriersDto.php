@@ -24,7 +24,7 @@ class CourriersDto
 
     #[Assert\Length(max: 255)]
     private ?string $telephone = null;
-    #[Assert\NotBlank(message:"Le champ confidentiel est obligatoire.")]
+    // #[Assert\NotBlank(message:"Le champ confidentiel est obligatoire.")]
     private ?bool $isConfidentiel = false;
 
     // ===== GETTERS =====

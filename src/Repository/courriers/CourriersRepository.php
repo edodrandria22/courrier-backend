@@ -3,7 +3,7 @@
 namespace App\Repository\courriers;
 
 use App\Entity\courriers\Courriers;
-
+use App\Entity\utilisateurs\Utilisateurs;
 use App\Repository\utils\BaseRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
@@ -60,12 +60,15 @@ class CourriersRepository extends BaseRepository
      * @return Courriers[]
      */
     
-    public function getAllCourierDisponible(): array
+    public function getAllCourierDisponible(Utilisateurs $utilisateurs): array
     {
         return $this->createQueryBuilder('c')
             ->andWhere('c.deletedAt IS NULL')
             ->andWhere('c.dateMessage IS NULL')
             ->andWhere('c.dateValidation IS NULL')
+            ->andWhere('c.createur = :utilisateur')
+            ->setParameter('utilisateur', $utilisateurs)
+            ->orderBy('c.createdAt', 'DESC')
             ->getQuery()
             ->getResult();
     }

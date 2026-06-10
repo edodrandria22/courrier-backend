@@ -30,6 +30,9 @@ class VueHistoriqueDetails extends BaseCourriers
     #[ORM\Column(type: "boolean", nullable: true)]
     private ?bool $isSend = null;
 
+    #[ORM\Column(type: "integer", nullable: true)]
+    private ?int $numero = null;
+
     public function getUtilisateurId(): ?int
     {
         return $this->utilisateurId;
@@ -89,6 +92,16 @@ class VueHistoriqueDetails extends BaseCourriers
     public function setIsSend(?bool $isSend): self
     {
         $this->isSend = $isSend;
+        return $this;
+    }
+    public function getNumero(): ?int
+    {
+        return $this->numero;
+    }
+
+    public function setNumero(?int $numero): self
+    {
+        $this->numero = $numero;
         return $this;
     }
 }

@@ -42,6 +42,12 @@ class HistoriquesService extends BaseService
         ];
         return $this->search($conditions, $orderCriteria, $paginationCriteria);
     }
+    public function getNbCourrierByUser(Utilisateurs $utilisateurs, bool $isSend): int
+    {
+        $valiny = $this->repo->getNbCourrierByUser($utilisateurs,$isSend);
+        return $valiny;
+
+    }
     private function updateHistorique(Utilisateurs $utilisateur, Courriers $courrier, bool $isSend,Messages $messages): void
     {
         // Supprimer ancien historique
@@ -49,11 +55,13 @@ class HistoriquesService extends BaseService
         $this->delete($dernierHistorique);
 
         // Créer nouveau historique
+        $nbCourriers = $this->getNbCourrierByUser($utilisateur,$isSend) +1;
         $historique = new Historiques();
         $historique->setUtilisateur($utilisateur);
         $historique->setCourrier($courrier);
         $historique->setIsSend($isSend);
         $historique->setMessage($messages);
+        $historique->setNumero($nbCourriers);
 
         $this->save($historique);
     }

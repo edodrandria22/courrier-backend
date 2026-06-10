@@ -32,11 +32,12 @@ class CourrierController extends BaseApiController
 
     #[Route('', name: 'api_courriers_list', methods: ['GET'])]
     #[TokenRequired]
-    public function index(): JsonResponse
+    public function index(Request $request): JsonResponse
     {
         try {
-            $courriers = $this->courriersService->getAllCourierDisponible();
-            $excludes = ['deletedAt',"dateValidation","telephone","email","cloturePar"];
+            $user = $this->getUserFromRequest($request);
+            $courriers = $this->courriersService->getAllCourierDisponible($user);
+            $excludes = ['deletedAt',"dateValidation","cloturePar"];
             $data = $this->courriersService->transformerArray($courriers, $excludes);
             
             return $this->jsonSuccess($data);
