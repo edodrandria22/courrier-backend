@@ -3,6 +3,8 @@
 namespace App\Service\utilisateurs;
 
 use App\Dto\utilisateurs\UtilisateursDto;
+use App\Dto\utils\ConditionCriteria;
+use App\Dto\utils\OrderCriteria;
 use App\Entity\utilisateurs\Utilisateurs;
 use App\Repository\utilisateurs\RolesRepository;
 use App\Service\utils\BaseService;
@@ -49,18 +51,21 @@ class UtilisateursService extends BaseService
         return $user;
     }
     
-    public function updateUser($idUser, array $data): Utilisateurs
+    public function updateUser(int $idUser, array $data): Utilisateurs
     {
+        
         $user = $this->repository->find($idUser);
         if (!$user) {
             throw new Exception('Utilisateur non trouvé pour id=' . $idUser);
         }
         if (isset($data['prenom'])) {
-            $user->setPrenom($data['prenom']);
+            $prenom = $data['prenom'] ? mb_convert_case($data['prenom'], MB_CASE_TITLE, "UTF-8") : null;
+            $user->setPrenom($prenom);
         }
 
         if (isset($data['nom'])) {
-            $user->setNom($data['nom']);
+            $nom = mb_strtoupper($data['nom'], 'UTF-8');
+            $user->setNom($nom);
         }
 
         if (isset($data['email'])) {
@@ -114,10 +119,12 @@ class UtilisateursService extends BaseService
     public function saveDto(UtilisateursDto $dto): Utilisateurs
     {
         $user = new Utilisateurs();
+        $nom = mb_strtoupper($dto->getNom(), 'UTF-8');
+        $prenom = $dto->getPrenom() ? mb_convert_case($dto->getPrenom(), MB_CASE_TITLE, "UTF-8") : null;
         $user->setEmail($dto->getEmail());
         $user->setMdp($dto->getMdp());
-        $user->setNom($dto->getNom());
-        $user->setPrenom($dto->getPrenom());
+        $user->setNom($nom);
+        $user->setPrenom($prenom);
         $user->setAdresse($dto->getAdresse());
         
         return $this->createUser($user,$dto->getIdRole());
@@ -144,6 +151,17 @@ class UtilisateursService extends BaseService
         $newUser->setRole($user->getRole());
         
         return $newUser;
+    }
+    public function getAllUtilisateurByRole(int $roleId,?OrderCriteria $orderCriteria = new OrderCriteria()): array
+    {
+
+         $conditions = [];
+         $conditions[] = new ConditionCriteria('role', $roleId, '=');
+        return $this->search($conditions, $orderCriteria);
+    }
+    public function getAllUtilisateurs(): array
+    {
+        return $this->getAllUtilisateurByRole(2);
     }
     
 }

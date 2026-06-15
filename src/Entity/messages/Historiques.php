@@ -24,6 +24,9 @@ class Historiques extends BaseEntite
 
     #[ORM\Column(type: "integer", nullable: true)]
     private ?int $numero = null;
+    
+    #[ORM\Column(type: "integer", nullable: true)]
+    private ?int $numRef = null;
 
     
     #[ORM\ManyToOne(targetEntity: Messages::class)]
@@ -78,6 +81,15 @@ class Historiques extends BaseEntite
     public function setNumero(?int $numero): self
     {
         $this->numero = $numero;
+        return $this;
+    }
+    public function getNumRef(): ?int
+    {
+        return $this->numRef;
+    }
+    public function setNumRef(?int $numRef): self
+    {
+        $this->numRef = $numRef;
         return $this;
     }
 }

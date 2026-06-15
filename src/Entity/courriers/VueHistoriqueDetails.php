@@ -8,8 +8,16 @@ use App\Repository\courriers\VueHistoriqueDetailsRepository;
 
 #[ORM\Entity(repositoryClass: VueHistoriqueDetailsRepository::class, readOnly: true)]
 #[ORM\Table(name: "vue_historique_details")]
+#[ORM\MappedSuperclass]
 class VueHistoriqueDetails extends BaseCourriers
 {
+    #[ORM\Id]
+    #[ORM\Column(type: "integer")]
+    private ?int $historiqueId = null;
+
+    #[ORM\Column(type: "integer")]
+    private ?int $id = null;
+    
     #[ORM\Column(type: "integer")]
     private ?int $utilisateurId = null;
     
@@ -32,7 +40,32 @@ class VueHistoriqueDetails extends BaseCourriers
 
     #[ORM\Column(type: "integer", nullable: true)]
     private ?int $numero = null;
+    
+    #[ORM\Column(type: "integer", nullable: true)]
+    private ?int $numRef = null;
 
+    public function getHistoriqueId(): ?int
+    {
+        return $this->historiqueId;
+    }
+    
+    public function setHistoriqueId(?int $historiqueId): self
+    {
+        $this->historiqueId = $historiqueId;
+        return $this;
+    }
+    
+    public function getId(): ?int
+    {
+        return $this->id;
+    }
+    
+    public function setId(?int $id): self
+    {
+        $this->id = $id;
+        return $this;
+    }
+    
     public function getUtilisateurId(): ?int
     {
         return $this->utilisateurId;
@@ -102,6 +135,16 @@ class VueHistoriqueDetails extends BaseCourriers
     public function setNumero(?int $numero): self
     {
         $this->numero = $numero;
+        return $this;
+    }
+    public function getNumRef(): ?int
+    {
+        return $this->numRef;
+    }
+
+    public function setNumRef(?int $numRef): self
+    {
+        $this->numRef = $numRef;
         return $this;
     }
 }

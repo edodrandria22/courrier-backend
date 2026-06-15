@@ -7,6 +7,7 @@ use App\Dto\utils\PaginationCriteria;
 use App\Dto\utils\ConditionCriteria;
 use App\Dto\utils\JoinCriteria;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\ORM\QueryBuilder;
 use Doctrine\Persistence\ManagerRegistry;
 
 abstract class BaseRepository extends ServiceEntityRepository
@@ -61,7 +62,7 @@ abstract class BaseRepository extends ServiceEntityRepository
         return $qb->getQuery()->getResult();
     }
 
-    private function applyJoins($qb, array $joins): void
+    private function applyJoins(QueryBuilder $qb, array $joins): void
     {
         
         foreach ($joins as $join) {

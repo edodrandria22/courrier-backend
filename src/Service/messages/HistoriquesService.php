@@ -48,11 +48,11 @@ class HistoriquesService extends BaseService
         return $valiny;
 
     }
-    private function updateHistorique(Utilisateurs $utilisateur, Courriers $courrier, bool $isSend,Messages $messages): void
+    private function updateHistorique(Utilisateurs $utilisateur, Courriers $courrier, bool $isSend,Messages $messages): Historiques
     {
         // Supprimer ancien historique
-        $dernierHistorique = $this->getByUserAndCourrier($utilisateur, $courrier);
-        $this->delete($dernierHistorique);
+        // $dernierHistorique = $this->getByUserAndCourrier($utilisateur, $courrier);
+        // $this->delete($dernierHistorique);
 
         // Créer nouveau historique
         $nbCourriers = $this->getNbCourrierByUser($utilisateur,$isSend) +1;
@@ -62,15 +62,14 @@ class HistoriquesService extends BaseService
         $historique->setIsSend($isSend);
         $historique->setMessage($messages);
         $historique->setNumero($nbCourriers);
-
-        $this->save($historique);
+        return $historique;
     }
-    public function tranformerMessageEnHistorique(Messages $messages): void
+    public function tranformerMessageEnHistorique(Messages $messages): array
     {
         $courrier = $messages->getCourrier();
       
         #Ajouter une nouvelle historique pour l'expediteur
-        $this->updateHistorique(
+        $historiqueExpditeur = $this->updateHistorique(
             $messages->getExpediteur(),
             $courrier,
             true,
@@ -78,12 +77,20 @@ class HistoriquesService extends BaseService
         );
 
         #Ajouter une nouvelle historique pour le destinataire
-        $this->updateHistorique(
+        $historiqueDestinataire = $this->updateHistorique(
             $messages->getDestinataire(),
             $courrier,
             false,
             $messages
         );
+
+        $historiqueExpditeur->setNumRef($historiqueDestinataire->getNumero());
+        $historiqueDestinataire->setNumRef($historiqueExpditeur->getNumero());
+
+        $this->save($historiqueExpditeur);
+        $this->save($historiqueDestinataire);
+        
+        return [$historiqueExpditeur, $historiqueDestinataire];
     }
 
     

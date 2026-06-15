@@ -39,7 +39,12 @@ class VueHistoriqueDetailsService extends BaseService
     public function searchByDto(Utilisateurs $utilisateur, RechercheCourriersDto $dto, OrderCriteria $orderCriteria, PaginationCriteria $paginationCriteria): array
     {
         $conditions = [];
-        $conditions[] = new ConditionCriteria('utilisateurId', $utilisateur->getId(), '=');
+        if ($utilisateur->getRole()->getName() !== 'Admin') {
+            $conditions[] = new ConditionCriteria('utilisateurId', $utilisateur->getId(), '=');
+        }
+        else{
+            $conditions[] = new ConditionCriteria('isSend', false, '=');
+        }
 
         $conditions[] = new ConditionCriteria('createdAt', $paginationCriteria->getValue(), '<');
 
@@ -52,11 +57,13 @@ class VueHistoriqueDetailsService extends BaseService
         }
 
         if ($this->notEmpty($dto->nom)) {
-            $conditions[] = new ConditionCriteria('nom', $dto->nom, 'LIKE');
+            $nom = mb_strtoupper($dto->nom, 'UTF-8');
+            $conditions[] = new ConditionCriteria('nom', $nom, 'LIKE');
         }
 
         if ($this->notEmpty($dto->prenom)) {
-            $conditions[] = new ConditionCriteria('prenom', $dto->prenom, 'LIKE');
+            $prenom = $dto->prenom ? mb_convert_case($dto->prenom, MB_CASE_TITLE, "UTF-8") : null;
+            $conditions[] = new ConditionCriteria('prenom', $prenom, 'LIKE');
         }
 
         if ($this->notEmpty($dto->email)) {
@@ -128,6 +135,13 @@ class VueHistoriqueDetailsService extends BaseService
             $valiny[$i] = $this->tranformerUtilisateur($entities[$i],$exclude); 
         }
         return $valiny;
+    }
+    public function getByIdCourrier(int $id): array{
+        $conditions = [
+            new ConditionCriteria('id', $id, '='),
+            new ConditionCriteria('isSend', false, '='),
+        ];
+        return $this->search($conditions,new OrderCriteria('createdAt', 'desc'));
     }
     
     

@@ -31,7 +31,7 @@ class CourrierController extends BaseApiController
     }
 
     #[Route('', name: 'api_courriers_list', methods: ['GET'])]
-    #[TokenRequired]
+    #[TokenRequired(['Utilisateur'])]
     public function index(Request $request): JsonResponse
     {
         try {
@@ -50,7 +50,7 @@ class CourrierController extends BaseApiController
      * Liste tous les courriers impliquant l'utilisateur connecté (créateur, expéditeur ou destinataire)
      */
     #[Route('/getAllbyUser', name: 'api_courriers_get_all_by_user', methods: ['GET'])]
-    #[TokenRequired]
+    #[TokenRequired(['Utilisateur'])]
     public function getAllbyUser(Request $request): JsonResponse
     {
         try {
@@ -69,7 +69,7 @@ class CourrierController extends BaseApiController
         }
     }
     #[Route('/getAllbyUserSend', name: 'api_courriers_get_all_by_user_recu', methods: ['GET'])]
-    #[TokenRequired]
+    #[TokenRequired(['Utilisateur'])]
     public function getAllbyUserRecu(Request $request): JsonResponse
     {
         try {
@@ -90,7 +90,7 @@ class CourrierController extends BaseApiController
 
 
     #[Route('', name: 'api_courriers_creer', methods: ['POST'])]
-    #[TokenRequired]
+    #[TokenRequired(['Utilisateur'])]
     public function creer(Request $request): JsonResponse
     {
         try {
@@ -109,7 +109,7 @@ class CourrierController extends BaseApiController
         }
     }
     #[Route('/{id}', name: 'api_courriers_update', methods: ['PUT'], requirements: ['id' => '\d+'])]
-    #[TokenRequired]
+    #[TokenRequired(['Utilisateur'])]
     public function update(Request $request, int $id): JsonResponse
     {
         try {
@@ -164,7 +164,7 @@ class CourrierController extends BaseApiController
     }
 
     #[Route('/{id}/cloturer', name: 'api_courriers_cloturer', methods: ['POST'], requirements: ['id' => '\d+'])]
-    #[TokenRequired]
+    #[TokenRequired(['Utilisateur'])]
     public function cloturer(int $id, Request $request): JsonResponse
     {
         try {

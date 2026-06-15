@@ -139,8 +139,11 @@ class MessagesService extends BaseService
             $message->setExpediteur($expediteur);
             // $message->setCourrier($this->courriersService->cloneCourrier($courrier));
             $data = $message->toArray($excludes);
-            $vueCourrier = $this->vueHistoriqueDetailService->getVerifierById($message->getCourrier()->getId());
-            $data['courrier']= $this->vueHistoriqueDetailService->tranformerUtilisateur($vueCourrier,$excludes);
+            $vueCourriers = $this->vueHistoriqueDetailService->getByIdCourrier($message->getCourrier()->getId());
+            if(empty($vueCourriers)){
+             throw new Exception('Vue courrier non trouvée');
+            }
+            $data['courrier']= $this->vueHistoriqueDetailService->tranformerUtilisateur($vueCourriers[0],$excludes);
             $this->mercureService->sendNotification("message",$data);
 
             $this->em->getConnection()->commit();
@@ -164,8 +167,11 @@ class MessagesService extends BaseService
         $message->setIsReadAt(new DateTimeImmutable());
         $excludes = ['deletedAt'];
         $data = $message->toArray($excludes);
-        $vueCourrier = $this->vueHistoriqueDetailService->getVerifierById($message->getCourrier()->getId());
-        $data['courrier']= $this->vueHistoriqueDetailService->tranformerUtilisateur($vueCourrier,$excludes);
+        $vueCourriers = $this->vueHistoriqueDetailService->getByIdCourrier($message->getCourrier()->getId());
+            if(empty($vueCourriers)){
+             throw new Exception('Vue courrier non trouvée');
+            }
+            $data['courrier']= $this->vueHistoriqueDetailService->tranformerUtilisateur($vueCourriers[0],$excludes);
         $this->mercureService->sendNotification("lectureMessage",$data);
         return $this->save($message);
     }
@@ -182,9 +188,12 @@ class MessagesService extends BaseService
         $message->setIsReadAt(null);
         $excludes = ['deletedAt'];
         $data = $message->toArray($excludes);
-        $vueCourrier = $this->vueHistoriqueDetailService->getVerifierById($message->getCourrier()->getId());
-        $excludesCourrier = array_merge($excludes, ['isSend','utilisateurId','dateMessage','cloturerPar','createdAt','expediteurId','destinataireId']);
-        $data['courrier']= $this->vueHistoriqueDetailService->tranformerUtilisateur($vueCourrier,$excludesCourrier);
+        $vueCourriers = $this->vueHistoriqueDetailService->getByIdCourrier($message->getCourrier()->getId());
+        if(empty($vueCourriers)){
+            throw new Exception('Vue courrier non trouvée');
+        }
+        $excludesCourrier = ['isSend','utilisateurId','dateMessage','cloturerPar','createdAt','expediteurId','destinataireId'];
+        $data['courrier']= $this->vueHistoriqueDetailService->tranformerUtilisateur($vueCourriers[0],$excludesCourrier);
         $this->mercureService->sendNotification("lectureMessage",$data);
         return $this->save($message);
     }
@@ -205,7 +214,6 @@ class MessagesService extends BaseService
             new JoinCriteria('m.destinataire', 'd', 'LEFT'),
             new JoinCriteria('m.expediteur', 'e', 'LEFT'),
         ];
-
         $messages = $this->search($conditions, $orderCriteria, $paginationCriteria, $joins);
         return $messages;
     }
@@ -279,9 +287,6 @@ class MessagesService extends BaseService
                 $observation,
                 $files
             );
-
-            $this->historiquesService->tranformerMessageEnHistorique($nouveauMessage);
-
             // Mise à jour de la date de validation
             $message->setDateValidation(new DateTimeImmutable());
             $this->save($message);
@@ -292,8 +297,11 @@ class MessagesService extends BaseService
             $message->setExpediteur($utilisateur);
         
             $data = $nouveauMessage->toArray($excludes);
-            $vueCourrier = $this->vueHistoriqueDetailService->getVerifierById($message->getCourrier()->getId());
-            $data['courrier']= $this->vueHistoriqueDetailService->tranformerUtilisateur($vueCourrier,$excludes);
+            $vueCourriers = $this->vueHistoriqueDetailService->getByIdCourrier($message->getCourrier()->getId());
+            if(empty($vueCourriers)){
+                throw new Exception('Vue courrier non trouvée');
+            }
+            $data['courrier']= $this->vueHistoriqueDetailService->tranformerUtilisateur($vueCourriers[0],$excludes);
             $this->mercureService->sendNotification("message",$data);
 
             $this->em->getConnection()->commit();
@@ -337,10 +345,10 @@ class MessagesService extends BaseService
         for ($i=0; $i < count($entities) ; $i++) { 
             $entity = $entities[$i];
             $items[$i] = $entity->toArray($exclude);
-            $vueCourrier = $this->vueHistoriqueDetailService->getVerifierById($entity->getCourrier()->getId());
-            $items[$i]['courrier']= $this->vueHistoriqueDetailService->tranformerUtilisateur($vueCourrier,$exclude);
+            // echo($entity->getCourrier()->getId());
+            // $vueCourrier = $this->vueHistoriqueDetailService->getVerifierById($entity->getCourrier()->getId());
+            // $items[$i]['courrier']= $this->vueHistoriqueDetailService->tranformerUtilisateur($vueCourrier,$exclude);
         }
-
         return $items;
     }
 }

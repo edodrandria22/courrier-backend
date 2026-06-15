@@ -23,8 +23,8 @@ class UtilisateurController extends BaseApiController
         $this->utilisateurService = $utilisateurService;
     }
     #[Route('', name: 'user', methods: ['GET'])]
-    // #[TokenRequired(['Admin'])]
-    #[TokenRequired]
+    #[TokenRequired(['Admin'])]
+    // #[TokenRequired]
     public function getUtilisateur(): JsonResponse
     {
         try {
@@ -61,7 +61,7 @@ class UtilisateurController extends BaseApiController
         }
     }
 
-    #[Route('/{id}', name: 'api_utilisateur_get_one', methods: ['GET'])]
+    #[Route('/{id}', methods: ['GET'], requirements: ['id' => '\d+'])]
     #[TokenRequired(['Admin'])]
     public function getOneUser(int $id): JsonResponse
     {
@@ -168,6 +168,23 @@ class UtilisateurController extends BaseApiController
         } catch (\Throwable $e) {
             return $this->jsonError($e->getMessage(), 400);
         }
+    }
+    #[Route('/utilisateur', name: 'user_utilisateurde', methods: ['GET'])]
+    // #[TokenRequired]
+    public function getAllUtilisateurs(): JsonResponse
+    {
+        try {
+
+            $users = $this->utilisateurService->getAllUtilisateurs();
+
+            $excludes = ['createdAt', 'deletedAt','mdp'];
+            $data = $this->utilisateurService->transformerArray($users, $excludes);
+            return $this->jsonSuccess($data);
+
+        } catch (\Exception $e) {
+            return $this->jsonError($e->getMessage(), $e->getCode() ?: 400);
+        }
+
     }
 }
 

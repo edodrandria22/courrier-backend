@@ -2,12 +2,13 @@
 
 namespace App\Entity\courriers;
 
-use App\Entity\utils\BaseValidation;
+
 use Doctrine\ORM\Mapping as ORM;
 use App\Entity\utilisateurs\Utilisateurs;
+use App\Entity\utils\BaseSansId;
 
 #[ORM\MappedSuperclass]
-abstract class BaseCourriers extends BaseValidation
+abstract class BaseCourriers extends BaseSansId
 {
     #[ORM\Column(type: "string", length: 100, nullable: false)]
     protected ?string $reference = null;
@@ -43,6 +44,24 @@ abstract class BaseCourriers extends BaseValidation
 
     #[ORM\Column(type: "boolean", nullable: true)]
     protected ?bool $isConfidentiel = false;
+    #[ORM\Column(type: "datetime_immutable", nullable: true)]
+    protected ?\DateTimeImmutable $dateValidation = null;
+
+    public function getDateValidation(): ?\DateTimeInterface
+    {
+        return $this->dateValidation;
+    }
+
+    public function setDateValidation(?\DateTimeInterface $dateValidation): self
+    {
+        $this->dateValidation = $dateValidation;
+        return $this;
+    }
+
+    public function validate(): void
+    {
+        $this->dateValidation = new \DateTimeImmutable();
+    }
 
     public function __construct()
     {

@@ -65,5 +65,12 @@ message
     --modifier message -- a faire -- 30mn
 
 11/06/2026
-    --Creation des utilisateur nom majuscule , prenom camelle cas-- a faire -- 30mn
-    --rechereche nom majuscule , prenom camelle cas-- a faire -- 30mn
+    --Creation des utilisateur nom majuscule , prenom camelle cas-- ok -- 30mn
+    --rechereche nom majuscule , prenom camelle cas-- ok -- 30mn
+    --api pour avoir tous les utilisateur non admin-- ok -- 10mn
+
+12/06/2026
+    --modifer fonction pour avoir tous les courriers envoyes et recu -- a faire -- 60mn
+        --la liste doit etre differente pour une meme courrier de destinataire different
+        --ajouter une numReference pour le courrier -- a faire -- 30mn
+        --modifier courrier avec une liste de tous les personnes -- a faire 90mn
