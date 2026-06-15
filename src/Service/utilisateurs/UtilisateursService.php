@@ -5,6 +5,7 @@ namespace App\Service\utilisateurs;
 use App\Dto\utilisateurs\UtilisateursDto;
 use App\Dto\utils\ConditionCriteria;
 use App\Dto\utils\OrderCriteria;
+use App\Dto\utils\PaginationCriteria;
 use App\Entity\utilisateurs\Utilisateurs;
 use App\Repository\utilisateurs\RolesRepository;
 use App\Service\utils\BaseService;
@@ -163,5 +164,15 @@ class UtilisateursService extends BaseService
     {
         return $this->getAllUtilisateurByRole(2);
     }
-    
+    public function rechercheByNomPrenom(string $nom, string $prenom,OrderCriteria $orderCriteria, PaginationCriteria $paginationCriteria): array
+    {
+        $conditions = [];
+        $conditions[] = new ConditionCriteria('nom', $nom, 'like');
+        $conditions[] = new ConditionCriteria('role', 2, '=');
+        $conditions[] = new ConditionCriteria('prenom', $prenom, 'like');
+        $conditions[] = new ConditionCriteria('createdAt', $paginationCriteria->getValue(), '<');
+
+        
+        return $this->search($conditions, $orderCriteria, $paginationCriteria);
+    }
 }

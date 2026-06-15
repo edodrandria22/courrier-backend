@@ -97,6 +97,7 @@ abstract class BaseRepository extends ServiceEntityRepository
             $expr = match ($operator) {
 
                 '=' => $qb->expr()->eq($field, ':' . $param),
+                '!=' => $qb->expr()->neq($field, ':' . $param),
 
                 'LIKE' => $qb->expr()->like($field, ':' . $param),
 

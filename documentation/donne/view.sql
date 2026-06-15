@@ -41,3 +41,11 @@ FROM Historiques h
 JOIN courriers c ON h.courrier_id = c.id
 LEFT JOIN messages m ON h.message_id = m.id
 WHERE h.deleted_at IS NULL;
+
+
+CREATE OR REPLACE VIEW vue_utilisateurs AS
+SELECT
+    *
+    nom || ' ' || prenom AS nom_complet,
+    
+FROM utilisateurs;

@@ -11,16 +11,21 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use App\Annotation\TokenRequired;
+use App\Dto\utils\PaginationCriteria;
+use App\Service\utilisateurs\VueUtilisateursService;
+use DateTimeImmutable;
 
 #[Route('/utilisateurs')]
 class UtilisateurController extends BaseApiController
 {
     private UtilisateursService $utilisateurService;
+    private VueUtilisateursService $vueUtilisateursService;
 
 
-    public function __construct(UtilisateursService $utilisateurService)
+    public function __construct(UtilisateursService $utilisateurService, VueUtilisateursService $vueUtilisateursService)
     {
         $this->utilisateurService = $utilisateurService;
+        $this->vueUtilisateursService = $vueUtilisateursService;
     }
     #[Route('', name: 'user', methods: ['GET'])]
     #[TokenRequired(['Admin'])]
@@ -185,6 +190,27 @@ class UtilisateurController extends BaseApiController
             return $this->jsonError($e->getMessage(), $e->getCode() ?: 400);
         }
 
+    }
+    #[Route('/recherche', name: 'api_utilisateurs_recherche', methods: ['POST'])]
+    #[TokenRequired(['Utilisateur'])]
+    public function recherche(Request $request): JsonResponse
+    {
+        try {
+            $user = $this->getUserFromRequest($request);
+            $body = $request->toArray();
+            $dateParam = $request->query->get('date');
+            $jerena = $body['nomComplet'] ?? "";
+            $date = $dateParam ? new DateTimeImmutable($dateParam) : new DateTimeImmutable();
+            $limit = $_ENV['LIMIT_PAGINATIONS'] ?? 10; 
+            $paginationCriteria = new PaginationCriteria($date, $limit);
+            $orderCriteria = new OrderCriteria();
+            $utlisateurs = $this->vueUtilisateursService->rechercheByNomPrenom($user, $jerena,$orderCriteria, $paginationCriteria);
+            
+            $data = $this->vueUtilisateursService->transformerArrayJson($utlisateurs);
+            return $this->jsonSuccess($data);
+        } catch (\Throwable $e) {
+            return $this->jsonError($e->getMessage(),  400);
+        }
     }
 }
 

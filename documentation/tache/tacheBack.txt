@@ -73,4 +73,8 @@ message
     --modifer fonction pour avoir tous les courriers envoyes et recu -- a faire -- 60mn
         --la liste doit etre differente pour une meme courrier de destinataire different
         --ajouter une numReference pour le courrier -- a faire -- 30mn
-        --modifier courrier avec une liste de tous les personnes -- a faire 90mn
+        
+
+15/05/2026
+    --recherche par nom et prenom -- ok -- 60mn
+--modifier courrier avec une liste de tous les personnes -- a faire 90mn
