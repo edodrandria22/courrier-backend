@@ -198,8 +198,8 @@ class UtilisateurController extends BaseApiController
         try {
             $user = $this->getUserFromRequest($request);
             $body = $request->toArray();
-            $dateParam = $request->query->get('date');
             $jerena = $body['nomComplet'] ?? "";
+            $dateParam = $body['date'] ?? null;
             $date = $dateParam ? new DateTimeImmutable($dateParam) : new DateTimeImmutable();
             $limit = $_ENV['LIMIT_PAGINATIONS'] ?? 10; 
             $paginationCriteria = new PaginationCriteria($date, $limit);
