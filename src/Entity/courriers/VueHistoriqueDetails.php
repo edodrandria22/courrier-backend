@@ -3,6 +3,7 @@
 namespace App\Entity\courriers;
 
 use App\Entity\courriers\BaseCourriers;
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use App\Repository\courriers\VueHistoriqueDetailsRepository;
 
@@ -43,6 +44,9 @@ class VueHistoriqueDetails extends BaseCourriers
     
     #[ORM\Column(type: "integer", nullable: true)]
     private ?int $numRef = null;
+
+    #[ORM\Column(type: Types::TEXT, nullable: true)]
+    private ?string $observation = null;
 
     public function getHistoriqueId(): ?int
     {
@@ -145,6 +149,16 @@ class VueHistoriqueDetails extends BaseCourriers
     public function setNumRef(?int $numRef): self
     {
         $this->numRef = $numRef;
+        return $this;
+    }
+    public function getObservation(): ?string
+    {
+        return $this->observation;
+    }
+
+    public function setObservation(?string $observation): static
+    {
+        $this->observation = $observation;
         return $this;
     }
 }

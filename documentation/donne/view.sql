@@ -34,6 +34,7 @@ SELECT
     destinataire_id,
     expediteur_id,
     h.message_id,
+    h.observation,
 
     m.is_read_at
 
@@ -43,9 +44,10 @@ LEFT JOIN messages m ON h.message_id = m.id
 WHERE h.deleted_at IS NULL;
 
 
+DROP VIEW IF EXISTS vue_utilisateurs;
+
 CREATE OR REPLACE VIEW vue_utilisateurs AS
 SELECT
-    *
-    nom || ' ' || prenom AS nom_complet,
-    
+    *,
+    LOWER(nom || ' ' || prenom) AS nom_complet
 FROM utilisateurs;

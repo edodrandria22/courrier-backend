@@ -75,6 +75,12 @@ message
         --ajouter une numReference pour le courrier -- a faire -- 30mn
         
 
-15/05/2026
+16/05/2026
     --recherche par nom et prenom -- ok -- 60mn
+
+17/05/2026
+    --modifier message avec numero destinaire et numero recepteur -- ok -- 30mn
+    --ajouter commentaire sur le historique -- ok -- 30mn
+
+--modifier commentaire pour chaque historique -- a faire -- 30mn
 --modifier courrier avec une liste de tous les personnes -- a faire 90mn

@@ -85,6 +85,8 @@ class HistoriquesService extends BaseService
         );
 
         $historiqueExpditeur->setNumRef($historiqueDestinataire->getNumero());
+        $historiqueExpditeur->setObservation($messages->getObservation());
+
         $historiqueDestinataire->setNumRef($historiqueExpditeur->getNumero());
 
         $this->save($historiqueExpditeur);

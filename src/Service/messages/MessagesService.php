@@ -20,7 +20,6 @@ use DateTimeImmutable;
 use Exception;
 use Doctrine\ORM\EntityManagerInterface;
 
-
 use App\Service\utils\FichiersService;
 use Override;
 use Symfony\Component\HttpFoundation\File\UploadedFile;

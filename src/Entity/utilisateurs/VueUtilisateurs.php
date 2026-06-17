@@ -11,8 +11,6 @@ use App\Repository\utilisateurs\VueUtilisateursRepository;
 #[ORM\MappedSuperclass]
 class VueUtilisateurs extends BaseUtilisateurs
 {
-    
-
     #[ORM\Column()]
     private ?string $nomComplet = null;
     
@@ -26,4 +24,6 @@ class VueUtilisateurs extends BaseUtilisateurs
         $this->nomComplet = $nomComplet;
         return $this;
     }
+    
+
 }

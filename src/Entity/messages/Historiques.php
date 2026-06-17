@@ -4,7 +4,7 @@ namespace App\Entity\messages;
 use App\Entity\courriers\Courriers;
 use App\Entity\utilisateurs\Utilisateurs;
 use Doctrine\ORM\Mapping as ORM;
-
+use Doctrine\DBAL\Types\Types;
 use App\Entity\utils\BaseEntite;
 use App\Repository\messages\HistoriquesRepository;
 
@@ -32,6 +32,9 @@ class Historiques extends BaseEntite
     #[ORM\ManyToOne(targetEntity: Messages::class)]
     #[ORM\JoinColumn(nullable: true)]
     private ?Messages $message = null;
+
+    #[ORM\Column(type: Types::TEXT, nullable: true)]
+    private ?string $observation = null;
     public function getUtilisateur(): ?Utilisateurs
     {
         return $this->utilisateur;
@@ -90,6 +93,16 @@ class Historiques extends BaseEntite
     public function setNumRef(?int $numRef): self
     {
         $this->numRef = $numRef;
+        return $this;
+    }
+    public function getObservation(): ?string
+    {
+        return $this->observation;
+    }
+
+    public function setObservation(?string $observation): static
+    {
+        $this->observation = $observation;
         return $this;
     }
 }
