@@ -95,7 +95,7 @@ class MessagesService extends BaseService
             $message = $this->createMessage($expediteur, $destinataire, $courrier, $observation);
             // Persistance des fichiers liés
             $this->fichiersService->persistFiles($files, $message);
-            $this->historiquesService->tranformerMessageEnHistorique($message);
+            // $this->historiquesService->tranformerMessageEnHistorique($message);
             
             $this->em->getConnection()->commit();
 
@@ -133,10 +133,18 @@ class MessagesService extends BaseService
             $message = $this->createMessage($expediteur, $destinataire, $courrier, $observation);
             // Persistance des fichiers liés
             $this->fichiersService->persistFiles($files, $message);
-            $this->historiquesService->tranformerMessageEnHistorique($message);
-            $excludes = [ 'deletedAt'];
-            $message->setDestinataire($destinataire);
-            $message->setExpediteur($expediteur);
+            $historiques= $this->historiquesService->tranformerMessageEnHistorique($message);
+
+            if (count($historiques) < 2) {
+                throw new Exception('Le message doit avoir au moins 2 historiques');
+            }
+            $message->setNumeroExpediteur($historiques[0]->getNumero());
+            $message->setNumeroDestinataire($historiques[1]->getNumero());
+            $this->save($message);
+            
+            $excludes = [ 'deletedAt','observation'];
+            // $message->setDestinataire($destinataire);
+            // $message->setExpediteur($expediteur);
             // $message->setCourrier($this->courriersService->cloneCourrier($courrier));
             $data = $message->toArray($excludes);
             $vueCourriers = $this->vueHistoriqueDetailService->getByIdCourrier($message->getCourrier()->getId());
@@ -165,7 +173,7 @@ class MessagesService extends BaseService
             return $message;
         }
         $message->setIsReadAt(new DateTimeImmutable());
-        $excludes = ['deletedAt'];
+        $excludes = ['deletedAt','observation'];
         $data = $message->toArray($excludes);
         $vueCourriers = $this->vueHistoriqueDetailService->getByIdCourrier($message->getCourrier()->getId());
             if(empty($vueCourriers)){
@@ -186,7 +194,7 @@ class MessagesService extends BaseService
             return $message;
         }
         $message->setIsReadAt(null);
-        $excludes = ['deletedAt'];
+        $excludes = ['deletedAt','observation'];
         $data = $message->toArray($excludes);
         $vueCourriers = $this->vueHistoriqueDetailService->getByIdCourrier($message->getCourrier()->getId());
         if(empty($vueCourriers)){
@@ -291,13 +299,18 @@ class MessagesService extends BaseService
             $message->setDateValidation(new DateTimeImmutable());
             $this->save($message);
             $this->save($nouveauMessage);
-            $excludes = ['deletedAt'];
-            $message->setCourrier($this->courriersService->cloneCourrier($message->getCourrier()));
-            $message->setDestinataire($nouveauDestinataire);
-            $message->setExpediteur($utilisateur);
+            $excludes = ['deletedAt','observation'];    
+            $historiques= $this->historiquesService->tranformerMessageEnHistorique($nouveauMessage);
+
+            if (count($historiques) < 2) {
+                throw new Exception('Le message doit avoir au moins 2 historiques');
+            }
+            $nouveauMessage->setNumeroExpediteur($historiques[0]->getNumero());
+            $nouveauMessage->setNumeroDestinataire($historiques[1]->getNumero());
+            $this->save($nouveauMessage);
         
             $data = $nouveauMessage->toArray($excludes);
-            $vueCourriers = $this->vueHistoriqueDetailService->getByIdCourrier($message->getCourrier()->getId());
+            $vueCourriers = $this->vueHistoriqueDetailService->getByIdCourrier($nouveauMessage->getCourrier()->getId());
             if(empty($vueCourriers)){
                 throw new Exception('Vue courrier non trouvée');
             }

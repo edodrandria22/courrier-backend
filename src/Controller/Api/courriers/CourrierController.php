@@ -77,7 +77,7 @@ class CourrierController extends BaseApiController
 
             $dateParam = $request->query->get('date');
             $date = $dateParam ? new DateTimeImmutable($dateParam) : new DateTimeImmutable();
-            $limit = $_ENV['LIMIT_PAGINATIONS'] ?? 10;  
+            $limit = $_ENV['LIMIT_PAGINATIONS'] ?? 10; 
             $paginationCriteria = new PaginationCriteria($date, $limit);
             $orderCriteria = new OrderCriteria();
             $courriers = $this->courriersService->getAllByUserJson($user, $orderCriteria, $paginationCriteria,true);
@@ -154,7 +154,7 @@ class CourrierController extends BaseApiController
             $paginationCriteria = new PaginationCriteria($date, $limit);
             $orderCriteria = new OrderCriteria();
             $messages = $this->messagesService->getMessagesByCourrier($id, $orderCriteria, $paginationCriteria);
-            $excludes = ['deletedAt','utilisateurId','destinataireId','expediteurId'];
+            $excludes = ['deletedAt','utilisateurId','destinataireId','expediteurId','observation'];
             $data = $this->messagesService->transformerArray($messages, $excludes);
             return $this->jsonSuccess($data);
         } catch (\Throwable $e) {

@@ -37,6 +37,11 @@ class Messages extends BaseValidation
 
     #[ORM\OneToMany(mappedBy: 'message', targetEntity: Fichiers::class, cascade: ['persist', 'remove'])]
     private Collection $fichiers;
+    #[ORM\Column(type: "integer", nullable: true)]
+    private ?int $numeroExpediteur = null;
+    
+    #[ORM\Column(type: "integer", nullable: true)]
+    private ?int $numeroDestinataire = null;
 
     public function __construct()
     {
@@ -85,6 +90,24 @@ class Messages extends BaseValidation
     public function setIsReadAt(?\DateTimeInterface $isReadAt): static
     {
         $this->isReadAt = $isReadAt;
+        return $this;
+    }
+    public function getNumeroExpediteur(): ?int
+    {
+        return $this->numeroExpediteur;
+    }
+    public function setNumeroExpediteur(?int $numeroExpediteur): static
+    {
+        $this->numeroExpediteur = $numeroExpediteur;
+        return $this;
+    }
+    public function getNumeroDestinataire(): ?int
+    {
+        return $this->numeroDestinataire;
+    }
+    public function setNumeroDestinataire(?int $numeroDestinataire): static
+    {
+        $this->numeroDestinataire = $numeroDestinataire;
         return $this;
     }
 
