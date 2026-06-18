@@ -232,6 +232,21 @@ class CourrierController extends BaseApiController
             return $this->jsonError($e->getMessage(),  400);
         }
     }
+    #[Route('/historique/{id}', name: 'api_courriers_historique', methods: ['PUT'])]
+    #[TokenRequired(['Utilisateur'])]
+    public function historique(int $id, Request $request): JsonResponse
+    {
+        try {
+            $user = $this->getUserFromRequest($request);
+            $body = $request->toArray();
+            $observation = $body['observation'] ?? "";
+            $vueHistoriqueDetail = $this->courriersService->modifierObservationHistorique($id, $user, $observation);
+            $excludes = ['deletedAt'];
+            return $this->jsonSuccess($vueHistoriqueDetail->toArray($excludes));
+        } catch (\Throwable $e) {
+            return $this->jsonError($e->getMessage(),  400);
+        }
+    }
     
 
 }

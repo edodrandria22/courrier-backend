@@ -143,6 +143,12 @@ class VueHistoriqueDetailsService extends BaseService
         ];
         return $this->search($conditions,new OrderCriteria('createdAt', 'desc'));
     }
+    public function getByHistoriqueId(int $historiqueId): ?VueHistoriqueDetails{
+        $conditions = [
+            new ConditionCriteria('historiqueId', $historiqueId, '='),
+        ];
+        return $this->search($conditions,new OrderCriteria('createdAt', 'desc'))[0] ?? null;
+    }
     
     
     

@@ -82,5 +82,6 @@ message
     --modifier message avec numero destinaire et numero recepteur -- ok -- 30mn
     --ajouter commentaire sur le historique -- ok -- 30mn
 
---modifier commentaire pour chaque historique -- a faire -- 30mn
+18/05/2026
+    --modifier commentaire pour chaque historique -- a faire -- 60mn
 --modifier courrier avec une liste de tous les personnes -- a faire 90mn

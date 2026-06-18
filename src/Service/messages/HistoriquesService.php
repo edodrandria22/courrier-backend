@@ -94,6 +94,67 @@ class HistoriquesService extends BaseService
         
         return [$historiqueExpditeur, $historiqueDestinataire];
     }
+    public function getByMessageIdAndIsSend(Historiques $historiques): ?Historiques
+    {
+        $conditions = [
+            new ConditionCriteria('message', $historiques->getMessage()->getId(), '='),
+            new ConditionCriteria('isSend', !$historiques->getIsSend(), '='),
+        ];
+        return $this->search($conditions,new OrderCriteria('createdAt', 'desc'))[0] ?? null;
+    }
+    public function verifierUtilisateur(Utilisateurs $utilisateur, Utilisateurs $utilisateurExpditeur){
+        if($utilisateur->getId() !== $utilisateurExpditeur->getId()){
+            throw new \Exception("Vous n'êtes pas autorisé à modifier cette observation");
+        }
+    }
+    /**
+     * Met à jour la date de réception de l'historique et de son historique associé
+     */
+    private function mettreAJourDateReception(Historiques $historique): void
+    {
+        if ($historique->getIsSend() === false && $historique->getDateReception() === null) {
+            $dateReception = new \DateTimeImmutable();
 
+            $historique->setDateReception($dateReception);
+
+            $historiqueReception = $this->getByMessageIdAndIsSend($historique);
+
+            if ($historiqueReception !== null) {
+                $historiqueReception->setDateReception($dateReception);
+                $this->save($historiqueReception);
+            }
+        }
+    }
+
+    public function modifierObservation(
+        int $idHistorique,
+        Utilisateurs $utilisateur,
+        ?string $observation
+    ): Historiques {
+        $this->em->beginTransaction();
+
+        try {
+            $historique = $this->getVerifierById($idHistorique);
+
+            $this->verifierUtilisateur($utilisateur, $historique->getUtilisateur());
+
+            $this->mettreAJourDateReception($historique);
+
+            $historique->setObservation($observation);
+
+            $this->save($historique);
+
+            $this->em->commit();
+
+            return $historique;
+
+        } catch (\Throwable $e) {
+            $this->em->rollback();
+
+            throw $e;
+        }
+    }
+
+    
     
 }

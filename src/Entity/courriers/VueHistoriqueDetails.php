@@ -47,6 +47,8 @@ class VueHistoriqueDetails extends BaseCourriers
 
     #[ORM\Column(type: Types::TEXT, nullable: true)]
     private ?string $observation = null;
+    #[ORM\Column(type: "datetime_immutable", nullable: true)]
+    protected ?\DateTimeImmutable $dateReception = null;
 
     public function getHistoriqueId(): ?int
     {
@@ -159,6 +161,15 @@ class VueHistoriqueDetails extends BaseCourriers
     public function setObservation(?string $observation): static
     {
         $this->observation = $observation;
+        return $this;
+    }
+    public function getDateReception(): ?\DateTimeImmutable
+    {
+        return $this->dateReception;
+    }
+    public function setDateReception(?\DateTimeImmutable $dateReception): static
+    {
+        $this->dateReception = $dateReception;
         return $this;
     }
 }

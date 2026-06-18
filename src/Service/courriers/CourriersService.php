@@ -13,7 +13,9 @@ use App\Service\utils\MailService;
 use App\Service\utils\ValidationService;
 use Doctrine\ORM\EntityManagerInterface;
 use App\Dto\courriers\CourriersDto;
+use App\Entity\courriers\VueHistoriqueDetails;
 use App\Service\mercure\MercureService;
+use App\Service\messages\HistoriquesService;
 
 class CourriersService extends BaseService
 {
@@ -23,7 +25,8 @@ class CourriersService extends BaseService
         EntityManagerInterface $entityManager,
         private readonly MailService $mailService,
         private readonly VueHistoriqueDetailsService $vueHistoriqueDetailsService,
-        private readonly MercureService $mercureService
+        private readonly MercureService $mercureService,
+        private readonly HistoriquesService $historiquesService
     ) {
         parent::__construct($entityManager);
     }
@@ -250,6 +253,11 @@ class CourriersService extends BaseService
         }
         $message=$this->mailService->getHtmlMail($nom, $listDiv);
         $this->mailService->sendEmail($courrier->getEmail(), "Suivi du courier", $message);
+    }
+    public function modifierObservationHistorique(int $idHistorique,Utilisateurs $utilisateur ,?string $observation): ?VueHistoriqueDetails
+    {
+        $this->historiquesService->modifierObservation($idHistorique, $utilisateur, $observation);
+        return $this->vueHistoriqueDetailsService->getByHistoriqueId($idHistorique);
     }
 
     
