@@ -191,15 +191,15 @@ class CourriersService extends BaseService
     {
         return $this->repo->getAllCourierDisponible($utilisateurs);
     }
-    public function getAllByUser(Utilisateurs $user,OrderCriteria $orderCriteria,PaginationCriteria $paginationCriteria,bool $isSend): array
+    public function getAllByUser(Utilisateurs $user,OrderCriteria $orderCriteria,PaginationCriteria $paginationCriteria,bool $isSend, ?bool $isReadAt = null): array
     {
-        $result = $this->vueHistoriqueDetailsService->getHistoriques($user, $orderCriteria,$paginationCriteria,$isSend);
+        $result = $this->vueHistoriqueDetailsService->getHistoriques($user, $orderCriteria,$paginationCriteria,$isSend,$isReadAt);
         return $result;
     }
-    public function getAllByUserJson(Utilisateurs $user,OrderCriteria $orderCriteria,PaginationCriteria $paginationCriteria,bool $isSend): array
+    public function getAllByUserJson(Utilisateurs $user,OrderCriteria $orderCriteria,PaginationCriteria $paginationCriteria,bool $isSend,?bool $isReadAt = null): array
     {
         $exclude = ['deletedAt','utilisateurId','destinataireId','expediteurId'];
-        $historique = $this->getAllByUser($user, $orderCriteria, $paginationCriteria, $isSend);
+        $historique = $this->getAllByUser($user, $orderCriteria, $paginationCriteria, $isSend, $isReadAt);
         return $this->vueHistoriqueDetailsService->transformerArrayUtilisateur($historique, $exclude);
     }
 
