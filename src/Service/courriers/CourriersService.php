@@ -16,6 +16,7 @@ use App\Dto\courriers\CourriersDto;
 use App\Entity\courriers\VueHistoriqueDetails;
 use App\Service\mercure\MercureService;
 use App\Service\messages\HistoriquesService;
+use Exception;
 
 class CourriersService extends BaseService
 {
@@ -80,32 +81,7 @@ class CourriersService extends BaseService
         $courrier->delete();
         $this->save($courrier);
     }
-
-    public function cloturerCourrier(int $id,Utilisateurs $user): object
-    {
-         $conn = $this->em->getConnection();
-        $conn->beginTransaction(); // Début de la transaction
-        try {
-            $courrier = $this->getValidatedCourrier($id);
-            $courrier->setDateValidation(new \DateTimeImmutable());
-            $courrier->setCloturePar($user);
-            $destinataire = $courrier->getEmail();
-            $subject = "Cloturation du courrier chez Espa";
-            $this->mailService->sendEmail($destinataire, $subject, $this->genererDivClorer($courrier, $user));
-            $excludes = [ 'deletedAt'];
-            $data = $courrier->toArray($excludes);
-            $this->mercureService->sendNotification("clotureCourrier",$data);
-            $valiny= parent::save($courrier);
-
-            $conn->commit(); // Commit de la transaction
-            return $valiny;
-          
-        } catch (\Throwable $th) {
-            $conn->rollBack(); // Rollback de la transaction
-            throw $th;
-        }
-
-    }
+    
 
     /**
      * Sauvegarde un courrier avec génération de référence si nécessaire
@@ -161,10 +137,10 @@ class CourriersService extends BaseService
     public function updateDto(Utilisateurs $utilisateur,Courriers $courrier, CourriersDto $dto): Courriers
     {
         if($courrier->getCreateur()->getId() != $utilisateur->getId()){
-            throw new \Exception("Seule l'auteur du courrier peut le modifier son courrier");
+            throw new Exception("Seule l'auteur du courrier peut le modifier son courrier");
         }
         if ($courrier->getDateMessage()) {
-            throw new \Exception("Le courrier a déjà été envoyé, vous ne pouvez plus le modifier");
+            throw new Exception("Le courrier a déjà été envoyé, vous ne pouvez plus le modifier");
         }
         $object = $dto->getIsConfidentiel() ? "Pli fermé" : $dto->getObject();
         $courrier->setObject($object);

@@ -176,7 +176,7 @@ class CourrierController extends BaseApiController
     {
         try {
             $user = $this->getUserFromRequest($request);
-            $courrier = $this->courriersService->cloturerCourrier($id, $user);
+            $courrier = $this->messagesService->cloturerCourrier($id, $user);
             $data = $courrier->toArray();
             return $this->jsonSuccess($data);
         } catch (\Throwable $e) {

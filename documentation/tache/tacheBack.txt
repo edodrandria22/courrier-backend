@@ -86,4 +86,7 @@ message
     --modifier commentaire pour chaque historique -- ok -- 60mn
 19/06/2026
     --modifier api pour voir tous les courriers utilisateurs avec filtre traite et non traite -- a faire -- 30mn
+23/06/2026
+    -- apres transferer courrier , le courrier doit traite -- ok -- 20mn
+    -- transferer message, envoyer message traiter sur le mercure -- ok -- 20 mn
 --modifier courrier avec une liste de tous les personnes -- a faire 90mn

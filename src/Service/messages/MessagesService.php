@@ -21,6 +21,7 @@ use Exception;
 use Doctrine\ORM\EntityManagerInterface;
 
 use App\Service\utils\FichiersService;
+use App\Service\utils\MailService;
 use Override;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 
@@ -35,7 +36,8 @@ class MessagesService extends BaseService
         private readonly ValidationService $validationService,
         private readonly HistoriquesService $historiquesService,
         private readonly VueHistoriqueDetailsService $vueHistoriqueDetailService,
-        private readonly MercureService $mercureService
+        private readonly MercureService $mercureService,
+        private readonly MailService $mailService,
     ) {
         parent::__construct($em);
     }  
@@ -163,7 +165,16 @@ class MessagesService extends BaseService
         }
     }
 
-
+    public function sendNotificationMessage(Messages $messages,$excludes = []): void{
+        $data = $messages->toArray($excludes);
+        $vueCourriers = $this->vueHistoriqueDetailService->getByIdCourrier($messages->getCourrier()->getId());
+        if(empty($vueCourriers)){
+            throw new Exception('Vue courrier non trouvée');
+        }
+        $excludesCourrier = ['isSend','utilisateurId','dateMessage','cloturerPar','createdAt','expediteurId','destinataireId'];
+        $data['courrier']= $this->vueHistoriqueDetailService->tranformerUtilisateur($vueCourriers[0],$excludesCourrier);
+        $this->mercureService->sendNotification("lectureMessage",$data);
+    }
 
     public function lireMessage(int $messageId,Utilisateurs $user): Messages
     {
@@ -173,13 +184,7 @@ class MessagesService extends BaseService
         }
         $message->setIsReadAt(new DateTimeImmutable());
         $excludes = ['deletedAt','observation'];
-        $data = $message->toArray($excludes);
-        $vueCourriers = $this->vueHistoriqueDetailService->getByIdCourrier($message->getCourrier()->getId());
-            if(empty($vueCourriers)){
-             throw new Exception('Vue courrier non trouvée');
-            }
-            $data['courrier']= $this->vueHistoriqueDetailService->tranformerUtilisateur($vueCourriers[0],$excludes);
-        $this->mercureService->sendNotification("lectureMessage",$data);
+        $this->sendNotificationMessage($message, $excludes);
         return $this->save($message);
     }
 
@@ -194,16 +199,9 @@ class MessagesService extends BaseService
         }
         $message->setIsReadAt(null);
         $excludes = ['deletedAt','observation'];
-        $data = $message->toArray($excludes);
-        $vueCourriers = $this->vueHistoriqueDetailService->getByIdCourrier($message->getCourrier()->getId());
-        if(empty($vueCourriers)){
-            throw new Exception('Vue courrier non trouvée');
-        }
-        $excludesCourrier = ['isSend','utilisateurId','dateMessage','cloturerPar','createdAt','expediteurId','destinataireId'];
-        $data['courrier']= $this->vueHistoriqueDetailService->tranformerUtilisateur($vueCourriers[0],$excludesCourrier);
-        $this->mercureService->sendNotification("lectureMessage",$data);
+        $this->sendNotificationMessage($message, $excludes);
         return $this->save($message);
-    }
+   }
 
      
     
@@ -295,7 +293,9 @@ class MessagesService extends BaseService
                 $files
             );
             // Mise à jour de la date de validation
-            $message->setDateValidation(new DateTimeImmutable());
+            $date = new DateTimeImmutable();
+            $message->setIsReadAt($date);
+            $message->setDateValidation($date);
             $this->save($message);
             $this->save($nouveauMessage);
             $excludes = ['deletedAt','observation'];    
@@ -315,6 +315,8 @@ class MessagesService extends BaseService
             }
             $data['courrier']= $this->vueHistoriqueDetailService->tranformerUtilisateur($vueCourriers[0],$excludes);
             $this->mercureService->sendNotification("message",$data);
+
+            $this->sendNotificationMessage($message, $excludes);
 
             $this->em->getConnection()->commit();
 
@@ -362,5 +364,50 @@ class MessagesService extends BaseService
             // $items[$i]['courrier']= $this->vueHistoriqueDetailService->tranformerUtilisateur($vueCourrier,$exclude);
         }
         return $items;
+    }
+    public function getDernierMessageByCourrier(int $courrierId): ?Messages
+    {
+        return $this->getAllMessagesByCourrier($courrierId, new OrderCriteria())[0]??null; 
+    }
+    public function traiterMessage(int $courrierId,DateTimeImmutable $date): ?Messages
+    {
+        $dernierMessage = $this->getDernierMessageByCourrier($courrierId);
+        if($dernierMessage== null)
+        {
+            throw new Exception("Le message du courrierId $courrierId n'existe pas.");
+        }
+        $dernierMessage->setIsReadAt($date);
+        return $this->save($dernierMessage);
+        
+    }
+    public function cloturerCourrier(int $id,Utilisateurs $user): object
+    {
+         $conn = $this->em->getConnection();
+        $conn->beginTransaction(); // Début de la transaction
+        try {
+            $courrier = $this->courriersService->getValidatedCourrier($id);
+            $date = new DateTimeImmutable();
+            $courrier->setDateValidation($date);
+            $courrier->setCloturePar($user);
+            $destinataire = $courrier->getEmail();
+            $subject = "Cloturation du courrier chez Espa";
+            $this->mailService->sendEmail($destinataire, $subject, $this->courriersService->genererDivClorer($courrier, $user));
+            $excludes = ['deletedAt','observation'];
+            $data = $courrier->toArray($excludes);
+
+            $this->mercureService->sendNotification("clotureCourrier",$data);
+            
+            $valiny= $this->courriersService->save($courrier);
+            $messages = $this->traiterMessage($id, $date);
+            $this->sendNotificationMessage($messages, $excludes);
+
+            $conn->commit(); // Commit de la transaction
+            return $valiny;
+          
+        } catch (\Throwable $th) {
+            $conn->rollBack(); // Rollback de la transaction
+            throw $th;
+        }
+
     }
 }
