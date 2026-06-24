@@ -92,25 +92,5 @@ abstract class BaseService
     ): array {
         return $this->getRepository()->search($conditions, $orderCriteria, $pagination, $joins);
     }
-        // public function findByCourrier(Courriers $courrier, ?OrderCriteria $orderCriteria = null): array
-    // {
-    //     // Définir la condition sur le courrier
-        // $conditions = [
-        //     new ConditionCriteria('courrier', $courrier, '=')
-        // ];
-
-    //     // Définir les relations à joindre
-    //     $joins = [
-    //         new JoinCriteria('m.expediteur', 'e', 'LEFT'),
-    //         new JoinCriteria('m.destinataire', 'd', 'LEFT')
-    //     ];
-
-    //     // Appeler la méthode search factorisée
-    //     return $this->search(
-    //         conditions: $conditions,
-    //         order: $orderCriteria,
-    //         joins: $joins
-    //     );
-    // }
 
 }

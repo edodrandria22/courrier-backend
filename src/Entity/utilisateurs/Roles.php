@@ -2,7 +2,7 @@
 
 namespace App\Entity\utilisateurs;
 
-use App\Repository\RolesRepository;
+use App\Repository\utilisateurs\RolesRepository;
 use Doctrine\ORM\Mapping as ORM;
 use App\Entity\utils\BaseEntite;
 

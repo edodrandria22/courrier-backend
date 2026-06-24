@@ -89,4 +89,13 @@ message
 23/06/2026
     -- apres transferer courrier , le courrier doit traite -- ok -- 20mn
     -- transferer message, envoyer message traiter sur le mercure -- ok -- 20 mn
+
+24/06/2026
+    --envoyer courrier externe -- a faire -- 60mn
+        --ajouer nouvelle roles externe -- ok -- 10mn
+        --modifier getAllUser sans externe -- a faire -- 10mn
+        --creer une fonction pour retourner l'externe -- a faire -- 40mn
 --modifier courrier avec une liste de tous les personnes -- a faire 90mn
+--pagination utilisateurs -- a faire -- 60 mn
+--pagination pour les courriers et messages -- a faire -- 60 mn
+--gestion d'erreur -- a faire -- 60 mn

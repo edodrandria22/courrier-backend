@@ -28,15 +28,18 @@ class UtilisateurController extends BaseApiController
         $this->vueUtilisateursService = $vueUtilisateursService;
     }
     #[Route('', name: 'user', methods: ['GET'])]
-    #[TokenRequired(['Admin'])]
-    // #[TokenRequired]
-    public function getUtilisateur(): JsonResponse
+    // #[TokenRequired(['Admin'])]
+    public function getUtilisateur(Request $request): JsonResponse
     {
         try {
+            $dateParam = $request->query->get('date');
+            $limitParam = $request->query->get('limit');
+            $date = $dateParam ? new DateTimeImmutable($dateParam) : new DateTimeImmutable();
+            $limit = $limitParam ? (int)$limitParam : 10; 
+            $paginationCriteria = new PaginationCriteria($date, $limit);    
+            $users = $this->utilisateurService->getAllUsersPaginated($paginationCriteria);
 
-            $users = $this->utilisateurService->getAll(new OrderCriteria());
-
-            $excludes = ['createdAt', 'deletedAt','mdp'];
+            $excludes = ['deletedAt','mdp'];
             $data = $this->utilisateurService->transformerArray($users, $excludes);
             return $this->jsonSuccess($data);
 
@@ -174,25 +177,8 @@ class UtilisateurController extends BaseApiController
             return $this->jsonError($e->getMessage(), 400);
         }
     }
-    #[Route('/utilisateur', name: 'user_utilisateurde', methods: ['GET'])]
-    // #[TokenRequired]
-    public function getAllUtilisateurs(): JsonResponse
-    {
-        try {
-
-            $users = $this->utilisateurService->getAllUtilisateurs();
-
-            $excludes = ['createdAt', 'deletedAt','mdp'];
-            $data = $this->utilisateurService->transformerArray($users, $excludes);
-            return $this->jsonSuccess($data);
-
-        } catch (\Exception $e) {
-            return $this->jsonError($e->getMessage(), $e->getCode() ?: 400);
-        }
-
-    }
     #[Route('/recherche', name: 'api_utilisateurs_recherche', methods: ['POST'])]
-    #[TokenRequired(['Utilisateur'])]
+    #[TokenRequired(['Utilisateurs'])]
     public function recherche(Request $request): JsonResponse
     {
         try {

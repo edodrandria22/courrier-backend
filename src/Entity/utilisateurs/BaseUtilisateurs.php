@@ -17,7 +17,7 @@ abstract class BaseUtilisateurs extends BaseEntite
     #[ORM\Column(length: 255)]
     protected ?string $nom = null;
 
-    #[ORM\Column(length: 255)]
+    #[ORM\Column(length: 255, nullable: true)]
     protected ?string $prenom = null;
 
     #[ORM\Column(length: 255, nullable: true)]

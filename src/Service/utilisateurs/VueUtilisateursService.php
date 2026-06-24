@@ -32,7 +32,7 @@ class VueUtilisateursService extends BaseService
         $conditions = [];
         $conditions[] = new ConditionCriteria('id', $user->getId(), '!=');
         $conditions[] = new ConditionCriteria('nomComplet', $nomJerena, 'like');
-        $conditions[] = new ConditionCriteria('role', 2, '=');
+        $conditions[] = new ConditionCriteria('role', [2,3], 'in');
         $conditions[] = new ConditionCriteria('createdAt', $paginationCriteria->getValue(), '<');
 
         

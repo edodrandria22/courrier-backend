@@ -175,4 +175,17 @@ class UtilisateursService extends BaseService
         
         return $this->search($conditions, $orderCriteria, $paginationCriteria);
     }
+    public function getAllUsersPaginatedByRoles(array $rolesId,PaginationCriteria $paginationCriteria): array
+    {
+        $conditions = [];
+        $conditions[] = new ConditionCriteria('role', $rolesId, 'in');
+        $conditions[] = new ConditionCriteria('createdAt', $paginationCriteria->getValue(), '<');
+        
+        return $this->search($conditions, new OrderCriteria(), $paginationCriteria);
+    }
+    public function getAllUsersPaginated(PaginationCriteria $paginationCriteria): array
+    {
+        $rolesId = [1, 2];
+        return $this->getAllUsersPaginatedByRoles($rolesId, $paginationCriteria);
+    }
 }
