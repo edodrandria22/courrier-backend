@@ -178,7 +178,7 @@ class UtilisateurController extends BaseApiController
         }
     }
     #[Route('/recherche', name: 'api_utilisateurs_recherche', methods: ['POST'])]
-    #[TokenRequired(['Utilisateurs'])]
+    #[TokenRequired(['Utilisateur'])]
     public function recherche(Request $request): JsonResponse
     {
         try {

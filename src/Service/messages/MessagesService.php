@@ -410,4 +410,33 @@ class MessagesService extends BaseService
         }
 
     }
+    public function recupererMessageExterne(
+        Messages $message,
+        Utilisateurs $utisateurExterne,
+        Utilisateurs $nouveauDestinataire,
+        ?string $observation = null,
+        array $files = []
+    ): Messages {
+        $expediteurPrecedent = $message->getExpediteur();
+        $this->validerTranfers($expediteurPrecedent, $nouveauDestinataire);
+        return $this->transfererMessage($message, $utisateurExterne, $nouveauDestinataire, $observation, $files);
+
+    }
+    public function recupererMessageExterneById(
+        int $messageId,
+        int $nouveauDestinataireId,
+        ?string $observation = null,
+        array $files = []
+    ): Messages {
+        // Récupération et validation du message
+        $message = $this->getValidatedMessage($messageId);
+        $utisateurExterneId = 2;
+
+        // Récupération et validation des utilisateurs
+        $utisateurExterne = $this->utilisateursService->getValidatedUser($utisateurExterneId, 'Utilisateur externe');
+        $nouveauDestinataire = $this->utilisateursService->getValidatedUser($nouveauDestinataireId, 'Nouveau destinataire');
+
+        // Transfert du message
+        return $this->recupererMessageExterne($message, $utisateurExterne, $nouveauDestinataire, $observation, $files);
+    }
 }

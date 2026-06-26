@@ -123,5 +123,31 @@ class MessageController extends BaseApiController
             return $this->jsonError($e->getMessage(), $e->getCode() ?: 400);
         }
     }
+    #[Route('/recupererExterne', name: 'api_messages_recuperer_externe', methods: ['POST'])]
+    #[TokenRequired]
+    public function recupererExterne(Request $request): JsonResponse
+    {
+        try {
+            $user = $this->getUserFromRequest($request);
+
+            // On supporte maintenant multipart/form-data pour les fichiers
+            $data = $request->request->all();
+            $uploadedFiles = $request->files->get('fichiers', []);
+
+            $this->validatorService->validateRequiredFields($data, ['id']);
+
+            $message = $this->messagesService->recupererMessageExterneById(
+                messageId: (int) $data['id'],
+                nouveauDestinataireId: $user->getId(),
+                observation: $data['observation'] ?? null,
+                files: is_array($uploadedFiles) ? $uploadedFiles : [$uploadedFiles]
+            );
+            $excludes = ['createdAt', 'deletedAt'];
+            $data = $message->toArray($excludes);
+            return $this->jsonSuccess($data);
+        } catch (\Throwable $e) {
+            return $this->jsonError($e->getMessage(), $e->getCode() ?: 400);
+        }
+    }
 
 }

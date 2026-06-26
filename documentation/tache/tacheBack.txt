@@ -94,7 +94,8 @@ message
     --envoyer courrier externe -- a faire -- 60mn
         --ajouer nouvelle roles externe -- ok -- 10mn
         --modifier getAllUser sans externe -- a faire -- 10mn
-        --creer une fonction pour retourner l'externe -- a faire -- 40mn
+26/06/2026
+        --creer une fonction pour retourner l'externe -- ok -- 40mn
 --modifier courrier avec une liste de tous les personnes -- a faire 90mn
 --pagination utilisateurs -- a faire -- 60 mn
 --pagination pour les courriers et messages -- a faire -- 60 mn

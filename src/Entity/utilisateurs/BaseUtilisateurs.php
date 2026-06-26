@@ -65,7 +65,7 @@ abstract class BaseUtilisateurs extends BaseEntite
         return $this->prenom;
     }
 
-    public function setPrenom(string $prenom): static
+    public function setPrenom(?string $prenom): static
     {
         $this->prenom = $prenom;
         return $this;
