@@ -18,6 +18,7 @@ class VueHistoriqueDetailsService extends BaseService
     public function __construct(
         private readonly VueHistoriqueDetailsRepository $repo,
         private readonly UtilisateursService $utilisateurService,
+        private readonly DetailPersonnesService $detailPersonnesService,
         EntityManagerInterface $entityManager
     ) {
         parent::__construct($entityManager);
@@ -104,17 +105,36 @@ class VueHistoriqueDetailsService extends BaseService
         
         return $this->search($conditions, $orderCriteria, $paginationCriteria);
     }
-    public function getHistoriques(Utilisateurs $user, OrderCriteria $orderCriteria,PaginationCriteria $paginationCriteria,bool $isSend,?bool $isReadAt = null): array
-    {
+    public function getHistoriques(
+        Utilisateurs $user,
+        OrderCriteria $orderCriteria,
+        PaginationCriteria $paginationCriteria,
+        bool $isSend,
+        ?bool $isReadAt = null
+    ): array {
         $conditions = [
             new ConditionCriteria('utilisateurId', $user->getId(), '='),
             new ConditionCriteria('createdAt', $paginationCriteria->getValue(), '<'),
             new ConditionCriteria('isSend', $isSend, '='),
         ];
-        if($isReadAt !== null){
-            $conditions[] = new ConditionCriteria('isReadAt', null, $isReadAt ? 'IS NOT NULL' : 'IS NULL');
+
+        if ($isReadAt !== null) {
+            $conditions[] = new ConditionCriteria(
+                'isReadAt',
+                null,
+                $isReadAt ? 'IS NOT NULL' : 'IS NULL'
+            );
         }
-        return $this->search($conditions, $orderCriteria, $paginationCriteria);
+
+        $historiques = $this->search($conditions, $orderCriteria, $paginationCriteria);
+
+        foreach ($historiques as $historique) {
+            $historique->setDetailPersonnes(
+                $this->detailPersonnesService->getByCourrierId($historique->getId())
+            );
+        }
+
+        return $historiques;
     }
     public function tranformerUtilisateur(VueHistoriqueDetails $entite,array $exclude = []): array
     {

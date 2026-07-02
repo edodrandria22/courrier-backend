@@ -49,6 +49,10 @@ class VueHistoriqueDetails extends BaseCourriers
     private ?string $observation = null;
     #[ORM\Column(type: "datetime_immutable", nullable: true)]
     protected ?\DateTimeImmutable $dateReception = null;
+    /**
+ * @var DetailPersonnes[]
+ */
+    private array $detailPersonnes = [];
 
     public function getHistoriqueId(): ?int
     {
@@ -171,5 +175,34 @@ class VueHistoriqueDetails extends BaseCourriers
     {
         $this->dateReception = $dateReception;
         return $this;
+    }
+    /**
+     * @return DetailPersonnes[]
+     */
+    public function getDetailPersonnes(): array
+    {
+        return $this->detailPersonnes;
+    }
+
+    /**
+     * @param DetailPersonnes[] $detailPersonnes
+     */
+    public function setDetailPersonnes(array $detailPersonnes): self
+    {
+        $this->detailPersonnes = $detailPersonnes;
+        return $this;
+    }
+    public function toArray(array $exclude = []): array
+    {
+        $data = parent::toArray($exclude);
+
+        $excludePersonne = [...$exclude, 'id', 'createdAt'];
+
+        $data['detailPersonnes'] = array_map(
+            fn (DetailPersonnes $detailPersonne) => $detailPersonne->toArray($excludePersonne),
+            $this->detailPersonnes
+        );
+
+        return $data;
     }
 }
