@@ -19,18 +19,6 @@ abstract class BaseCourriers extends BaseSansId
     #[ORM\Column(type: "text", nullable: true)]
     protected ?string $description = null;
 
-    #[ORM\Column(type: "string", length: 100, nullable: true)]
-    protected ?string $email = null;
-
-    #[ORM\Column(type: "string", length: 255, nullable: true)]
-    protected ?string $nom = null;
-
-    #[ORM\Column(type: "string", length: 255, nullable: true)]
-    protected ?string $prenom = null;
-
-    #[ORM\Column(type: "string", length: 255, nullable: true)]
-    protected ?string $telephone = null;
-
     #[ORM\Column(type: "datetime_immutable", nullable: true)]
     protected ?\DateTimeImmutable $dateMessage = null;
 
@@ -97,50 +85,6 @@ abstract class BaseCourriers extends BaseSansId
     public function setDescription(?string $description): self
     {
         $this->description = $description;
-        return $this;
-    }
-
-    public function getEmail(): ?string
-    {
-        return $this->email;
-    }
-
-    public function setEmail(?string $email): self
-    {
-        $this->email = $email;
-        return $this;
-    }
-
-    public function getNom(): ?string
-    {
-        return $this->nom;
-    }
-
-    public function setNom(?string $nom): self
-    {
-        $this->nom = $nom;
-        return $this;
-    }
-
-    public function getPrenom(): ?string
-    {
-        return $this->prenom;
-    }
-
-    public function setPrenom(?string $prenom): self
-    {
-        $this->prenom = $prenom;
-        return $this;
-    }
-
-    public function getTelephone(): ?string
-    {
-        return $this->telephone;
-    }
-
-    public function setTelephone(?string $telephone): self
-    {
-        $this->telephone = $telephone;
         return $this;
     }
 

@@ -6,26 +6,18 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 class CourriersDto
 {
-    #[Assert\NotBlank(message: "Object est obligatoire.")]
+    #[Assert\NotBlank(message: "L'objet est obligatoire.")]
     private ?string $object = null;
 
     private ?string $description = null;
 
-    // #[Assert\Email(message: "L'adresse mail n'est pas valide.")]
-    private ?string $email = null;
-
-    // #[Assert\NotBlank(message: "Le nom est obligatoire.")]
-    #[Assert\Length(max: 255)]
-    private ?string $nom = null;
-
-    // #[Assert\NotBlank(message: "Le prenom est obligatoire.")]
-    #[Assert\Length(max: 255)]
-    private ?string $prenom = null;
-
-    #[Assert\Length(max: 255)]
-    private ?string $telephone = null;
-    // #[Assert\NotBlank(message:"Le champ confidentiel est obligatoire.")]
     private ?bool $isConfidentiel = false;
+
+    /**
+     * @var DetailPersonnesDto[]
+     */
+    #[Assert\Valid]
+    private array $detailPersonnes = [];
 
     // ===== GETTERS =====
 
@@ -39,29 +31,17 @@ class CourriersDto
         return $this->description;
     }
 
-    public function getEmail(): ?string
-    {
-        return $this->email;
-    }
-
-    public function getNom(): ?string
-    {
-        return $this->nom;
-    }
-
-    public function getPrenom(): ?string
-    {
-        return $this->prenom;
-    }
-
-    public function getTelephone(): ?string
-    {
-        return $this->telephone;
-    }
-
     public function getIsConfidentiel(): ?bool
     {
         return $this->isConfidentiel;
+    }
+
+    /**
+     * @return DetailPersonnesDto[]
+     */
+    public function getDetailPersonnes(): array
+    {
+        return $this->detailPersonnes;
     }
 
     // ===== SETTERS =====
@@ -78,33 +58,24 @@ class CourriersDto
         return $this;
     }
 
-    public function setEmail(?string $email): self
-    {
-        $this->email = $email;
-        return $this;
-    }
-
-    public function setNom(?string $nom): self
-    {
-        $this->nom = $nom;
-        return $this;
-    }
-
-    public function setPrenom(?string $prenom): self
-    {
-        $this->prenom = $prenom;
-        return $this;
-    }
-
-    public function setTelephone(?string $telephone): self
-    {
-        $this->telephone = $telephone;
-        return $this;
-    }
-    
     public function setIsConfidentiel(?bool $isConfidentiel): self
     {
         $this->isConfidentiel = $isConfidentiel;
+        return $this;
+    }
+
+    /**
+     * @param DetailPersonnesDto[] $detailPersonnes
+     */
+    public function setDetailPersonnes(array $detailPersonnes): self
+    {
+        $this->detailPersonnes = $detailPersonnes;
+        return $this;
+    }
+
+    public function addDetailPersonne(DetailPersonnesDto $detailPersonne): self
+    {
+        $this->detailPersonnes[] = $detailPersonne;
         return $this;
     }
 }

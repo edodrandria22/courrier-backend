@@ -2,7 +2,7 @@
 
 namespace App\Entity\utils;
 
-use App\Repository\FichiersRepository;
+use App\Repository\utils\FichiersRepository;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\DBAL\Types\Types;
 

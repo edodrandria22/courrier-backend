@@ -13,6 +13,7 @@ use App\Service\utils\MailService;
 use App\Service\utils\ValidationService;
 use Doctrine\ORM\EntityManagerInterface;
 use App\Dto\courriers\CourriersDto;
+use App\Entity\courriers\DetailPersonnes;
 use App\Entity\courriers\VueHistoriqueDetails;
 use App\Service\mercure\MercureService;
 use App\Service\messages\HistoriquesService;
@@ -99,9 +100,7 @@ class CourriersService extends BaseService
             // Génération de la référence si elle est nulle
             $courrier->setReference($courrier->getReference() ?? $this->generateReference());
             // Normalisation des identités
-            $courrier->setNom($courrier->getNom() ? mb_strtoupper($courrier->getNom()) : null);
-            $courrier->setPrenom($courrier->getPrenom() ? mb_convert_case($courrier->getPrenom(), MB_CASE_TITLE) : null);
-
+           
             // Persistance via la méthode parent
             $savedEntity = parent::save($courrier, $flush);
 
@@ -114,6 +113,22 @@ class CourriersService extends BaseService
             throw $e; // Relance l'exception pour la remonter
         }
     }
+    public function genererListeDetailPersonne(CourriersDto $dto,Courriers $courrier): void
+    {
+        foreach ($dto->getDetailPersonnes() as $detailPersonne) {
+            $nom = $detailPersonne->getName() ? mb_strtoupper($detailPersonne->getName()) : null;
+            $prenom = $detailPersonne->getPrenom() ? mb_convert_case($detailPersonne->getPrenom(), MB_CASE_TITLE) : null;
+
+            $detailPersonneEntity = new DetailPersonnes();
+            $detailPersonneEntity->setCourrier($courrier);
+            $detailPersonneEntity->setName($nom);
+            $detailPersonneEntity->setPrenom($prenom);
+            $detailPersonneEntity->setEmail($detailPersonne->getEmail());
+            $detailPersonneEntity->setTelephone($detailPersonne->getTelephone());
+            $courrier->addDetailPersonne($detailPersonneEntity);
+        }
+        
+    }
     public function saveDto(Utilisateurs $utilisateur,CourriersDto $dto): Courriers
     {
         $courrier = new Courriers();
@@ -122,15 +137,9 @@ class CourriersService extends BaseService
         $courrier->setIsConfidentiel($dto->getIsConfidentiel());
         if(!$dto->getIsConfidentiel()){
             $courrier->setDescription($dto->getDescription());
-            $courrier->setNom($dto->getNom());
-            $courrier->setPrenom($dto->getPrenom());
-            $courrier->setTelephone($dto->getTelephone());
         }
-        $courrier->setEmail($dto->getEmail());
-        
+        $this->genererListeDetailPersonne($dto, $courrier);
         $courrier->setCreateur($utilisateur);
-        
-
         $result = $this->save($courrier);
         return $result;
     }
@@ -147,11 +156,10 @@ class CourriersService extends BaseService
         $courrier->setIsConfidentiel($dto->getIsConfidentiel());
         if(!$dto->getIsConfidentiel()){
             $courrier->setDescription($dto->getDescription());
-            $courrier->setNom($dto->getNom());
-            $courrier->setPrenom($dto->getPrenom());
-            $courrier->setTelephone($dto->getTelephone());
+            
         }
-        $courrier->setEmail($dto->getEmail());
+        $this->genererListeDetailPersonne($dto, $courrier);
+
         
         $result = $this->save($courrier);
         return $result;
@@ -186,21 +194,26 @@ class CourriersService extends BaseService
         $clone->setReference($courrierOriginal->getReference()); // ou générer une nouvelle référence
         $clone->setObject($courrierOriginal->getObject());
         $clone->setDescription($courrierOriginal->getDescription());
-        $clone->setEmail($courrierOriginal->getEmail());
-        $clone->setNom($courrierOriginal->getNom());
-        $clone->setPrenom($courrierOriginal->getPrenom());
-        $clone->setTelephone($courrierOriginal->getTelephone());
         $clone->setDateMessage($courrierOriginal->getDateMessage());
         $clone->setCreateur($courrierOriginal->getCreateur());
         $clone->setCreatedAt($courrierOriginal->getCreatedAt());
         $clone->setCloturePar($courrierOriginal->getCloturePar()); // le clone n’est pas encore clôturé
         return $clone;
     }
-    public function genererDivClorer(Courriers $courrier,Utilisateurs $utilisateur)
+    public function genererDivClorer(DetailPersonnes $detailPersonne,Utilisateurs $utilisateur)
     {
-        $nom = $courrier->getNom() . ' ' . $courrier->getPrenom();
+        $nom = $detailPersonne->getName() . ' ' . $detailPersonne->getPrenom();
         $messageHtml = "Votre courier est cloturer , vous devier allez a la porte ".$utilisateur->getAdresse();
         return $this->mailService->getHtmlMail($nom, $messageHtml);
+    }
+    public function envoyerMailCloturer(Courriers $courrier,Utilisateurs $utilisateur)
+    {
+        $subject = "Cloturation du courrier chez Espa";
+        $listeDetailsPersonnes = $courrier->getDetailPersonnes();
+        foreach ($listeDetailsPersonnes as $detailPersonne) {
+            $html = $this->genererDivClorer($detailPersonne, $utilisateur);
+            $this->mailService->sendEmail($detailPersonne->getEmail(), $subject, $html);
+        }
     }
     /**
      * @param string $reference
@@ -217,18 +230,31 @@ class CourriersService extends BaseService
         
         return $valiny;
     }
-    public function genererEmailSuiviMessage(Courriers $courrier,array $listeMessage)
+    function genererEmailSuviDetailPersonne(DetailPersonnes $detailPersonne,String $listeDiv)
     {
-        if ($courrier->getEmail() === null) {
+        if ($detailPersonne->getEmail() === null) {
             return ;
         }
-        $nom = $courrier->getNom() . ' ' . $courrier->getPrenom();
+        $nom = $detailPersonne->getName() . ' ' . $detailPersonne->getPrenom();
+            
+        $message=$this->mailService->getHtmlMail($nom, $listeDiv);
+        $this->mailService->sendEmail($detailPersonne->getEmail(), "Suivi du courier", $message);
+
+    }
+    public function genererEmailSuiviMessage(Courriers $courrier,array $listeMessage)
+    {
+        $listeDetailsPersonnes = $courrier->getDetailPersonnes();
+        if (empty($listeDetailsPersonnes)) {
+            return;
+        }
         $listDiv = "";
         foreach ($listeMessage as $message) {
           $listDiv .= $message->getParticipantsHtml();  
         }
-        $message=$this->mailService->getHtmlMail($nom, $listDiv);
-        $this->mailService->sendEmail($courrier->getEmail(), "Suivi du courier", $message);
+        
+        foreach ($listeDetailsPersonnes as $detailPersonne) {
+            $this->genererEmailSuviDetailPersonne($detailPersonne, $listDiv);
+        }
     }
     public function modifierObservationHistorique(int $idHistorique,Utilisateurs $utilisateur ,?string $observation): ?VueHistoriqueDetails
     {

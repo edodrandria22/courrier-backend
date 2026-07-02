@@ -19,10 +19,6 @@ SELECT
     c.reference,
     c.object,
     c.description,
-    c.email,
-    c.nom,
-    c.prenom,
-    c.telephone,
     c.is_confidentiel,
 
     h.id as historique_id,
@@ -36,7 +32,8 @@ SELECT
     h.message_id,
     h.observation,
 
-    m.is_read_at
+    m.is_read_at,
+    h.date_reception
 
 FROM Historiques h
 JOIN courriers c ON h.courrier_id = c.id
@@ -49,5 +46,7 @@ DROP VIEW IF EXISTS vue_utilisateurs;
 CREATE OR REPLACE VIEW vue_utilisateurs AS
 SELECT
     *,
-    LOWER(nom || ' ' || prenom) AS nom_complet
+    LOWER(
+        COALESCE(nom, '') || ' ' || COALESCE(prenom, '')
+    ) AS nom_complet
 FROM utilisateurs;

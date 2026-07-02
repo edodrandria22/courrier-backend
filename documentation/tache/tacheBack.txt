@@ -96,7 +96,14 @@ message
         --modifier getAllUser sans externe -- a faire -- 10mn
 26/06/2026
         --creer une fonction pour retourner l'externe -- ok -- 40mn
---modifier courrier avec une liste de tous les personnes -- a faire 90mn
+
+01/06/2026
+    --modifier courrier avec une liste de tous les personnes -- a faire -- 90 mn
+        --modifier api -- ok -- 30mn
+        --modifier service -- ok -- 60mn
+
+
+--seule le dernier message peut etre transferer
 --pagination utilisateurs -- a faire -- 60 mn
 --pagination pour les courriers et messages -- a faire -- 60 mn
 --gestion d'erreur -- a faire -- 60 mn

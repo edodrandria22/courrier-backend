@@ -389,9 +389,7 @@ class MessagesService extends BaseService
             $date = new DateTimeImmutable();
             $courrier->setDateValidation($date);
             $courrier->setCloturePar($user);
-            $destinataire = $courrier->getEmail();
-            $subject = "Cloturation du courrier chez Espa";
-            $this->mailService->sendEmail($destinataire, $subject, $this->courriersService->genererDivClorer($courrier, $user));
+            $this->courriersService->envoyerMailCloturer($courrier, $user);
             $excludes = ['deletedAt','observation'];
             $data = $courrier->toArray($excludes);
 
