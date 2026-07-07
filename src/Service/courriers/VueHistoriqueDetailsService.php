@@ -57,23 +57,23 @@ class VueHistoriqueDetailsService extends BaseService
             $conditions[] = new ConditionCriteria('object', $dto->object, 'LIKE');
         }
 
-        if ($this->notEmpty($dto->nom)) {
-            $nom = mb_strtoupper($dto->nom, 'UTF-8');
-            $conditions[] = new ConditionCriteria('nom', $nom, 'LIKE');
-        }
+        // if ($this->notEmpty($dto->nom)) {
+        //     $nom = mb_strtoupper($dto->nom, 'UTF-8');
+        //     $conditions[] = new ConditionCriteria('nom', $nom, 'LIKE');
+        // }
 
-        if ($this->notEmpty($dto->prenom)) {
-            $prenom = $dto->prenom ? mb_convert_case($dto->prenom, MB_CASE_TITLE, "UTF-8") : null;
-            $conditions[] = new ConditionCriteria('prenom', $prenom, 'LIKE');
-        }
+        // if ($this->notEmpty($dto->prenom)) {
+        //     $prenom = $dto->prenom ? mb_convert_case($dto->prenom, MB_CASE_TITLE, "UTF-8") : null;
+        //     $conditions[] = new ConditionCriteria('prenom', $prenom, 'LIKE');
+        // }
 
-        if ($this->notEmpty($dto->email)) {
-            $conditions[] = new ConditionCriteria('email', $dto->email, 'LIKE');
-        }
+        // if ($this->notEmpty($dto->email)) {
+        //     $conditions[] = new ConditionCriteria('email', $dto->email, 'LIKE');
+        // }
 
-        if ($this->notEmpty($dto->telephone)) {
-            $conditions[] = new ConditionCriteria('telephone', $dto->telephone, 'LIKE');
-        }
+        // if ($this->notEmpty($dto->telephone)) {
+        //     $conditions[] = new ConditionCriteria('telephone', $dto->telephone, 'LIKE');
+        // }
 
         if ($this->notEmpty($dto->numero)) {
             $conditions[] = new ConditionCriteria('numero', $dto->numero, '=');
@@ -110,7 +110,7 @@ class VueHistoriqueDetailsService extends BaseService
         OrderCriteria $orderCriteria,
         PaginationCriteria $paginationCriteria,
         bool $isSend,
-        ?bool $isReadAt = null
+        ?bool $isTraiterAt = null
     ): array {
         $conditions = [
             new ConditionCriteria('utilisateurId', $user->getId(), '='),
@@ -118,11 +118,11 @@ class VueHistoriqueDetailsService extends BaseService
             new ConditionCriteria('isSend', $isSend, '='),
         ];
 
-        if ($isReadAt !== null) {
+        if ($isTraiterAt !== null) {
             $conditions[] = new ConditionCriteria(
-                'isReadAt',
+                'isTraiterAt',
                 null,
-                $isReadAt ? 'IS NOT NULL' : 'IS NULL'
+                $isTraiterAt ? 'IS NOT NULL' : 'IS NULL'
             );
         }
 

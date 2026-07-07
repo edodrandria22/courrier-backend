@@ -83,36 +83,6 @@ class CourriersService extends BaseService
         $this->save($courrier);
     }
     
-
-    /**
-     * Sauvegarde un courrier avec génération de référence si nécessaire
-     * 
-     * @param Courriers $courrier
-     */
-    public function save(object $courrier, bool $flush = true): object
-    {
-        // $this->validator->throwIfNull($courrier->getNom(), "Le nom du déposant est obligatoire.");
-
-        $conn = $this->em->getConnection();
-        $conn->beginTransaction(); // Début de la transaction
-
-        try {
-            // Génération de la référence si elle est nulle
-            $courrier->setReference($courrier->getReference() ?? $this->generateReference());
-            // Normalisation des identités
-           
-            // Persistance via la méthode parent
-            $savedEntity = parent::save($courrier, $flush);
-
-            $conn->commit(); // Commit de la transaction
-
-            return $savedEntity;
-
-        } catch (\Throwable $e) {
-            $conn->rollBack(); // Annule la transaction en cas d'erreur
-            throw $e; // Relance l'exception pour la remonter
-        }
-    }
     public function genererListeDetailPersonne(CourriersDto $dto,Courriers $courrier): void
     {
         foreach ($dto->getDetailPersonnes() as $detailPersonne) {
@@ -125,6 +95,9 @@ class CourriersService extends BaseService
             $detailPersonneEntity->setPrenom($prenom);
             $detailPersonneEntity->setEmail($detailPersonne->getEmail());
             $detailPersonneEntity->setTelephone($detailPersonne->getTelephone());
+
+            $messageCourrier = $this->genererMessageInsertionCourrier($detailPersonneEntity, $courrier);
+            $this->mailService->sendEmail($detailPersonneEntity->getEmail(),"Reference du suivi courrier" ,$messageCourrier);
             $courrier->addDetailPersonne($detailPersonneEntity);
         }
         
@@ -132,6 +105,7 @@ class CourriersService extends BaseService
     public function saveDto(Utilisateurs $utilisateur,CourriersDto $dto): Courriers
     {
         $courrier = new Courriers();
+        $courrier->setReference($this->generateReference());
         $object = $dto->getIsConfidentiel() ? "Pli fermé" : $dto->getObject();
         $courrier->setObject($object);
         $courrier->setIsConfidentiel($dto->getIsConfidentiel());
@@ -143,15 +117,18 @@ class CourriersService extends BaseService
         $result = $this->save($courrier);
         return $result;
     }
-    public function updateDto(Utilisateurs $utilisateur,Courriers $courrier, CourriersDto $dto): Courriers
+    public function updateDto(Utilisateurs $utilisateur,Courriers $courrierAncien, CourriersDto $dto): Courriers
     {
-        if($courrier->getCreateur()->getId() != $utilisateur->getId()){
+        if($courrierAncien->getCreateur()->getId() != $utilisateur->getId()){
             throw new Exception("Seule l'auteur du courrier peut le modifier son courrier");
         }
-        if ($courrier->getDateMessage()) {
+        if ($courrierAncien->getDateMessage()) {
             throw new Exception("Le courrier a déjà été envoyé, vous ne pouvez plus le modifier");
         }
         $object = $dto->getIsConfidentiel() ? "Pli fermé" : $dto->getObject();
+        $courrier = new Courriers();
+        $courrier->setReference($courrierAncien->getReference());
+        $courrier->setCreateur($courrierAncien->getCreateur());
         $courrier->setObject($object);
         $courrier->setIsConfidentiel($dto->getIsConfidentiel());
         if(!$dto->getIsConfidentiel()){
@@ -160,7 +137,7 @@ class CourriersService extends BaseService
         }
         $this->genererListeDetailPersonne($dto, $courrier);
 
-        
+        $this->delete($courrierAncien);
         $result = $this->save($courrier);
         return $result;
     }
@@ -175,15 +152,15 @@ class CourriersService extends BaseService
     {
         return $this->repo->getAllCourierDisponible($utilisateurs);
     }
-    public function getAllByUser(Utilisateurs $user,OrderCriteria $orderCriteria,PaginationCriteria $paginationCriteria,bool $isSend, ?bool $isReadAt = null): array
+    public function getAllByUser(Utilisateurs $user,OrderCriteria $orderCriteria,PaginationCriteria $paginationCriteria,bool $isSend, ?bool $isTraiterAt = null): array
     {
-        $result = $this->vueHistoriqueDetailsService->getHistoriques($user, $orderCriteria,$paginationCriteria,$isSend,$isReadAt);
+        $result = $this->vueHistoriqueDetailsService->getHistoriques($user, $orderCriteria,$paginationCriteria,$isSend,$isTraiterAt);
         return $result;
     }
-    public function getAllByUserJson(Utilisateurs $user,OrderCriteria $orderCriteria,PaginationCriteria $paginationCriteria,bool $isSend,?bool $isReadAt = null): array
+    public function getAllByUserJson(Utilisateurs $user,OrderCriteria $orderCriteria,PaginationCriteria $paginationCriteria,bool $isSend,?bool $isTraiterAt = null): array
     {
         $exclude = ['deletedAt','utilisateurId','destinataireId','expediteurId'];
-        $historique = $this->getAllByUser($user, $orderCriteria, $paginationCriteria, $isSend, $isReadAt);
+        $historique = $this->getAllByUser($user, $orderCriteria, $paginationCriteria, $isSend, $isTraiterAt);
         return $this->vueHistoriqueDetailsService->transformerArrayUtilisateur($historique, $exclude);
     }
 
@@ -260,6 +237,13 @@ class CourriersService extends BaseService
     {
         $this->historiquesService->modifierObservation($idHistorique, $utilisateur, $observation);
         return $this->vueHistoriqueDetailsService->getByHistoriqueId($idHistorique);
+    }
+    public function genererMessageInsertionCourrier(DetailPersonnes $detailPersonne,Courriers $courrier)
+    {
+        $nom = $detailPersonne->getName() . ' ' . $detailPersonne->getPrenom();
+        $messageHtml = "Votre référence courrier est : <b>" . $courrier->getReference() . "</b><br>"
+            . "Voici le lien pour suivre votre courrier : http://localhost:3000/suivi";
+        return $this->mailService->getHtmlMail($nom, $messageHtml);
     }
 
     

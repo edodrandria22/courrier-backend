@@ -35,6 +35,8 @@ class VueHistoriqueDetails extends BaseCourriers
 
     #[ORM\Column(type: "datetime_immutable", nullable: true)]
     private ?\DateTimeImmutable $isReadAt = null;
+    #[ORM\Column(type: "datetime_immutable", nullable: true)]
+    private ?\DateTimeImmutable $isTraiterAt = null;
 
     #[ORM\Column(type: "boolean", nullable: true)]
     private ?bool $isSend = null;
@@ -106,6 +108,16 @@ class VueHistoriqueDetails extends BaseCourriers
     public function setIsReadAt(?\DateTimeImmutable $isReadAt): self
     {
         $this->isReadAt = $isReadAt;
+        return $this;
+    }
+    public function getIsTraiterAt(): ?\DateTimeImmutable
+    {
+        return $this->isTraiterAt;
+    }
+    
+    public function setIsTraiterAt(?\DateTimeImmutable $isTraiterAt): self
+    {
+        $this->isTraiterAt = $isTraiterAt;
         return $this;
     }
     public function setExpediteurId(?int $expediteurId): self

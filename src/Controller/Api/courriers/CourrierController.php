@@ -57,9 +57,9 @@ class CourrierController extends BaseApiController
             $user = $this->getUserFromRequest($request);
 
             $dateParam = $request->query->get('date');
-            $value = $request->query->get('isReadAt');
+            $value = $request->query->get('isTraiterAt');
 
-            $isReadAt = match ($value) {
+            $isTraiterAt = match ($value) {
                 'true', '1', 'yes', 'on' => true,
                 'false', '0', 'no', 'off' => false,
                 default => null,
@@ -68,7 +68,7 @@ class CourrierController extends BaseApiController
             $limit = $_ENV['LIMIT_PAGINATIONS'] ?? 10;  
             $paginationCriteria = new PaginationCriteria($date, $limit);
             $orderCriteria = new OrderCriteria();
-            $courriers = $this->courriersService->getAllByUserJson($user, $orderCriteria, $paginationCriteria,false,$isReadAt);
+            $courriers = $this->courriersService->getAllByUserJson($user, $orderCriteria, $paginationCriteria,false,$isTraiterAt);
             
             return $this->jsonSuccess($courriers);
         } catch (\Throwable $e) {

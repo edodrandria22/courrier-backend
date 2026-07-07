@@ -75,7 +75,7 @@ abstract class BaseRepository extends ServiceEntityRepository
         }
     }
 
-    private function applyConditions($qb, array $conditions): void
+    private function applyConditions(QueryBuilder $qb, array $conditions): void
     {
         foreach ($conditions as $i => $cond) {
 
@@ -144,19 +144,19 @@ abstract class BaseRepository extends ServiceEntityRepository
         }
     }
 
-    private function applyDeletedAtFilter($qb): void
+    private function applyDeletedAtFilter( $qb): void
     {
         $qb->andWhere('m.deletedAt IS NULL');
     }
 
-    private function applyOrder($qb, ?OrderCriteria $order): void
+    private function applyOrder(QueryBuilder $qb, ?OrderCriteria $order): void
     {
         if ($order) {
             $qb->orderBy('m.' . $order->getField(), $order->getDirection());
         }
     }
 
-    private function applyPagination($qb, ?PaginationCriteria $pagination): void
+    private function applyPagination(QueryBuilder $qb, ?PaginationCriteria $pagination): void
     {
         if ($pagination) {
             $qb->setMaxResults($pagination->getLimit());

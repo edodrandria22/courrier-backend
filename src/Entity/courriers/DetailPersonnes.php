@@ -2,13 +2,16 @@
 
 namespace App\Entity\courriers;
 
+use App\Entity\utils\BaseEntite;
 use App\Repository\courriers\DetailPersonnesRepository;
 use Doctrine\ORM\Mapping as ORM;
-use App\Entity\utils\BaseNom;
 #[ORM\Entity(repositoryClass: DetailPersonnesRepository::class)]    
-class DetailPersonnes extends BaseNom
+class DetailPersonnes extends BaseEntite
 {
     #[ORM\Column(type: "string", length: 255, nullable: true)]
+    protected ?string $name = null;
+
+    #[ORM\Column(type: "string", length: 255, nullable: false)]
     protected ?string $email = null;
 
     #[ORM\Column(type: "string", length: 255, nullable: true)]
@@ -22,6 +25,16 @@ class DetailPersonnes extends BaseNom
     protected ?Courriers $courrier = null;
     public function __construct()
     {
+    }
+    public function getName(): ?string
+    {
+        return $this->name;
+    }
+
+    public function setName(?string $name): self
+    {
+        $this->name = $name;
+        return $this;
     }
     public function getEmail(): ?string
     {

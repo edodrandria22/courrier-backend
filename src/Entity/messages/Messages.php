@@ -43,6 +43,10 @@ class Messages extends BaseValidation
     #[ORM\Column(type: "integer", nullable: true)]
     private ?int $numeroDestinataire = null;
 
+    #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
+    private ?\DateTimeInterface $isTraiterAt = null;
+
+
     public function __construct()
     {
         $this->fichiers = new ArrayCollection();
@@ -90,6 +94,16 @@ class Messages extends BaseValidation
     public function setIsReadAt(?\DateTimeInterface $isReadAt): static
     {
         $this->isReadAt = $isReadAt;
+        return $this;
+    }
+    public function getIsTraiterAt(): ?\DateTimeInterface
+    {
+        return $this->isTraiterAt;
+    }
+
+    public function setIsTraiterAt(?\DateTimeInterface $isTraiterAt): static
+    {
+        $this->isTraiterAt = $isTraiterAt;
         return $this;
     }
     public function getNumeroExpediteur(): ?int

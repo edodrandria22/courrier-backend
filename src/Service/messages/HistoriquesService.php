@@ -10,6 +10,7 @@ use App\Entity\messages\Historiques;
 use App\Entity\messages\Messages;
 use App\Entity\utilisateurs\Utilisateurs;
 use App\Repository\messages\HistoriquesRepository;
+use App\Service\courriers\NumeroCourriersService;
 use App\Service\utils\BaseService;
 use Doctrine\ORM\EntityManagerInterface;
 
@@ -17,6 +18,7 @@ class HistoriquesService extends BaseService
 {
     public function __construct(
         private readonly HistoriquesRepository $repo,
+        private readonly NumeroCourriersService $numeroCourriersService,
         EntityManagerInterface $em
     ) {
         parent::__construct($em);
@@ -44,16 +46,15 @@ class HistoriquesService extends BaseService
     }
     public function getNbCourrierByUser(Utilisateurs $utilisateurs, bool $isSend): int
     {
+        $numeroCourrier = $this->numeroCourriersService->getByUtilisateurId($utilisateurs->getId(),$isSend, date('Y'));
+        $numeroDepart = ($numeroCourrier[0] ?? null)?->getNumero() ?? 0;
         $valiny = $this->repo->getNbCourrierByUser($utilisateurs,$isSend);
-        return $valiny;
+        
+        return $valiny + $numeroDepart;
 
     }
     private function updateHistorique(Utilisateurs $utilisateur, Courriers $courrier, bool $isSend,Messages $messages): Historiques
     {
-        // Supprimer ancien historique
-        // $dernierHistorique = $this->getByUserAndCourrier($utilisateur, $courrier);
-        // $this->delete($dernierHistorique);
-
         // Créer nouveau historique
         $nbCourriers = $this->getNbCourrierByUser($utilisateur,$isSend) +1;
         $historique = new Historiques();

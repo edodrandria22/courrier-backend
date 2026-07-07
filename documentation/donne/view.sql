@@ -33,7 +33,8 @@ SELECT
     h.observation,
 
     m.is_read_at,
-    h.date_reception
+    h.date_reception,
+    m.is_traiter_at
 
 FROM Historiques h
 JOIN courriers c ON h.courrier_id = c.id

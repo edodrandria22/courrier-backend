@@ -6,12 +6,13 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 class DetailPersonnesDto
 {
-    #[Assert\NotBlank(message: "Le nom est obligatoire.")]
+
     private ?string $name = null;
 
     private ?string $prenom = null;
 
     #[Assert\Email(message: "L'adresse email n'est pas valide.")]
+    #[Assert\NotBlank(message: "L'adresse email est obligatoire.")]
     private ?string $email = null;
 
     private ?string $telephone = null;

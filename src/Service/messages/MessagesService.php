@@ -295,6 +295,7 @@ class MessagesService extends BaseService
             // Mise à jour de la date de validation
             $date = new DateTimeImmutable();
             $message->setIsReadAt($date);
+            $message->setIsTraiterAt($date);
             $message->setDateValidation($date);
             $this->save($message);
             $this->save($nouveauMessage);
@@ -377,6 +378,7 @@ class MessagesService extends BaseService
             throw new Exception("Le message du courrierId $courrierId n'existe pas.");
         }
         $dernierMessage->setIsReadAt($date);
+        $dernierMessage->setIsTraiterAt($date);
         return $this->save($dernierMessage);
         
     }
