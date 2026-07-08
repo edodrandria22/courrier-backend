@@ -17,9 +17,6 @@ class NumeroCourriers extends BaseEntite
     #[ORM\Column(type:"boolean",nullable:false)]
     private bool $isSend;
 
-    #[ORM\Column(type: "string", length: 255, nullable: false)]
-    protected ?string $object = null;
-
     #[ORM\ManyToOne(targetEntity: Utilisateurs::class)]
     #[ORM\JoinColumn(nullable: true)]
     protected ?Utilisateurs $utilisateur = null;

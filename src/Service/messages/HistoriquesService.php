@@ -44,11 +44,11 @@ class HistoriquesService extends BaseService
         ];
         return $this->search($conditions, $orderCriteria, $paginationCriteria);
     }
-    public function getNbCourrierByUser(Utilisateurs $utilisateurs, bool $isSend): int
+    public function getNbCourrierByUser(Utilisateurs $utilisateur, bool $isSend): int
     {
-        $numeroCourrier = $this->numeroCourriersService->getByUtilisateurId($utilisateurs->getId(),$isSend, date('Y'));
-        $numeroDepart = ($numeroCourrier[0] ?? null)?->getNumero() ?? 0;
-        $valiny = $this->repo->getNbCourrierByUser($utilisateurs,$isSend);
+        $numeroCourrier = $this->numeroCourriersService->getNumeroDepartActuel($utilisateur,$isSend, date('Y'));
+        $numeroDepart = $numeroCourrier->getNumero();
+        $valiny = $this->repo->getNbCourrierByUser($utilisateur,$isSend);
         
         return $valiny + $numeroDepart;
 

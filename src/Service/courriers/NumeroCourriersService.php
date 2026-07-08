@@ -2,7 +2,10 @@
 
 namespace App\Service\courriers;
 
+use App\Dto\courriers\NumeroDepartDto;
 use App\Dto\utils\ConditionCriteria;
+use App\Entity\courriers\NumeroCourriers;
+use App\Entity\utilisateurs\Utilisateurs;
 use App\Repository\courriers\NumeroCourriersRepository;
 use App\Service\utils\BaseService;
 use DateTimeImmutable;
@@ -24,12 +27,12 @@ class NumeroCourriersService extends BaseService
     /**
      * Génère une référence automatique au format JJMMAAAA/REFN
      */
-    public function getByUtilisateurId(int $utilisateurId,bool $isSend,int $annee): array
+    public function getByUtilisateur(Utilisateurs $utilisateur,bool $isSend,int $annee): array
     {
         $dateDebut = new DateTimeImmutable("$annee-01-01 00:00:00");
         $dateFin = new DateTimeImmutable("$annee-12-31 23:59:59");
          $conditions = [
-            new ConditionCriteria('utilisateur', $utilisateurId, '='),
+            new ConditionCriteria('utilisateur', $utilisateur->getId(), '='),
             new ConditionCriteria('isSend', $isSend, '='),
             new ConditionCriteria(
                 'createdAt',
@@ -38,6 +41,27 @@ class NumeroCourriersService extends BaseService
             )
         ];
         return $this->search($conditions);
+    }
+    public function getNumeroDepartActuel(Utilisateurs $utilisateur,bool $isSend,int $annee): NumeroCourriers
+    {
+        $numeroDepart = $this->getByUtilisateur($utilisateur, $isSend, $annee);
+        if (empty($numeroDepart)) {
+            $valiny = new NumeroCourriers();
+            $valiny->setNumero(0);
+            $valiny->setIsSend($isSend);
+            $valiny->setUtilisateur($utilisateur);
+            return $valiny;
+        }
+        return $numeroDepart[0];
+    }
+    public function saveDto(Utilisateurs $utilisateur,NumeroDepartDto $dto): NumeroCourriers
+    {
+        $entity = new NumeroCourriers();
+        $entity->setNumero($dto->getNumero());
+        $entity->setIsSend($dto->getIsSend());
+        $entity->setUtilisateur($utilisateur);
+        $this->save($entity);
+        return $entity;
     }
     
     

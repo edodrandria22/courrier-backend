@@ -97,18 +97,20 @@ message
 26/06/2026
         --creer une fonction pour retourner l'externe -- ok -- 40mn
 
-01/06/2026
+01/07/2026
     --modifier courrier avec une liste de tous les personnes -- a faire -- 90 mn
         --modifier api -- ok -- 30mn
         --modifier service -- ok -- 60mn
 
-07/06/2026
+07/07/2026
     --envoyer mail la referenceapres insertion nouveau courrier -- ok -- 30mn
     --seulement mail obligatoire pour le nouveau courrier -- ok -- 10mn
     -- traiter courrier -- ok -- 20mn
     -- numero depart courrier -- ok -- 30mn
-    
--- test et api pour numero depart --a faire --30 mn
+
+08/07/2026
+    --service pour inserer une nouvelle numero depart -- a faire -- 30mn
+    -- test et api pour numero depart --a faire --30 mn
 
 --seule le dernier message peut etre transferer
 --pagination utilisateurs -- a faire -- 60 mn
