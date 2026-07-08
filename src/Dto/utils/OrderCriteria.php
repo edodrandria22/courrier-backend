@@ -12,6 +12,7 @@ class OrderCriteria
         'dateDebut',
         'dateFin',
         'createdAt',
+        'dateMessage'
     ];
 
     public function __construct(

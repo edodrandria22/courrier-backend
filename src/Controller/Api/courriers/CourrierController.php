@@ -68,6 +68,7 @@ class CourrierController extends BaseApiController
             $limit = $_ENV['LIMIT_PAGINATIONS'] ?? 10;  
             $paginationCriteria = new PaginationCriteria($date, $limit);
             $orderCriteria = new OrderCriteria();
+            $orderCriteria->setField("dateMessage");
             $courriers = $this->courriersService->getAllByUserJson($user, $orderCriteria, $paginationCriteria,false,$isTraiterAt);
             
             return $this->jsonSuccess($courriers);
@@ -87,6 +88,7 @@ class CourrierController extends BaseApiController
             $limit = $_ENV['LIMIT_PAGINATIONS'] ?? 10; 
             $paginationCriteria = new PaginationCriteria($date, $limit);
             $orderCriteria = new OrderCriteria();
+            $orderCriteria->setField("dateMessage");
             $courriers = $this->courriersService->getAllByUserJson($user, $orderCriteria, $paginationCriteria,true);
             
             return $this->jsonSuccess($courriers);
