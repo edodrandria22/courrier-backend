@@ -28,7 +28,12 @@ class NumeroDepartsController extends BaseApiController
             $isSend = $request->query->get('isSend');
             $data = ['isSend' => $isSend];
             $this->validatorService->validateRequiredFields($data,['isSend']);
-            $numeroDepart = $this->numeroCourriersService->getNumeroDepartActuel($user, $isSend, date('Y'));
+            $isSendBool = match ($isSend) {
+                'true', '1', 'yes', 'on' => true,
+                'false', '0', 'no', 'off' => false,
+                default => throw new \Exception('Valeur isSend invalide'),
+            };
+            $numeroDepart = $this->numeroCourriersService->getNumeroDepartActuel($user, $isSendBool, date('Y'));
             
             $excludes = ["createdAt","deletedAt","id"];
             $data = $numeroDepart->toArray($excludes);

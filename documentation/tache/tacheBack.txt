@@ -109,8 +109,15 @@ message
     -- numero depart courrier -- ok -- 30mn
 
 08/07/2026
-    --service pour inserer une nouvelle numero depart -- a faire -- 30mn
-    -- test et api pour numero depart --a faire --30 mn
+    --service pour inserer une nouvelle numero depart -- ok -- 30mn
+    -- test et api pour numero depart --ok --30 mn
+    -- changer order critaria de la liste courrier obtenu --ok -- 30 mn
+
+10/07/2026
+    -- statistique pour chaque utilisateur -- a faire --60mn    
+        -- nombre de courrier recu , envoye , traiter et non traite
+        
+
 
 --seule le dernier message peut etre transferer
 --pagination utilisateurs -- a faire -- 60 mn

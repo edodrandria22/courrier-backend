@@ -4,6 +4,7 @@ namespace App\Service\courriers;
 
 use App\Dto\courriers\NumeroDepartDto;
 use App\Dto\utils\ConditionCriteria;
+use App\Dto\utils\OrderCriteria;
 use App\Entity\courriers\NumeroCourriers;
 use App\Entity\utilisateurs\Utilisateurs;
 use App\Repository\courriers\NumeroCourriersRepository;
@@ -40,12 +41,14 @@ class NumeroCourriersService extends BaseService
                 'BETWEEN'
             )
         ];
-        return $this->search($conditions);
+        return $this->search($conditions,new OrderCriteria("createdAt","desc"));
     }
     public function getNumeroDepartActuel(Utilisateurs $utilisateur,bool $isSend,int $annee): NumeroCourriers
     {
+ 
         $numeroDepart = $this->getByUtilisateur($utilisateur, $isSend, $annee);
         if (empty($numeroDepart)) {
+                  
             $valiny = new NumeroCourriers();
             $valiny->setNumero(0);
             $valiny->setIsSend($isSend);
