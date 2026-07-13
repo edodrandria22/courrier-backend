@@ -92,5 +92,13 @@ abstract class BaseService
     ): array {
         return $this->getRepository()->search($conditions, $orderCriteria, $pagination, $joins);
     }
+    public function aggregate(
+        string $function,
+        string $field,
+        array $conditions = [],
+        array $joins = []
+    ): mixed {
+        return $this->getRepository()->aggregate($function, $field, $conditions, $joins);
+    }
 
 }

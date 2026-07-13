@@ -172,6 +172,71 @@ class VueHistoriqueDetailsService extends BaseService
         ];
         return $this->search($conditions,new OrderCriteria('createdAt', 'desc'))[0] ?? null;
     }
+    public function getNbCourrierParUtilisateur(Utilisateurs $utilisateur,array $conditions = []): int{
+        $conditions = [
+            new ConditionCriteria('utilisateurId', $utilisateur->getId(), '='),
+            ...$conditions
+        ];
+        return $this->aggregate('count', 'historiqueId',$conditions);
+    }
+    public function getNbCourrierParUtilisateurEntreDates(Utilisateurs $utilisateur,\DateTimeInterface $dateDebut,\DateTimeInterface $dateFin,array $conditions): int{
+        $conditions = [
+            new ConditionCriteria('createdAt', $dateDebut, '>='),
+            new ConditionCriteria('createdAt', $dateFin, '<='),
+            ...$conditions
+        ];
+        return $this->getNbCourrierParUtilisateur($utilisateur, $conditions);
+    }
+
+    public function getNbCourrierIsSend(Utilisateurs $utilisateur,\DateTimeInterface $dateDebut,\DateTimeInterface $dateFin,bool $isSend = false): int{
+        $conditions = [
+          new ConditionCriteria('isSend', $isSend, '=')
+        ];
+        return $this->getNbCourrierParUtilisateurEntreDates($utilisateur, $dateDebut, $dateFin, $conditions);
+    }
+    public function getNbCourrierIsTraite(Utilisateurs $utilisateur,\DateTimeInterface $dateDebut,\DateTimeInterface $dateFin,bool $isTraite = false): int{
+        $conditions = [
+          new ConditionCriteria('isSend', false, '='),
+          new ConditionCriteria(
+                'isTraiterAt',
+                null,
+                $isTraite ? 'IS NOT NULL' : 'IS NULL'
+          )
+        ];
+        return $this->getNbCourrierParUtilisateurEntreDates($utilisateur, $dateDebut, $dateFin, $conditions);
+    }
+    public function getNbCourrierIsRead(Utilisateurs $utilisateur,\DateTimeInterface $dateDebut,\DateTimeInterface $dateFin,bool $isRead = false): int{
+        $conditions = [
+          new ConditionCriteria('isSend', false, '='),
+          new ConditionCriteria(
+                'isReadAt',
+                null,
+                $isRead ? 'IS NOT NULL' : 'IS NULL'
+          )
+        ];
+        return $this->getNbCourrierParUtilisateurEntreDates($utilisateur, $dateDebut, $dateFin, $conditions);
+    }
+    public function getStatistique(Utilisateurs $utilisateur,\DateTimeInterface $dateDebut,\DateTimeInterface $dateFin): array{
+        $data = [
+            'recu' => $this->getNbCourrierIsSend($utilisateur, $dateDebut, $dateFin, false),
+            'envoye' => $this->getNbCourrierIsSend($utilisateur, $dateDebut, $dateFin, true),
+            'traite' => $this->getNbCourrierIsTraite($utilisateur, $dateDebut, $dateFin, true),
+            'nonTraite' => $this->getNbCourrierIsTraite($utilisateur, $dateDebut, $dateFin, false),
+            'lu' => $this->getNbCourrierIsRead($utilisateur, $dateDebut, $dateFin, true),
+            'nonLu' => $this->getNbCourrierIsRead($utilisateur, $dateDebut, $dateFin, false),
+        ];
+        return $data;
+    }
+    public function getNbCourrierNonTraite(Utilisateurs $utilisateurs) : int
+    {
+        $conditions = [
+            new ConditionCriteria('isSend', false, '='),
+            new ConditionCriteria('isTraiterAt', null, 'IS NULL'),
+        ];
+        return $this->getNbCourrierParUtilisateur($utilisateurs, $conditions);
+    }
+
+
     
     
     

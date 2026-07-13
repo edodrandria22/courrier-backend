@@ -256,6 +256,40 @@ class CourrierController extends BaseApiController
             return $this->jsonError($e->getMessage(),  400);
         }
     }
+    #[Route('/statistique', name: 'api_statistique', methods: ['GET'])]
+    #[TokenRequired(['Utilisateur'])]
+    public function statistique(Request $request): JsonResponse
+    {
+        try {
+            $user = $this->getUserFromRequest($request);
+            $dateDebutParam = $request->query->get('dateDebut');
+            $dateFinParam = $request->query->get('dateFin');
+            $dateDebut = $dateDebutParam ? new DateTimeImmutable($dateDebutParam) : new DateTimeImmutable();
+            $dateFin = $dateFinParam ? new DateTimeImmutable($dateFinParam) : new DateTimeImmutable();
+            
+            $statistique = $this->courriersService->getStatistique($user, $dateDebut, $dateFin);
+            
+            return $this->jsonSuccess($statistique);
+        } catch (\Throwable $e) {
+            return $this->jsonError($e->getMessage(),  400);
+        }
+    }
+    #[Route('/nonTraite', name: 'api_nonTraite', methods: ['GET'])]
+    #[TokenRequired(['Utilisateur'])]
+    public function nonTraite(Request $request): JsonResponse
+    {
+        try {
+            $user = $this->getUserFromRequest($request);
+            $nonTraite = $this->courriersService->getNbCourrierNonTraite($user);
+            $data = [
+                'nonTraite' => $nonTraite
+            ];
+            return $this->jsonSuccess($data);
+        } catch (\Throwable $e) {
+            return $this->jsonError($e->getMessage(),  400);
+        }
+    }
+
     
 
 }

@@ -61,6 +61,22 @@ abstract class BaseRepository extends ServiceEntityRepository
 
         return $qb->getQuery()->getResult();
     }
+    public function aggregate(
+        string $function,
+        string $field,
+        array $conditions = [],
+        array $joins = []
+    ): mixed {
+        $qb = $this->createQueryBuilder('m');
+
+        $qb->select(sprintf('%s(m.%s)', strtoupper($function), $field));
+
+        $this->applyJoins($qb, $joins);
+        $this->applyConditions($qb, $conditions);
+        $this->applyDeletedAtFilter($qb);
+
+        return $qb->getQuery()->getSingleScalarResult();
+    }
 
     private function applyJoins(QueryBuilder $qb, array $joins): void
     {
@@ -144,7 +160,7 @@ abstract class BaseRepository extends ServiceEntityRepository
         }
     }
 
-    private function applyDeletedAtFilter( $qb): void
+    private function applyDeletedAtFilter(QueryBuilder $qb): void
     {
         $qb->andWhere('m.deletedAt IS NULL');
     }

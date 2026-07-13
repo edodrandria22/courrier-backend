@@ -113,12 +113,12 @@ message
     -- test et api pour numero depart --ok --30 mn
     -- changer order critaria de la liste courrier obtenu --ok -- 30 mn
 
-10/07/2026
-    -- statistique pour chaque utilisateur -- a faire --60mn    
-        -- nombre de courrier recu , envoye , traiter et non traite
-        
+13/07/2026
+    --generalisation repository aggregate pour les somme , moyenne et count -- ok -- 60mn
+    -- statistique pour chaque utilisateur -- ok --60mn    
+        -- nombre de courrier recu , envoye , traiter et non traite entre date
 
-
+--recherche courrier par nom , addresse email, ou telephone
 --seule le dernier message peut etre transferer
 --pagination utilisateurs -- a faire -- 60 mn
 --pagination pour les courriers et messages -- a faire -- 60 mn

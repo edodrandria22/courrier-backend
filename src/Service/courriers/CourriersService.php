@@ -15,7 +15,6 @@ use Doctrine\ORM\EntityManagerInterface;
 use App\Dto\courriers\CourriersDto;
 use App\Entity\courriers\DetailPersonnes;
 use App\Entity\courriers\VueHistoriqueDetails;
-use App\Service\mercure\MercureService;
 use App\Service\messages\HistoriquesService;
 use Exception;
 
@@ -27,7 +26,6 @@ class CourriersService extends BaseService
         EntityManagerInterface $entityManager,
         private readonly MailService $mailService,
         private readonly VueHistoriqueDetailsService $vueHistoriqueDetailsService,
-        private readonly MercureService $mercureService,
         private readonly HistoriquesService $historiquesService
     ) {
         parent::__construct($entityManager);
@@ -245,7 +243,25 @@ class CourriersService extends BaseService
             . "Voici le lien pour suivre votre courrier : http://localhost:3000/suivi";
         return $this->mailService->getHtmlMail($nom, $messageHtml);
     }
+    public function getStatistique(
+        Utilisateurs $utilisateur,
+        \DateTimeImmutable $dateDebut,
+        \DateTimeImmutable $dateFin
+    ): array {
+        $dateDebut = $dateDebut->setTime(0, 0, 0);
+        $dateFin = $dateFin->setTime(23, 59, 59);
 
+        return $this->vueHistoriqueDetailsService->getStatistique(
+            $utilisateur,
+            $dateDebut,
+            $dateFin
+        );
+    }
+    public function getNbCourrierNonTraite(Utilisateurs $utilisateurs) : int{
+        return $this->vueHistoriqueDetailsService->getNbCourrierNonTraite($utilisateurs);
+    }
+  
     
+  
     
 }
