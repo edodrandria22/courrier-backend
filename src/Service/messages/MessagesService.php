@@ -148,11 +148,11 @@ class MessagesService extends BaseService
             // $message->setExpediteur($expediteur);
             // $message->setCourrier($this->courriersService->cloneCourrier($courrier));
             $data = $message->toArray($excludes);
-            $vueCourriers = $this->vueHistoriqueDetailService->getByIdCourrier($message->getCourrier()->getId());
-            if(empty($vueCourriers)){
+            $vueCourriers = $this->vueHistoriqueDetailService->getByHistoriqueId($historiques[1]->getId());
+            if($vueCourriers == null){
              throw new Exception('Vue courrier non trouvée');
             }
-            $data['courrier']= $this->vueHistoriqueDetailService->tranformerUtilisateur($vueCourriers[0],$excludes);
+            $data['courrier']= $this->vueHistoriqueDetailService->tranformerUtilisateur($vueCourriers,$excludes);
             $this->mercureService->sendNotification("message",$data);
 
             $this->em->getConnection()->commit();
@@ -310,11 +310,11 @@ class MessagesService extends BaseService
             $this->save($nouveauMessage);
         
             $data = $nouveauMessage->toArray($excludes);
-            $vueCourriers = $this->vueHistoriqueDetailService->getByIdCourrier($nouveauMessage->getCourrier()->getId());
-            if(empty($vueCourriers)){
+            $vueCourriers = $this->vueHistoriqueDetailService->getByHistoriqueId($historiques[1]->getId());
+            if($vueCourriers == null){
                 throw new Exception('Vue courrier non trouvée');
             }
-            $data['courrier']= $this->vueHistoriqueDetailService->tranformerUtilisateur($vueCourriers[0],$excludes);
+            $data['courrier']= $this->vueHistoriqueDetailService->tranformerUtilisateur($vueCourriers,$excludes);
             $this->mercureService->sendNotification("message",$data);
 
             $this->sendNotificationMessage($message, $excludes);
