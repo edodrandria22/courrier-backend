@@ -120,7 +120,7 @@ message
     --numero courrier fausse lors de l'envoie -- a faire -- 30 mn
 
 15/07/2026
-    --recherche courrier par nom , addresse email, ou telephone -- a faire -- 60 mn
+    --recherche courrier par nom , addresse email, ou telephone -- ok -- 120 mn
 
 --seule le dernier message peut etre transferer
 --pagination utilisateurs -- a faire -- 60 mn

@@ -17,10 +17,6 @@ class VueHistoriqueDetailPersonnesRepository extends BaseRepository
     {
         parent::__construct($registry, VueHistoriqueDetailPersonnes::class);
     }
-    private function notEmpty(?string $value): bool
-    {
-        return $value !== null && trim($value) !== '';
-    }
     public function searchByDto(
         Utilisateurs $utilisateur,
         RechercheCourriersDto $dto,
