@@ -51,3 +51,20 @@ SELECT
         COALESCE(nom, '') || ' ' || COALESCE(prenom, '')
     ) AS nom_complet
 FROM utilisateurs;
+
+
+CREATE OR REPLACE VIEW vue_historique_detail_personnes AS
+SELECT
+    v.*,
+
+    -- dp.id AS detail_personne_id,
+    dp.name,
+    dp.prenom,
+    dp.email,
+    dp.telephone
+
+FROM vue_historique_details v
+
+LEFT JOIN detail_personnes dp
+    ON dp.courrier_id = v.id
+    AND dp.deleted_at IS NULL;

@@ -216,6 +216,7 @@ class CourrierController extends BaseApiController
             $limit = $_ENV['LIMIT_PAGINATIONS'] ?? 10;  
             $paginationCriteria = new PaginationCriteria($date, $limit);
             $orderCriteria = new OrderCriteria();
+            $orderCriteria->addField(["historiqueId"]);
             $result = $this->vueHistoriqueDetailsService->searchByDto($user, $dto, $orderCriteria, $paginationCriteria);
             $excludes = ['deletedAt','mdp'];
             $data = $this->vueHistoriqueDetailsService->transformerArrayUtilisateur($result, $excludes);

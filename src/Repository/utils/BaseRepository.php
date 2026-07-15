@@ -29,11 +29,23 @@ abstract class BaseRepository extends ServiceEntityRepository
 
     public function getAll(OrderCriteria $orderCriteria): array
     {
-        return $this->createQueryBuilder('b')
-            ->andWhere('b.deletedAt IS NULL')
-            ->orderBy('b.' . $orderCriteria->getField(), $orderCriteria->getDirection())
-            ->getQuery()
-            ->getResult();
+        $qb = $this->createQueryBuilder('b')
+            ->andWhere('b.deletedAt IS NULL');
+
+        foreach ($orderCriteria->getField() as $index => $field) {
+
+            if (!str_contains($field, '.')) {
+                $field = "b.{$field}";
+            }
+
+            if ($index === 0) {
+                $qb->orderBy($field, $orderCriteria->getDirection());
+            } else {
+                $qb->addOrderBy($field, $orderCriteria->getDirection());
+            }
+        }
+
+        return $qb->getQuery()->getResult();
     }
 
     /**
@@ -43,13 +55,16 @@ abstract class BaseRepository extends ServiceEntityRepository
      * @param OrderCriteria|null $order
      * @param PaginationCriteria|null $pagination
      * @param JoinCriteria[] $joins
+     * @param array $distinct
+     * 
      * @return array
      */
     public function search(
         array $conditions = [],
         ?OrderCriteria $order = null,
         ?PaginationCriteria $pagination = null,
-        array $joins = []
+        array $joins = [],
+        array $distinct = []
     ): array {
         $qb = $this->createQueryBuilder('m');
 
@@ -58,7 +73,7 @@ abstract class BaseRepository extends ServiceEntityRepository
         $this->applyDeletedAtFilter($qb);
         $this->applyOrder($qb, $order);
         $this->applyPagination($qb, $pagination);
-
+     
         return $qb->getQuery()->getResult();
     }
     public function aggregate(
@@ -167,8 +182,21 @@ abstract class BaseRepository extends ServiceEntityRepository
 
     private function applyOrder(QueryBuilder $qb, ?OrderCriteria $order): void
     {
-        if ($order) {
-            $qb->orderBy('m.' . $order->getField(), $order->getDirection());
+        if (!$order) {
+            return;
+        }
+
+        foreach ($order->getField() as $index => $field) {
+
+            if (!str_contains($field, '.')) {
+                $field = 'm.' . $field;
+            }
+
+            if ($index === 0) {
+                $qb->orderBy($field, $order->getDirection());
+            } else {
+                $qb->addOrderBy($field, $order->getDirection());
+            }
         }
     }
 

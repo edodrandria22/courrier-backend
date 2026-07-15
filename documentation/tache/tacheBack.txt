@@ -118,7 +118,10 @@ message
     -- statistique pour chaque utilisateur -- ok --60mn    
         -- nombre de courrier recu , envoye , traiter et non traite entre date
     --numero courrier fausse lors de l'envoie -- a faire -- 30 mn
---recherche courrier par nom , addresse email, ou telephone
+
+15/07/2026
+    --recherche courrier par nom , addresse email, ou telephone -- a faire -- 60 mn
+
 --seule le dernier message peut etre transferer
 --pagination utilisateurs -- a faire -- 60 mn
 --pagination pour les courriers et messages -- a faire -- 60 mn
