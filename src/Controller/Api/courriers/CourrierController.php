@@ -65,7 +65,8 @@ class CourrierController extends BaseApiController
                 default => null,
             };
             $date = $dateParam ? new DateTimeImmutable($dateParam) : new DateTimeImmutable();
-            $limit = $_ENV['LIMIT_PAGINATIONS'] ?? 10;  
+            $limitParam = $request->query->get('limit');
+            $limit = $limitParam ? (int)$limitParam : ($_ENV['LIMIT_PAGINATIONS'] ?? 10);
             $paginationCriteria = new PaginationCriteria($date, $limit);
             $orderCriteria = new OrderCriteria();
             $orderCriteria->setField("dateMessage");
@@ -85,7 +86,8 @@ class CourrierController extends BaseApiController
 
             $dateParam = $request->query->get('date');
             $date = $dateParam ? new DateTimeImmutable($dateParam) : new DateTimeImmutable();
-            $limit = $_ENV['LIMIT_PAGINATIONS'] ?? 10; 
+            $limitParam = $request->query->get('limit');
+            $limit = $limitParam ? (int)$limitParam : ($_ENV['LIMIT_PAGINATIONS'] ?? 10);
             $paginationCriteria = new PaginationCriteria($date, $limit);
             $orderCriteria = new OrderCriteria();
             $orderCriteria->setField("dateMessage");
@@ -159,7 +161,8 @@ class CourrierController extends BaseApiController
         try {
             $dateParam = $request->query->get('date');
             $date = $dateParam ? new DateTimeImmutable($dateParam) : new DateTimeImmutable();
-            $limit = $_ENV['LIMIT_PAGINATIONS'] ?? 10;  
+            $limitParam = $request->query->get('limit');
+            $limit = $limitParam ? (int)$limitParam : ($_ENV['LIMIT_PAGINATIONS'] ?? 10);  
             $paginationCriteria = new PaginationCriteria($date, $limit);
             $orderCriteria = new OrderCriteria();
             $messages = $this->messagesService->getMessagesByCourrier($id, $orderCriteria, $paginationCriteria);
@@ -213,7 +216,8 @@ class CourrierController extends BaseApiController
             );
             
             $date = $dto->date ?? new DateTimeImmutable();
-            $limit = $_ENV['LIMIT_PAGINATIONS'] ?? 10;  
+            $limitParam = $request->query->get('limit');
+            $limit = $limitParam ? (int)$limitParam : ($_ENV['LIMIT_PAGINATIONS'] ?? 10);
             $paginationCriteria = new PaginationCriteria($date, $limit);
             $orderCriteria = new OrderCriteria();
             $orderCriteria->addField(["historiqueId"]);

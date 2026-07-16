@@ -187,7 +187,8 @@ class UtilisateurController extends BaseApiController
             $jerena = $body['nomComplet'] ?? "";
             $dateParam = $body['date'] ?? null;
             $date = $dateParam ? new DateTimeImmutable($dateParam) : new DateTimeImmutable();
-            $limit = $_ENV['LIMIT_PAGINATIONS'] ?? 10; 
+            $limitParam = $request->query->get('limit');
+            $limit = $limitParam ? (int)$limitParam : ($_ENV['LIMIT_PAGINATIONS'] ?? 10); 
             $paginationCriteria = new PaginationCriteria($date, $limit);
             $orderCriteria = new OrderCriteria();
             $utlisateurs = $this->vueUtilisateursService->rechercheByNomPrenom($user, $jerena,$orderCriteria, $paginationCriteria);

@@ -121,8 +121,9 @@ message
 
 15/07/2026
     --recherche courrier par nom , addresse email, ou telephone -- ok -- 120 mn
-
---seule le dernier message peut etre transferer
---pagination utilisateurs -- a faire -- 60 mn
---pagination pour les courriers et messages -- a faire -- 60 mn
---gestion d'erreur -- a faire -- 60 mn
+    --seule le dernier message peut etre transferer -- ok -- 10 mn
+    --pagination utilisateurs -- ok -- 10 mn
+    
+16/07/2026
+    --pagination pour les courriers et messages -- ok -- 10 mn
+    --pagination utilisateur recherche -- ok --10mn

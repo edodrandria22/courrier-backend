@@ -267,6 +267,11 @@ class MessagesService extends BaseService
             throw new Exception("Seule le personne conserner peut partager son message.");
         }
     }
+    private function validerDernierMessage(Messages $message): void{
+        if ($message->getDateValidation() !== null) {
+            throw new Exception("Seule le dernier message peut être transferé.");
+        }
+    }
 
 
     // Transferer un message à un autre utilisateur 
@@ -283,6 +288,7 @@ class MessagesService extends BaseService
             // Validation du transfert
             $destinatairePrecedent = $message->getDestinataire();
             $this->validerTranfers($destinatairePrecedent, $utilisateur);
+            $this->validerDernierMessage($message);
 
             // Envoi du nouveau message
             $nouveauMessage = $this->envoyerMessage(
