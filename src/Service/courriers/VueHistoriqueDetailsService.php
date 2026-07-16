@@ -59,7 +59,7 @@ class VueHistoriqueDetailsService extends BaseService
     ): array {
         $conditions = [
             new ConditionCriteria('utilisateurId', $user->getId(), '='),
-            new ConditionCriteria('createdAt', $paginationCriteria->getValue(), '<'),
+            new ConditionCriteria('dateMessage', $paginationCriteria->getValue(), '<'),
             new ConditionCriteria('isSend', $isSend, '='),
         ];
 
