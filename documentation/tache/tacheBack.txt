@@ -127,3 +127,7 @@ message
 16/07/2026
     --pagination pour les courriers et messages -- ok -- 10 mn
     --pagination utilisateur recherche -- ok --10mn
+    --loading pour recherche utilisateur -- a faire -- 30 mn
+
+17/07/2026
+    --changer vueDetailService avec date message --ok -- 20mn

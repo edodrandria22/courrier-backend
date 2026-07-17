@@ -109,13 +109,13 @@ class VueHistoriqueDetailsService extends BaseService
             new ConditionCriteria('id', $id, '='),
             new ConditionCriteria('isSend', false, '='),
         ];
-        return $this->search($conditions,new OrderCriteria('createdAt', 'desc'));
+        return $this->search($conditions,new OrderCriteria('dateMessage', 'desc'));
     }
     public function getByHistoriqueId(int $historiqueId): ?VueHistoriqueDetails{
         $conditions = [
             new ConditionCriteria('historiqueId', $historiqueId, '='),
         ];
-        return $this->search($conditions,new OrderCriteria('createdAt', 'desc'))[0] ?? null;
+        return $this->search($conditions,new OrderCriteria('dateMessage', 'desc'))[0] ?? null;
     }
     public function getNbCourrierParUtilisateur(Utilisateurs $utilisateur,array $conditions = []): int{
         $conditions = [
@@ -126,8 +126,8 @@ class VueHistoriqueDetailsService extends BaseService
     }
     public function getNbCourrierParUtilisateurEntreDates(Utilisateurs $utilisateur,\DateTimeInterface $dateDebut,\DateTimeInterface $dateFin,array $conditions): int{
         $conditions = [
-            new ConditionCriteria('createdAt', $dateDebut, '>='),
-            new ConditionCriteria('createdAt', $dateFin, '<='),
+            new ConditionCriteria('dateMessage', $dateDebut, '>='),
+            new ConditionCriteria('dateMessage', $dateFin, '<='),
             ...$conditions
         ];
         return $this->getNbCourrierParUtilisateur($utilisateur, $conditions);
