@@ -56,13 +56,15 @@ class HistoriquesService extends BaseService
     private function updateHistorique(Utilisateurs $utilisateur, Courriers $courrier, bool $isSend,Messages $messages): Historiques
     {
         // Créer nouveau historique
-        $nbCourriers = $this->getNbCourrierByUser($utilisateur,$isSend) +1;
         $historique = new Historiques();
         $historique->setUtilisateur($utilisateur);
         $historique->setCourrier($courrier);
         $historique->setIsSend($isSend);
         $historique->setMessage($messages);
-        $historique->setNumero($nbCourriers);
+        if($isSend  == true){
+            $nbCourriers = $this->getNbCourrierByUser($utilisateur,$isSend) +1;
+            $historique->setNumero($nbCourriers);
+        }
         return $historique;
     }
     public function tranformerMessageEnHistorique(Messages $messages): array
@@ -85,7 +87,7 @@ class HistoriquesService extends BaseService
             $messages
         );
 
-        $historiqueExpditeur->setNumRef($historiqueDestinataire->getNumero());
+        // $historiqueExpditeur->setNumRef($historiqueDestinataire->getNumero());
         $historiqueExpditeur->setObservation($messages->getObservation());
 
         $historiqueDestinataire->setNumRef($historiqueExpditeur->getNumero());
@@ -95,17 +97,17 @@ class HistoriquesService extends BaseService
         
         return [$historiqueExpditeur, $historiqueDestinataire];
     }
-    public function getByMessageIdAndIsSend(Historiques $historiques): ?Historiques
+    public function getByMessageAndIsSend(Messages $message, bool $isSend): ?Historiques
     {
         $conditions = [
-            new ConditionCriteria('message', $historiques->getMessage()->getId(), '='),
-            new ConditionCriteria('isSend', !$historiques->getIsSend(), '='),
+            new ConditionCriteria('message', $message->getId(), '='),
+            new ConditionCriteria('isSend', $isSend, '='),
         ];
         return $this->search($conditions,new OrderCriteria('createdAt', 'desc'))[0] ?? null;
     }
-    public function verifierUtilisateur(Utilisateurs $utilisateur, Utilisateurs $utilisateurExpditeur){
+    public function verifierUtilisateur(Utilisateurs $utilisateur, Utilisateurs $utilisateurExpditeur,String $message){
         if($utilisateur->getId() !== $utilisateurExpditeur->getId()){
-            throw new \Exception("Vous n'êtes pas autorisé à modifier cette observation");
+            throw new \Exception("Vous n'êtes pas autorisé à ".$message);
         }
     }
     /**
@@ -118,7 +120,7 @@ class HistoriquesService extends BaseService
 
             $historique->setDateReception($dateReception);
 
-            $historiqueReception = $this->getByMessageIdAndIsSend($historique);
+            $historiqueReception = $this->getByMessageAndIsSend($historique->getMessage(),$historique->getIsSend());
 
             if ($historiqueReception !== null) {
                 $historiqueReception->setDateReception($dateReception);
@@ -137,7 +139,7 @@ class HistoriquesService extends BaseService
         try {
             $historique = $this->getVerifierById($idHistorique);
 
-            $this->verifierUtilisateur($utilisateur, $historique->getUtilisateur());
+            $this->verifierUtilisateur($utilisateur, $historique->getUtilisateur(), "modifier l'observation");
 
             $this->mettreAJourDateReception($historique);
 
@@ -155,6 +157,19 @@ class HistoriquesService extends BaseService
             throw $e;
         }
     }
+    public function modifierHistoriqueVoirMessage(Utilisateurs $utilisateur,Messages $message): array
+    {
+        $this->verifierUtilisateur($utilisateur, $message->getDestinataire(), "voir le message");
+        $numeroArrivee = $this->getNbCourrierByUser($utilisateur,false) +1;
+        $historiqueRecepteur = $this->getByMessageAndIsSend($message, false);
+        $historiqueRecepteur->setNumero($numeroArrivee);
+        $historiqueExpediteur = $this->getByMessageAndIsSend($message, true);
+        $historiqueExpediteur->setNumRef($numeroArrivee);
+        $this->save($historiqueRecepteur);
+        $this->save($historiqueExpediteur);
+        return [$historiqueExpediteur, $historiqueRecepteur];
+    }
+    
 
     
     

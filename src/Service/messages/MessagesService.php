@@ -140,7 +140,6 @@ class MessagesService extends BaseService
                 throw new Exception('Le message doit avoir au moins 2 historiques');
             }
             $message->setNumeroExpediteur($historiques[0]->getNumero());
-            $message->setNumeroDestinataire($historiques[1]->getNumero());
             $this->save($message);
             
             $excludes = [ 'deletedAt','observation'];
@@ -178,14 +177,24 @@ class MessagesService extends BaseService
 
     public function lireMessage(int $messageId,Utilisateurs $user): Messages
     {
-        $message = $this->getValidatedMessage($messageId);
-        if ($message->getDestinataire()->getId() !== $user->getId()) {
-            return $message;
+        $this->em->getConnection()->beginTransaction();
+        try {
+            $message = $this->getValidatedMessage($messageId);
+            if ($message->getDestinataire()->getId() !== $user->getId()) {
+                return $message;
+            }
+            $message->setIsReadAt(new DateTimeImmutable());
+            $historiques = $this->historiquesService->modifierHistoriqueVoirMessage($user, $message);
+            $excludes = ['deletedAt','observation'];
+            $message->setNumeroDestinataire($historiques[1]->getNumero());
+            $this->sendNotificationMessage($message, $excludes);
+            $this->em->getConnection()->commit();
+            return $this->save($message);
+        } catch (\Throwable $th) {
+            $this->em->getConnection()->rollBack();
+            throw $th;
         }
-        $message->setIsReadAt(new DateTimeImmutable());
-        $excludes = ['deletedAt','observation'];
-        $this->sendNotificationMessage($message, $excludes);
-        return $this->save($message);
+        
     }
 
     /**
@@ -312,7 +321,6 @@ class MessagesService extends BaseService
                 throw new Exception('Le message doit avoir au moins 2 historiques');
             }
             $nouveauMessage->setNumeroExpediteur($historiques[0]->getNumero());
-            $nouveauMessage->setNumeroDestinataire($historiques[1]->getNumero());
             $this->save($nouveauMessage);
         
             $data = $nouveauMessage->toArray($excludes);

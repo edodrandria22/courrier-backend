@@ -19,6 +19,7 @@ class HistoriquesRepository extends BaseRepository
             ->select('COUNT(c.id)')
             ->where('c.utilisateur = :utilisateur')
             ->andWhere('c.isSend = :isSend')
+            ->andWhere('c.numero is not null')
             ->andWhere('c.deletedAt is null' )
             ->setParameter('utilisateur', $utilisateurs)
             ->setParameter('isSend', $isSend)

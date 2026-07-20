@@ -131,3 +131,8 @@ message
 
 17/07/2026
     --changer vueDetailService avec date message --ok -- 20mn
+
+20/07/2026
+    --ajouter numero de reception lorsque on met vu -- ok -- 60mn
+    --ajouter filtre de recherche avec date reception entre -- a faire -- 30mn
+    --ajouter filtre de recherche avec date courrier entre -- a faire -- 30mn
