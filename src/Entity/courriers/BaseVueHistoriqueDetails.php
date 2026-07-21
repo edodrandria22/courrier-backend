@@ -41,8 +41,15 @@ abstract class BaseVueHistoriqueDetails extends BaseCourriers
     #[ORM\Column(type: "integer", nullable: true)]
     protected ?int $numero = null;
     
+    
     #[ORM\Column(type: "integer", nullable: true)]
     protected ?int $numRef = null;
+    
+    #[ORM\Column(type: "integer", nullable: true)]
+    protected ?int $numeroExpediteur = null;
+    
+    #[ORM\Column(type: "integer", nullable: true)]
+    protected ?int $numeroDestinataire = null;
 
     #[ORM\Column(type: Types::TEXT, nullable: true)]
     protected ?string $observation = null;
@@ -166,6 +173,29 @@ abstract class BaseVueHistoriqueDetails extends BaseCourriers
         $this->numRef = $numRef;
         return $this;
     }
+    
+    public function getNumeroExpediteur(): ?int
+    {
+        return $this->numeroExpediteur;
+    }
+
+    public function setNumeroExpediteur(?int $numeroExpediteur): self
+    {
+        $this->numeroExpediteur = $numeroExpediteur;
+        return $this;
+    }
+    
+    public function getNumeroDestinataire(): ?int
+    {
+        return $this->numeroDestinataire;
+    }
+
+    public function setNumeroDestinataire(?int $numeroDestinataire): self
+    {
+        $this->numeroDestinataire = $numeroDestinataire;
+        return $this;
+    }
+    
     public function getObservation(): ?string
     {
         return $this->observation;
