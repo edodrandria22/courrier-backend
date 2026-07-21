@@ -30,8 +30,27 @@ class RechercheCourriersDto
     #[Assert\Type(\DateTimeInterface::class)]
     public ?\DateTimeInterface $dateFin = null;
 
+    #[Assert\Type(\DateTimeInterface::class)]
+    public ?\DateTimeInterface $dateReceptionDebut = null;
+
+    #[Assert\Type(\DateTimeInterface::class)]
+    public ?\DateTimeInterface $dateReceptionFin = null;
+
+     #[Assert\Type(\DateTimeInterface::class)]
+    public ?\DateTimeInterface $dateMessageDebut = null;
+
+    #[Assert\Type(\DateTimeInterface::class)]
+    public ?\DateTimeInterface $dateMessageFin = null;
+
     #[Assert\Type("integer")]
     public ?int $numero = null;
+
+    #[Assert\Type("integer")]
+    public ?int $numeroExpediteur = null;
+
+    #[Assert\Type("integer")]
+    public ?int $numeroDestinataire = null;
+
 
     #[Assert\Choice(choices: ["en_cours", "finalise"])]
     public ?string $statut = null;

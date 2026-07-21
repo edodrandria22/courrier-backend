@@ -134,5 +134,9 @@ message
 
 20/07/2026
     --ajouter numero de reception lorsque on met vu -- ok -- 60mn
+
+21/07/2026
+    --ajouter filtre de recherche avec date courrier entre -- ok -- 30mn
     --ajouter filtre de recherche avec date reception entre -- a faire -- 30mn
-    --ajouter filtre de recherche avec date courrier entre -- a faire -- 30mn
+    --ajouter filtre de recherche avec date message entre -- a faire -- 30mn
+    

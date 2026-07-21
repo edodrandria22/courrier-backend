@@ -69,11 +69,18 @@ class VueHistoriqueDetailPersonnesService extends BaseService
         if ($this->notEmpty($dto->numero)) {
             $conditions[] = new ConditionCriteria('numero', $dto->numero, '=');
         }
+        if ($this->notEmpty($dto->numeroExpediteur)) {
+            $conditions[] = new ConditionCriteria('numeroExpediteur', $dto->numeroExpediteur, '=');
+        }
+        if ($this->notEmpty($dto->numeroDestinataire)) {
+            $conditions[] = new ConditionCriteria('numeroDestinataire', $dto->numeroDestinataire, '=');
+        }
+        
         if ($dto->isConfidentiel !== null) {
             $conditions[] = new ConditionCriteria('isConfidentiel', $dto->isConfidentiel, '=');
         }
 
-        // Date BETWEEN
+        // Date courrier BETWEEN
         if ($dto->dateDebut && $dto->dateFin) {
             $conditions[] = new ConditionCriteria(
                 'createdAt',
@@ -84,6 +91,32 @@ class VueHistoriqueDetailPersonnesService extends BaseService
             $conditions[] = new ConditionCriteria('createdAt', $dto->dateDebut, '>=');
         } elseif ($dto->dateFin) {
             $conditions[] = new ConditionCriteria('createdAt', $dto->dateFin, '<=');
+        }
+
+        // Date reception BETWEEN
+        if ($dto->dateReceptionDebut && $dto->dateReceptionFin) {
+            $conditions[] = new ConditionCriteria(
+                'isReadAt',
+                [$dto->dateReceptionDebut, $dto->dateReceptionFin],
+                'BETWEEN'
+            );
+        } elseif ($dto->dateReceptionDebut) {
+            $conditions[] = new ConditionCriteria('isReadAt', $dto->dateReceptionDebut, '>=');
+        } elseif ($dto->dateReceptionFin) {
+            $conditions[] = new ConditionCriteria('isReadAt', $dto->dateReceptionFin, '<=');
+        }
+
+        // Date message BETWEEN
+        if ($dto->dateMessageDebut && $dto->dateMessageFin) {
+            $conditions[] = new ConditionCriteria(
+                'dateMessage',
+                [$dto->dateMessageDebut, $dto->dateMessageFin],
+                'BETWEEN'
+            );
+        } elseif ($dto->dateMessageDebut) {
+            $conditions[] = new ConditionCriteria('dateMessage', $dto->dateMessageDebut, '>=');
+        } elseif ($dto->dateMessageFin) {
+            $conditions[] = new ConditionCriteria('dateMessage', $dto->dateMessageFin, '<=');
         }
 
         // Statut basé sur dateValidation
