@@ -34,7 +34,9 @@ SELECT
 
     m.is_read_at,
     h.date_reception,
-    m.is_traiter_at
+    m.is_traiter_at,
+    m.numero_expediteur,
+    m.numero_destinataire
 
 FROM Historiques h
 JOIN courriers c ON h.courrier_id = c.id
@@ -53,6 +55,7 @@ SELECT
 FROM utilisateurs;
 
 
+DROP VIEW IF EXISTS vue_historique_detail_personnes;
 CREATE OR REPLACE VIEW vue_historique_detail_personnes AS
 SELECT
     v.*,
