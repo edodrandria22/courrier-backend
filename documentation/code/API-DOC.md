@@ -101,7 +101,7 @@
 
 # Pour se loger
 
-**Url:** `POST /utilisateurs`
+**Url:** `POST /utilisateurs/login`
 
 **Header:** `Content-Type: application/json`
 

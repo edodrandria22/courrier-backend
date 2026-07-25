@@ -137,7 +137,8 @@ abstract class BaseCourriers extends BaseSansId
         $data = parent::toArray($exclude);
 
         // $data['createur'] = $this->getCreateur()?->toArray($exclude);
-        $data['cloturePar'] = $this->getCloturePar()?->toArray($exclude);
+        $excludeUtilisateur = [...$exclude, 'role', 'mdp','idRole','adresse','createdAt','id'];
+        $data['cloturePar'] = $this->getCloturePar()?->toArray($excludeUtilisateur);
         $data['statut'] = $this->getDateValidation() !== null ? 'finalise' : 'en_cours';
 
         return $data;

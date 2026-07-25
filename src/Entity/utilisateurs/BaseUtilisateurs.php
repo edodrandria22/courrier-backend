@@ -104,6 +104,8 @@ abstract class BaseUtilisateurs extends BaseEntite
         if (!in_array('idRole', $exclude, true)) {
             $data['idRole'] = $this->getRole() ? $this->getRole()->getId() : null;
         }
+        $data['nom'] = $this->getNom();
+        $data['prenom'] = $this->getPrenom();
 
         return $data;
     }

@@ -157,6 +157,9 @@ class CourriersService extends BaseService
     }
     public function getAllByUserJson(Utilisateurs $user,OrderCriteria $orderCriteria,PaginationCriteria $paginationCriteria,bool $isSend,?bool $isTraiterAt = null): array
     {
+        if ($isTraiterAt) {
+            $orderCriteria= new OrderCriteria('isTraiterAt','DESC');
+        }
         $exclude = ['deletedAt','utilisateurId','destinataireId','expediteurId'];
         $historique = $this->getAllByUser($user, $orderCriteria, $paginationCriteria, $isSend, $isTraiterAt);
         return $this->vueHistoriqueDetailsService->transformerArrayUtilisateur($historique, $exclude);

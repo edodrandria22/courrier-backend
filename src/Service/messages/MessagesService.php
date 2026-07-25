@@ -391,7 +391,9 @@ class MessagesService extends BaseService
         {
             throw new Exception("Le message du courrierId $courrierId n'existe pas.");
         }
-        $dernierMessage->setIsReadAt($date);
+        if ($dernierMessage->getIsReadAt() === null) {
+            $dernierMessage->setIsReadAt($date);
+        }
         $dernierMessage->setIsTraiterAt($date);
         return $this->save($dernierMessage);
         
