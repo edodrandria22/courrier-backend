@@ -43,4 +43,12 @@ class ValidationService
             throw new InvalidArgumentException("Champs requis manquants : [" . implode(', ', $missingFields) . "]");
         }
     }
+    public function toNullableBool(mixed $value): ?bool
+    {
+        return match (strtolower((string) $value)) {
+            'true', '1', 'yes', 'on' => true,
+            'false', '0', 'no', 'off' => false,
+            default => null,
+        };
+    }
 }

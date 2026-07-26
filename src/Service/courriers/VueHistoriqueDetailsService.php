@@ -55,7 +55,8 @@ class VueHistoriqueDetailsService extends BaseService
         OrderCriteria $orderCriteria,
         PaginationCriteria $paginationCriteria,
         bool $isSend,
-        ?bool $isTraiterAt = null
+        ?bool $isTraiterAt = null,
+        ?bool $isRecu = null
     ): array {
         $conditions = [
             new ConditionCriteria('utilisateurId', $user->getId(), '='),
@@ -68,6 +69,13 @@ class VueHistoriqueDetailsService extends BaseService
                 'isTraiterAt',
                 null,
                 $isTraiterAt ? 'IS NOT NULL' : 'IS NULL'
+            );
+        }
+        if ($isRecu !== null) {
+            $conditions[] = new ConditionCriteria(
+                'isReadAt',
+                null,
+                $isRecu ? 'IS NOT NULL' : 'IS NULL'
             );
         }
 
@@ -166,19 +174,28 @@ class VueHistoriqueDetailsService extends BaseService
             'recu' => $this->getNbCourrierIsSend($utilisateur, $dateDebut, $dateFin, false),
             'envoye' => $this->getNbCourrierIsSend($utilisateur, $dateDebut, $dateFin, true),
             'traite' => $this->getNbCourrierIsTraite($utilisateur, $dateDebut, $dateFin, true),
-            'nonTraite' => $this->getNbCourrierIsTraite($utilisateur, $dateDebut, $dateFin, false),
+            'nonTraite' => $this->getNbCourrierIsRead($utilisateur, $dateDebut, $dateFin, false),
             'lu' => $this->getNbCourrierIsRead($utilisateur, $dateDebut, $dateFin, true),
             'nonLu' => $this->getNbCourrierIsRead($utilisateur, $dateDebut, $dateFin, false),
         ];
         return $data;
     }
-    public function getNbCourrierNonTraite(Utilisateurs $utilisateurs) : int
+    public function getNbCourrierIsReadAll(Utilisateurs $utilisateurs,bool $isRead) : int
     {
         $conditions = [
             new ConditionCriteria('isSend', false, '='),
             new ConditionCriteria('isTraiterAt', null, 'IS NULL'),
+            new ConditionCriteria('isReadAt',null,$isRead ? 'IS NOT NULL' : 'IS NULL')
         ];
         return $this->getNbCourrierParUtilisateur($utilisateurs, $conditions);
+    }
+    public function getNbCourrierNonTraite(Utilisateurs $utilisateurs) : int
+    {
+        return $this->getNbCourrierIsReadAll($utilisateurs, true);
+    }
+    public function getNbCourrierLu(Utilisateurs $utilisateurs) : int
+    {
+        return $this->getNbCourrierIsReadAll($utilisateurs, false);
     }
 
 

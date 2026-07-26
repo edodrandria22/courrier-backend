@@ -20,7 +20,7 @@ class UtilisateursDto
     #[Assert\NotBlank(message: "Le nom est obligatoire.")]
     public ?string $nom = null;
 
-    #[Assert\NotBlank(message: "Le prénom est obligatoire.")]
+    // #[Assert\NotBlank(message: "Le prénom est obligatoire.")]
     public ?string $prenom = null;
 
     #[Assert\Length(max: 255)]

@@ -150,18 +150,18 @@ class CourriersService extends BaseService
     {
         return $this->repo->getAllCourierDisponible($utilisateurs);
     }
-    public function getAllByUser(Utilisateurs $user,OrderCriteria $orderCriteria,PaginationCriteria $paginationCriteria,bool $isSend, ?bool $isTraiterAt = null): array
+    public function getAllByUser(Utilisateurs $user,OrderCriteria $orderCriteria,PaginationCriteria $paginationCriteria,bool $isSend, ?bool $isTraiterAt = null,?bool $isRecu = null): array
     {
-        $result = $this->vueHistoriqueDetailsService->getHistoriques($user, $orderCriteria,$paginationCriteria,$isSend,$isTraiterAt);
+        $result = $this->vueHistoriqueDetailsService->getHistoriques($user, $orderCriteria,$paginationCriteria,$isSend,$isTraiterAt,$isRecu);
         return $result;
     }
-    public function getAllByUserJson(Utilisateurs $user,OrderCriteria $orderCriteria,PaginationCriteria $paginationCriteria,bool $isSend,?bool $isTraiterAt = null): array
+    public function getAllByUserJson(Utilisateurs $user,OrderCriteria $orderCriteria,PaginationCriteria $paginationCriteria,bool $isSend,?bool $isTraiterAt = null,?bool $isRecu = null): array
     {
         if ($isTraiterAt) {
             $orderCriteria= new OrderCriteria('isTraiterAt','DESC');
         }
         $exclude = ['deletedAt','utilisateurId','destinataireId','expediteurId'];
-        $historique = $this->getAllByUser($user, $orderCriteria, $paginationCriteria, $isSend, $isTraiterAt);
+        $historique = $this->getAllByUser($user, $orderCriteria, $paginationCriteria, $isSend, $isTraiterAt, $isRecu);
         return $this->vueHistoriqueDetailsService->transformerArrayUtilisateur($historique, $exclude);
     }
 
@@ -262,6 +262,9 @@ class CourriersService extends BaseService
     }
     public function getNbCourrierNonTraite(Utilisateurs $utilisateurs) : int{
         return $this->vueHistoriqueDetailsService->getNbCourrierNonTraite($utilisateurs);
+    }
+    public function getNbCourrierLu(Utilisateurs $utilisateurs) : int{
+        return $this->vueHistoriqueDetailsService->getNbCourrierLu($utilisateurs);
     }
   
     

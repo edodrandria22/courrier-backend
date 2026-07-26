@@ -58,19 +58,18 @@ class CourrierController extends BaseApiController
 
             $dateParam = $request->query->get('date');
             $value = $request->query->get('isTraiterAt');
+            $valueRecu = $request->query->get('isRecu');
 
-            $isTraiterAt = match ($value) {
-                'true', '1', 'yes', 'on' => true,
-                'false', '0', 'no', 'off' => false,
-                default => null,
-            };
+            $isTraiterAt = $this->validatorService->toNullableBool($value);
+            
+            $isRecu = $this->validatorService->toNullableBool($valueRecu);
             $date = $dateParam ? new DateTimeImmutable($dateParam) : new DateTimeImmutable();
             $limitParam = $request->query->get('limit');
             $limit = $limitParam ? (int)$limitParam : ($_ENV['LIMIT_PAGINATIONS'] ?? 10);
             $paginationCriteria = new PaginationCriteria($date, $limit);
             $orderCriteria = new OrderCriteria();
             $orderCriteria->setField("dateMessage");
-            $courriers = $this->courriersService->getAllByUserJson($user, $orderCriteria, $paginationCriteria,false,$isTraiterAt);
+            $courriers = $this->courriersService->getAllByUserJson($user, $orderCriteria, $paginationCriteria,false,$isTraiterAt,$isRecu);
             
             return $this->jsonSuccess($courriers);
         } catch (\Throwable $e) {
@@ -286,8 +285,10 @@ class CourrierController extends BaseApiController
         try {
             $user = $this->getUserFromRequest($request);
             $nonTraite = $this->courriersService->getNbCourrierNonTraite($user);
+            $lu = $this->courriersService->getNbCourrierLu($user);
             $data = [
-                'nonTraite' => $nonTraite
+                'nonTraite' => $nonTraite,
+                'nonLu' => $lu,
             ];
             return $this->jsonSuccess($data);
         } catch (\Throwable $e) {
