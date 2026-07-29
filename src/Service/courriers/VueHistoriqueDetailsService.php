@@ -147,26 +147,15 @@ class VueHistoriqueDetailsService extends BaseService
         ];
         return $this->getNbCourrierParUtilisateurEntreDates($utilisateur, $dateDebut, $dateFin, $conditions);
     }
-    public function getNbCourrierIsTraite(Utilisateurs $utilisateur,\DateTimeInterface $dateDebut,\DateTimeInterface $dateFin,bool $isTraite = false): int{
+    public function getNbCourrierIsTraite(Utilisateurs $utilisateur,\DateTimeInterface $dateDebut,\DateTimeInterface $dateFin,?bool $isTraite = null , ?bool $isRead = null): int{
         $conditions = [
           new ConditionCriteria('isSend', false, '='),
-          new ConditionCriteria(
-                'isTraiterAt',
-                null,
-                $isTraite ? 'IS NOT NULL' : 'IS NULL'
-          )
         ];
-        return $this->getNbCourrierParUtilisateurEntreDates($utilisateur, $dateDebut, $dateFin, $conditions);
-    }
-    public function getNbCourrierIsRead(Utilisateurs $utilisateur,\DateTimeInterface $dateDebut,\DateTimeInterface $dateFin,bool $isRead = false): int{
-        $conditions = [
-          new ConditionCriteria('isSend', false, '='),
-          new ConditionCriteria(
-                'isReadAt',
-                null,
-                $isRead ? 'IS NOT NULL' : 'IS NULL'
-          )
-        ];
+        foreach (['isTraiterAt' => $isTraite, 'isReadAt' => $isRead] as $field => $value) {
+            if ($value !== null) {
+                $conditions[] = new ConditionCriteria($field, null, $value ? 'IS NOT NULL' : 'IS NULL');
+            }
+        }
         return $this->getNbCourrierParUtilisateurEntreDates($utilisateur, $dateDebut, $dateFin, $conditions);
     }
     public function getStatistique(Utilisateurs $utilisateur,\DateTimeInterface $dateDebut,\DateTimeInterface $dateFin): array{
@@ -174,9 +163,9 @@ class VueHistoriqueDetailsService extends BaseService
             'recu' => $this->getNbCourrierIsSend($utilisateur, $dateDebut, $dateFin, false),
             'envoye' => $this->getNbCourrierIsSend($utilisateur, $dateDebut, $dateFin, true),
             'traite' => $this->getNbCourrierIsTraite($utilisateur, $dateDebut, $dateFin, true),
-            'nonTraite' => $this->getNbCourrierIsRead($utilisateur, $dateDebut, $dateFin, false),
-            'lu' => $this->getNbCourrierIsRead($utilisateur, $dateDebut, $dateFin, true),
-            'nonLu' => $this->getNbCourrierIsRead($utilisateur, $dateDebut, $dateFin, false),
+            'nonTraite' => $this->getNbCourrierIsTraite($utilisateur, $dateDebut, $dateFin, false,true),
+            'lu' => $this->getNbCourrierIsTraite($utilisateur, $dateDebut, $dateFin, null,true),
+            'nonLu' => $this->getNbCourrierIsTraite($utilisateur, $dateDebut, $dateFin, false,false),
         ];
         return $data;
     }

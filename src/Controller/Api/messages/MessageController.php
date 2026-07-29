@@ -113,7 +113,7 @@ class MessageController extends BaseApiController
      */
     #[Route('/{id}', name: 'api_messages_show', methods: ['GET'], requirements: ['id' => '\d+'])]
     // #[TokenRequired]
-    public function show(int $id, Request $request): JsonResponse
+    public function show(int $id): JsonResponse
     {
         try {
             $message = $this->messagesService->getById($id);

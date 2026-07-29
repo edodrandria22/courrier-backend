@@ -188,14 +188,91 @@ class CourrierController extends BaseApiController
         }
     }
 
-     #[Route('/mercure', name: 'api_mercure', methods: ['POST'])]
+    #[Route('/mercure', name: 'api_mercure', methods: ['POST'])]
     public function send(HubInterface $hub): Response
     {
+
+        $data = [
+            'isReadAt' => null,
+            'numeroExpediteur' => 9,
+            'numeroDestinataire' => null,
+            'isTraiterAt' => null,
+            'dateValidation' => null,
+            'id' => 235,
+            'createdAt' => '2026-07-29 16:50:36',
+
+            'expediteur' => [
+                'email' => 'jean@gmail.com',
+                'nom' => 'JEAN',
+                'prenom' => 'Paul',
+                'adresse' => 'Analamahitsy Tanana',
+                'id' => 94,
+                'createdAt' => '2026-07-01 09:50:34',
+                'idRole' => 2,
+            ],
+
+            'destinataire' => [
+                'email' => 'njara@gmail.com',
+                'nom' => 'NJARA',
+                'prenom' => 'Hery',
+                'adresse' => 'By Pass',
+                'id' => 93,
+                'createdAt' => '2026-06-16 09:31:48',
+                'idRole' => 2,
+            ],
+
+            'fichiers' => [],
+
+            'courrier' => [
+                'historiqueId' => 490,
+                'id' => 114,
+                'utilisateurId' => 93,
+                'destinataireId' => 93,
+                'expediteurId' => 94,
+                'messageId' => 235,
+
+                'isReadAt' => null,
+                'isTraiterAt' => null,
+                'isSend' => false,
+
+                'numero' => null,
+                'numRef' => 9,
+                'numeroExpediteur' => 9,
+                'numeroDestinataire' => null,
+                'dateReception' => null,
+
+                'detailPersonnes' => [],
+
+                'reference' => '29072026/REF56',
+                'object' => 'dihdeuih',
+                'description' => '',
+                'dateMessage' => '2026-07-29 16:50:36',
+                'cloturePar' => null,
+
+                'isConfidentiel' => false,
+                'dateValidation' => null,
+                'createdAt' => '2026-07-29 16:50:25',
+                'statut' => 'en_cours',
+
+                'expediteur' => [
+                    'email' => 'jean@gmail.com',
+                    'nom' => 'JEAN',
+                    'prenom' => 'Paul',
+                    'adresse' => 'Analamahitsy Tanana',
+                ],
+
+                'destinataire' => [
+                    'email' => 'njara@gmail.com',
+                    'nom' => 'NJARA',
+                    'prenom' => 'Hery',
+                    'adresse' => 'By Pass',
+                ],
+            ],
+        ];
+
         $update = new Update(
             'message',
-            json_encode([
-                'message' => 'Bonjour depuis Symfony'
-            ])
+            json_encode($data, JSON_THROW_ON_ERROR)
         );
 
         $hub->publish($update);
