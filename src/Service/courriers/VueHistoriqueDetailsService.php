@@ -132,10 +132,10 @@ class VueHistoriqueDetailsService extends BaseService
         ];
         return $this->aggregate('count', 'historiqueId',$conditions);
     }
-    public function getNbCourrierParUtilisateurEntreDates(Utilisateurs $utilisateur,\DateTimeInterface $dateDebut,\DateTimeInterface $dateFin,array $conditions): int{
+    public function getNbCourrierParUtilisateurEntreDates(Utilisateurs $utilisateur,\DateTimeInterface $dateDebut,\DateTimeInterface $dateFin,array $conditions,String $fieldDate = "dateMessage"): int{
         $conditions = [
-            new ConditionCriteria('dateMessage', $dateDebut, '>='),
-            new ConditionCriteria('dateMessage', $dateFin, '<='),
+            new ConditionCriteria($fieldDate, $dateDebut, '>='),
+            new ConditionCriteria($fieldDate, $dateFin, '<='),
             ...$conditions
         ];
         return $this->getNbCourrierParUtilisateur($utilisateur, $conditions);
@@ -147,7 +147,7 @@ class VueHistoriqueDetailsService extends BaseService
         ];
         return $this->getNbCourrierParUtilisateurEntreDates($utilisateur, $dateDebut, $dateFin, $conditions);
     }
-    public function getNbCourrierIsTraite(Utilisateurs $utilisateur,\DateTimeInterface $dateDebut,\DateTimeInterface $dateFin,?bool $isTraite = null , ?bool $isRead = null): int{
+    public function getNbCourrierIsTraite(Utilisateurs $utilisateur,\DateTimeInterface $dateDebut,\DateTimeInterface $dateFin,?bool $isTraite = null , ?bool $isRead = null,String $fieldDate = "dateMessage"): int{
         $conditions = [
           new ConditionCriteria('isSend', false, '='),
         ];
@@ -156,15 +156,15 @@ class VueHistoriqueDetailsService extends BaseService
                 $conditions[] = new ConditionCriteria($field, null, $value ? 'IS NOT NULL' : 'IS NULL');
             }
         }
-        return $this->getNbCourrierParUtilisateurEntreDates($utilisateur, $dateDebut, $dateFin, $conditions);
+        return $this->getNbCourrierParUtilisateurEntreDates($utilisateur, $dateDebut, $dateFin, $conditions,$fieldDate);
     }
     public function getStatistique(Utilisateurs $utilisateur,\DateTimeInterface $dateDebut,\DateTimeInterface $dateFin): array{
         $data = [
             'recu' => $this->getNbCourrierIsSend($utilisateur, $dateDebut, $dateFin, false),
             'envoye' => $this->getNbCourrierIsSend($utilisateur, $dateDebut, $dateFin, true),
-            'traite' => $this->getNbCourrierIsTraite($utilisateur, $dateDebut, $dateFin, true),
-            'nonTraite' => $this->getNbCourrierIsTraite($utilisateur, $dateDebut, $dateFin, false,true),
-            'lu' => $this->getNbCourrierIsTraite($utilisateur, $dateDebut, $dateFin, null,true),
+            'traite' => $this->getNbCourrierIsTraite($utilisateur, $dateDebut, $dateFin, true,null,"isTraiterAt"),
+            'nonTraite' => $this->getNbCourrierIsTraite($utilisateur, $dateDebut, $dateFin, false,true,"isReadAt"),
+            'lu' => $this->getNbCourrierIsTraite($utilisateur, $dateDebut, $dateFin, null,true,"isReadAt"),
             'nonLu' => $this->getNbCourrierIsTraite($utilisateur, $dateDebut, $dateFin, false,false),
         ];
         return $data;
