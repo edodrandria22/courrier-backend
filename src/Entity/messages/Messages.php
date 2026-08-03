@@ -20,7 +20,7 @@ class Messages extends BaseValidation
     private ?Courriers $courrier = null;
 
     #[ORM\ManyToOne(targetEntity: Utilisateurs::class)]
-    #[ORM\JoinColumn(nullable: false)]
+    #[ORM\JoinColumn(nullable: true)]
     private ?Utilisateurs $expediteur = null;
 
     #[ORM\ManyToOne(targetEntity: Utilisateurs::class)]

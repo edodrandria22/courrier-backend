@@ -142,3 +142,7 @@ message
     
 29/07/2026
     --statistique non traite et traite chiffre fausse-- a faire -- 60mn
+
+03/08/2026
+    --modifier courrier service pour inserer de nouvelle transfere message a la creation -- ok -- 120mn
+    

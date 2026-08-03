@@ -12,6 +12,8 @@ class CourriersDto
     private ?string $description = null;
 
     private ?bool $isConfidentiel = false;
+     private ?string $observation = null;
+
 
     /**
      * @var DetailPersonnesDto[]
@@ -29,6 +31,10 @@ class CourriersDto
     public function getDescription(): ?string
     {
         return $this->description;
+    }
+    public function getObservation(): ?string
+    {
+        return $this->observation;
     }
 
     public function getIsConfidentiel(): ?bool

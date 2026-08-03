@@ -2,6 +2,7 @@
 
 namespace App\Service\messages;
 
+use App\Dto\courriers\CourriersDto;
 use App\Dto\utils\ConditionCriteria;
 use App\Dto\utils\JoinCriteria;
 use App\Dto\utils\OrderCriteria;
@@ -52,7 +53,7 @@ class MessagesService extends BaseService
         return $message;
     }
     private function createMessage(
-        Utilisateurs $expediteur,
+        ?Utilisateurs $expediteur,
         Utilisateurs $destinataire,
         Courriers $courrier,
         ?string $observation
@@ -113,33 +114,28 @@ class MessagesService extends BaseService
      * @param UploadedFile[] $files
      */
     public function envoyerNouvelleMessage(
-        int $expId,
-        int $destId,
-        int $courrierId,
+        Utilisateurs $utilisateur,
+        Courriers $courrier,
         ?string $observation = null,
         array $files = []
     ): Messages {
-        
-        $this->em->getConnection()->beginTransaction();
         try {
             // Récupération et validation des entités
-            $expediteur = $this->utilisateursService->getValidatedUser($expId, "Expéditeur");
-            $destinataire = $this->utilisateursService->getValidatedUser($destId, "Destinataire");
-            $courrier = $this->courriersService->getValidatedCourrier($courrierId);
-
+           
             if ($courrier->getDateMessage()) {
                 throw new Exception('Courrier deja fait en message');
             }
                 // Création et persistance du message
-            $message = $this->createMessage($expediteur, $destinataire, $courrier, $observation);
+            $message = $this->createMessage(null,$utilisateur, $courrier, $observation);
+            $date = new DateTimeImmutable();
+            $message->setIsReadAt($date);
             // Persistance des fichiers liés
             $this->fichiersService->persistFiles($files, $message);
-            $historiques= $this->historiquesService->tranformerMessageEnHistorique($message);
-
-            if (count($historiques) < 2) {
-                throw new Exception('Le message doit avoir au moins 2 historiques');
-            }
-            $message->setNumeroExpediteur($historiques[0]->getNumero());
+            $historique= $this->historiquesService->updateHistoriqueNouvelleMessage($utilisateur, $courrier, false, $message);
+            $this->save($historique);
+            
+            $message->setNumeroDestinataire($historique->getNumero());
+            
             $this->save($message);
             
             $excludes = [ 'deletedAt','observation'];
@@ -147,20 +143,30 @@ class MessagesService extends BaseService
             // $message->setExpediteur($expediteur);
             // $message->setCourrier($this->courriersService->cloneCourrier($courrier));
             $data = $message->toArray($excludes);
-            $vueCourriers = $this->vueHistoriqueDetailService->getByHistoriqueId($historiques[1]->getId());
+            $vueCourriers = $this->vueHistoriqueDetailService->getByHistoriqueId($historique->getId());
             if($vueCourriers == null){
              throw new Exception('Vue courrier non trouvée');
             }
             $data['courrier']= $this->vueHistoriqueDetailService->tranformerUtilisateur($vueCourriers,$excludes);
             $this->mercureService->sendNotification("message",$data);
 
-            $this->em->getConnection()->commit();
-
             return $message;
 
         } catch (\Throwable $e) {
-            $this->em->getConnection()->rollBack();
             throw $e;
+        }
+    }
+    public function saveCourrierDto(Utilisateurs $utilisateur,CourriersDto $dto, ?array $files = []): Messages
+    {
+        $this->em->getConnection()->beginTransaction();
+        try {
+            $courrier = $this->courriersService->saveDto($utilisateur, $dto);
+            $message = $this->envoyerNouvelleMessage($utilisateur,$courrier,$dto->getObservation(), $files);
+            $this->em->getConnection()->commit();
+            return $message;
+        } catch (\Throwable $th) {
+            $this->em->getConnection()->rollBack();
+            throw $th;
         }
     }
 
@@ -309,7 +315,7 @@ class MessagesService extends BaseService
             );
             // Mise à jour de la date de validation
             $date = new DateTimeImmutable();
-            $message->setIsReadAt($date);
+            $message->setIsReadAt($message->getIsReadAt() ? $message->getIsReadAt() : $date);
             $message->setIsTraiterAt($date);
             $message->setDateValidation($date);
             $this->save($message);
@@ -455,4 +461,5 @@ class MessagesService extends BaseService
         // Transfert du message
         return $this->recupererMessageExterne($message, $utisateurExterne, $nouveauDestinataire, $observation, $files);
     }
+    
 }

@@ -105,13 +105,14 @@ class CourrierController extends BaseApiController
     {
         try {
             $user = $this->getUserFromRequest($request);
-            $dto = $this->deserializeAndValidate(
+            $dto = $this->deserializeFormDataAndValidate(
                 $request,
                 CourriersDto::class
             );
-            $courrier = $this->courriersService->saveDto($user, $dto);
-            $excludes = ['deletedAt','dateValidation','cloturerPar'];
-            $data = $courrier->toArray($excludes);
+            $uploadedFiles = $request->files->get('fichiers', []);
+            $message = $this->messagesService->saveCourrierDto($user, $dto , files: is_array($uploadedFiles) ? $uploadedFiles : [$uploadedFiles]);
+            $excludes = ['deletedAt'];
+            $data = $message->toArray($excludes);
             return $this->jsonSuccess($data);
 
         } catch (\Throwable $e) {
@@ -269,10 +270,79 @@ class CourrierController extends BaseApiController
                 ],
             ],
         ];
+        $lectureMessage = [
+            'isReadAt' => '2026-07-30 10:01:57',
+            'numeroExpediteur' => 43,
+            'numeroDestinataire' => 11,
+            'isTraiterAt' => null,
+            'dateValidation' => null,
+            'id' => 217,
+            'createdAt' => '2026-07-25 09:12:18',
 
+            'expediteur' => [
+                'email' => 'njara@gmail.com',
+                'nom' => 'NJARA',
+                'prenom' => 'Hery',
+                'adresse' => 'By Pass',
+                'id' => 93,
+                'createdAt' => '2026-06-16 09:31:48',
+                'idRole' => 2,
+            ],
+
+            'destinataire' => [
+                'email' => 'randriadode@gmail.com',
+                'nom' => 'TEST',
+                'prenom' => 'Test',
+                'adresse' => 'Analamahitsy Tanana',
+                'id' => 91,
+                'createdAt' => '2026-06-11 11:53:25',
+                'idRole' => 2,
+            ],
+
+            'fichiers' => [],
+
+            'courrier' => [
+                'historiqueId' => 460,
+                'id' => 105,
+                'messageId' => 217,
+                'isReadAt' => '2026-07-30 10:01:57',
+                'isTraiterAt' => null,
+                'numero' => 11,
+                'numRef' => 43,
+                'numeroExpediteur' => 43,
+                'numeroDestinataire' => 10,
+                'observation' => null,
+                'dateReception' => null,
+                'detailPersonnes' => [],
+                'reference' => '25072026/REF4',
+                'object' => 'Demande de congé',
+                'description' => 'Test stat',
+                'cloturePar' => null,
+                'isConfidentiel' => false,
+                'dateValidation' => null,
+                'deletedAt' => null,
+                'statut' => 'en_cours',
+
+                'expediteur' => [
+                    'email' => 'njara@gmail.com',
+                    'nom' => 'NJARA',
+                    'prenom' => 'Hery',
+                    'adresse' => 'By Pass',
+                    'deletedAt' => null,
+                ],
+
+                'destinataire' => [
+                    'email' => 'randriadode@gmail.com',
+                    'nom' => 'TEST',
+                    'prenom' => 'Test',
+                    'adresse' => 'Analamahitsy Tanana',
+                    'deletedAt' => null,
+                ],
+            ],
+        ];
         $update = new Update(
-            'message',
-            json_encode($data, JSON_THROW_ON_ERROR)
+            'lectureMessage',
+            json_encode($lectureMessage, JSON_THROW_ON_ERROR)
         );
 
         $hub->publish($update);

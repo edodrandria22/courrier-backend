@@ -113,5 +113,39 @@ abstract class BaseApiController extends AbstractController
 
         return $dto;
     }
+    protected function deserializeFormDataAndValidate(Request $request, string $dtoClass)
+    {
+        $dto = new $dtoClass();
+
+        foreach ($request->request->all() as $property => $value) {
+            $setter = 'set' . ucfirst($property);
+
+            if (method_exists($dto, $setter)) {
+                $dto->$setter($value);
+            } elseif (property_exists($dto, $property)) {
+                $dto->$property = $value;
+            }
+        }
+
+        $errors = $this->validator->validate($dto);
+
+        if (count($errors) > 0) {
+            $messages = [];
+
+            foreach ($errors as $error) {
+                $messages[] = sprintf(
+                    '%s : %s',
+                    $error->getPropertyPath(),
+                    $error->getMessage()
+                );
+            }
+
+            throw new Exception(
+                'Erreur de validation : ' . implode(' | ', $messages)
+            );
+        }
+
+        return $dto;
+    }
 
 }

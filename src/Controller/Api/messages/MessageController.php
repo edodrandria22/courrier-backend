@@ -17,33 +17,33 @@ class MessageController extends BaseApiController
     ) {
         
     }
-    #[Route('', name: 'api_messages_envoyer', methods: ['POST'])]
-    #[TokenRequired]
-    public function envoyer(Request $request): JsonResponse
-    {
-        try {
-            $user = $this->getUserFromRequest($request);
+    // #[Route('', name: 'api_messages_envoyer', methods: ['POST'])]
+    // #[TokenRequired]
+    // public function envoyer(Request $request): JsonResponse
+    // {
+    //     try {
+    //         $user = $this->getUserFromRequest($request);
 
-            // On supporte maintenant multipart/form-data pour les fichiers
-            $data = $request->request->all();
-            $uploadedFiles = $request->files->get('fichiers', []);
+    //         // On supporte maintenant multipart/form-data pour les fichiers
+    //         $data = $request->request->all();
+    //         $uploadedFiles = $request->files->get('fichiers', []);
             
-            $this->validatorService->validateRequiredFields($data, ['destId', 'courrierId']);
+    //         $this->validatorService->validateRequiredFields($data, ['destId', 'courrierId']);
 
-            $message = $this->messagesService->envoyerNouvelleMessage(
-                expId: $user->getId(),
-                destId: (int) $data['destId'],
-                courrierId: (int) $data['courrierId'],
-                observation: $data['observation'] ?? null,
-                files: is_array($uploadedFiles) ? $uploadedFiles : [$uploadedFiles]
-            );
-            $excludes = ['createdAt', 'deletedAt'];
-            $data = $message->toArray($excludes);
-            return $this->jsonSuccess($data);
-        } catch (\Throwable $e) {
-            return $this->jsonError($e->getMessage(), $e->getCode() ?: 400);
-        }
-    }
+    //         $message = $this->messagesService->envoyerNouvelleMessage(
+    //             expId: $user->getId(),
+    //             destId: (int) $data['destId'],
+    //             courrierId: (int) $data['courrierId'],
+    //             observation: $data['observation'] ?? null,
+    //             files: is_array($uploadedFiles) ? $uploadedFiles : [$uploadedFiles]
+    //         );
+    //         $excludes = ['createdAt', 'deletedAt'];
+    //         $data = $message->toArray($excludes);
+    //         return $this->jsonSuccess($data);
+    //     } catch (\Throwable $e) {
+    //         return $this->jsonError($e->getMessage(), $e->getCode() ?: 400);
+    //     }
+    // }
     #[Route('/transferer', name: 'api_messages_transferer', methods: ['POST'])]
     #[TokenRequired]
     public function transferer(Request $request): JsonResponse

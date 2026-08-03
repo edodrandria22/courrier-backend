@@ -95,7 +95,12 @@ class VueHistoriqueDetailsService extends BaseService
         $valiny = $entite->toArray($exclude); 
         $excludeUtilisateur = array_merge($exclude, ['mdp','id','idRole','role','createdAt']);
 
-        $expediteur = $this->utilisateurService->cloneUtilisateur($this->utilisateurService->getById($entite->getExpediteurId() ?: 0));
+        $expediteur = null;
+        if ($entite->getExpediteurId() !== null) {
+            $expediteur = $this->utilisateurService->cloneUtilisateur(
+                $this->utilisateurService->getById($entite->getExpediteurId())
+            );
+        }
           
         $destinataire = $this->utilisateurService->cloneUtilisateur($this->utilisateurService->getById($entite->getDestinataireId() ?: 0));
             
