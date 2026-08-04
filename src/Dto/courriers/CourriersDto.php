@@ -12,7 +12,7 @@ class CourriersDto
     private ?string $description = null;
 
     private ?bool $isConfidentiel = false;
-     private ?string $observation = null;
+    private ?string $observation = null;
 
 
     /**
@@ -63,6 +63,11 @@ class CourriersDto
         $this->description = $description;
         return $this;
     }
+    public function setObservation(?string $observation): self
+    {
+        $this->observation = $observation;
+        return $this;
+    }
 
     public function setIsConfidentiel(?bool $isConfidentiel): self
     {
@@ -75,7 +80,26 @@ class CourriersDto
      */
     public function setDetailPersonnes(array $detailPersonnes): self
     {
-        $this->detailPersonnes = $detailPersonnes;
+        $this->detailPersonnes = array_map(function ($item) {
+            // Si c'est déjà une instance du DTO, on la garde
+            if ($item instanceof DetailPersonnesDto) {
+                return $item;
+            }
+
+            // Si c'est un tableau PHP, on instancie le DTO
+            if (is_array($item)) {
+                $dto = new DetailPersonnesDto();
+                if (isset($item['name'])) $dto->setName($item['name']);
+                if (isset($item['prenom'])) $dto->setPrenom($item['prenom']);
+                if (isset($item['email'])) $dto->setEmail($item['email']);
+                if (isset($item['telephone'])) $dto->setTelephone($item['telephone']);
+                
+                return $dto;
+            }
+
+            return $item;
+        }, $detailPersonnes);
+
         return $this;
     }
 

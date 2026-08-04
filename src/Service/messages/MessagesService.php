@@ -156,14 +156,14 @@ class MessagesService extends BaseService
             throw $e;
         }
     }
-    public function saveCourrierDto(Utilisateurs $utilisateur,CourriersDto $dto, ?array $files = []): Messages
+    public function saveCourrierDto(Utilisateurs $utilisateur,CourriersDto $dto, ?array $files = []): Courriers
     {
         $this->em->getConnection()->beginTransaction();
         try {
             $courrier = $this->courriersService->saveDto($utilisateur, $dto);
-            $message = $this->envoyerNouvelleMessage($utilisateur,$courrier,$dto->getObservation(), $files);
+            $this->envoyerNouvelleMessage($utilisateur,$courrier,$dto->getObservation(), $files);
             $this->em->getConnection()->commit();
-            return $message;
+            return $courrier;
         } catch (\Throwable $th) {
             $this->em->getConnection()->rollBack();
             throw $th;

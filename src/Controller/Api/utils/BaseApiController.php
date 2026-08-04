@@ -120,6 +120,22 @@ abstract class BaseApiController extends AbstractController
         foreach ($request->request->all() as $property => $value) {
             $setter = 'set' . ucfirst($property);
 
+            // 1. Si la valeur est une chaîne JSON (tableau ou objet), on la décode en tableau PHP
+            if (is_string($value) && (str_starts_with($value, '[') || str_starts_with($value, '{'))) {
+                $decoded = json_decode($value, true);
+                if (json_last_error() === JSON_ERROR_NONE) {
+                    $value = $decoded;
+                }
+            }
+
+            // 2. Conversion des chaînes "true"/"false" issues de FormData en vrais booléens
+            if ($value === 'true') {
+                $value = true;
+            } elseif ($value === 'false') {
+                $value = false;
+            }
+
+            // 3. Hydratation du DTO
             if (method_exists($dto, $setter)) {
                 $dto->$setter($value);
             } elseif (property_exists($dto, $property)) {
@@ -127,6 +143,7 @@ abstract class BaseApiController extends AbstractController
             }
         }
 
+        // Validation
         $errors = $this->validator->validate($dto);
 
         if (count($errors) > 0) {
