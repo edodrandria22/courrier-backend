@@ -36,7 +36,11 @@ class CourrierController extends BaseApiController
     {
         try {
             $user = $this->getUserFromRequest($request);
-            $courriers = $this->courriersService->getAllCourierDisponible($user);
+            $dateParam = $request->query->get('date');
+            $date = $dateParam ? new DateTimeImmutable($dateParam) : new DateTimeImmutable();
+            $limitParam = $request->query->get('limit');
+            $limit = $limitParam ? (int)$limitParam : ($_ENV['LIMIT_PAGINATIONS'] ?? 10);
+            $courriers = $this->courriersService->getAllCourrierByUserDate($user, $date, $limit);
             $excludes = ['deletedAt',"dateValidation","cloturePar"];
             $data = $this->courriersService->transformerArray($courriers, $excludes);
             

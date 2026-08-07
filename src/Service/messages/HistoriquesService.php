@@ -64,7 +64,7 @@ class HistoriquesService extends BaseService
         $historique->setObservation($messages->getObservation());
         if($isSend  == false){
             $nbCourriers = $this->getNbCourrierByUser($utilisateur,$isSend) +1;
-            $historique->setNumero($nbCourriers);
+            $historique->setNumero($nbCourriers);   
         }
         return $historique;
     }

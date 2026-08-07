@@ -145,4 +145,7 @@ message
 
 03/08/2026
     --modifier courrier service pour inserer de nouvelle transfere message a la creation -- ok -- 120mn
-    
+05/08/2026
+    --modifier getCourrier pour recuperer tous les courriers qu'il a creer -- a faire -- 30mn
+    --modifier update courrier -- a faire -- 60mn
+        --ne pas changer l'id et supprimer les anciennes detailPersonne

@@ -120,11 +120,12 @@ class CourriersService extends BaseService
         if($courrierAncien->getCreateur()->getId() != $utilisateur->getId()){
             throw new Exception("Seule l'auteur du courrier peut le modifier son courrier");
         }
-        if ($courrierAncien->getDateMessage()) {
-            throw new Exception("Le courrier a déjà été envoyé, vous ne pouvez plus le modifier");
-        }
+        // if ($courrierAncien->getDateMessage()) {
+        //     throw new Exception("Le courrier a déjà été envoyé, vous ne pouvez plus le modifier");
+        // }
         $object = $dto->getIsConfidentiel() ? "Pli fermé" : $dto->getObject();
         $courrier = new Courriers();
+        $courrier->setId($courrierAncien->getId());
         $courrier->setReference($courrierAncien->getReference());
         $courrier->setCreateur($courrierAncien->getCreateur());
         $courrier->setObject($object);
@@ -146,9 +147,18 @@ class CourriersService extends BaseService
     }
 
    
-    public function getAllCourierDisponible(Utilisateurs $utilisateurs): array
+    public function getAllCourierByUser(Utilisateurs $utilisateurs,OrderCriteria $orderCriteria,PaginationCriteria $paginationCriteria): array
     {
-        return $this->repo->getAllCourierDisponible($utilisateurs);
+        $conditions = [
+            new ConditionCriteria('createur', $utilisateurs->getId(), '='),
+            new ConditionCriteria($orderCriteria->getField()[0], $paginationCriteria->getValue(), '<'),
+
+        ];
+        return $this->search($conditions, $orderCriteria, $paginationCriteria);
+    }
+    public function getAllCourrierByUserDate(Utilisateurs $utilisateurs, \DateTimeInterface $date, int $limit = 10): array
+    {
+        return $this->getAllCourierByUser($utilisateurs, new OrderCriteria('dateCreation','DESC'), new PaginationCriteria($date,$limit));
     }
     public function getAllByUser(Utilisateurs $user,OrderCriteria $orderCriteria,PaginationCriteria $paginationCriteria,bool $isSend, ?bool $isTraiterAt = null,?bool $isRecu = null): array
     {
