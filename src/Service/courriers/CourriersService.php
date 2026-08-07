@@ -157,22 +157,23 @@ class CourriersService extends BaseService
     }
 
    
-    public function getAllCourierByUser(Utilisateurs $utilisateurs,OrderCriteria $orderCriteria,PaginationCriteria $paginationCriteria): array
+    public function getAllCourierByUser(Utilisateurs $utilisateurs,String $reference,OrderCriteria $orderCriteria,PaginationCriteria $paginationCriteria): array
     {
         $conditions = [
             new ConditionCriteria('createur', $utilisateurs->getId(), '='),
+            new ConditionCriteria('reference' , $reference, 'LIKE'),
             new ConditionCriteria($orderCriteria->getField()[0], $paginationCriteria->getValue(), '<'),
 
         ];
         return $this->search($conditions, $orderCriteria, $paginationCriteria);
     }
-    public function getAllCourrierByUserDate(Utilisateurs $utilisateurs, \DateTimeInterface $date, int $limit = 10): array
+    public function getAllCourrierByUserDate(Utilisateurs $utilisateurs,String $reference, \DateTimeInterface $date, int $limit = 10): array
     {
-        return $this->getAllCourierByUser($utilisateurs, new OrderCriteria('dateCreation','DESC'), new PaginationCriteria($date,$limit));
+        return $this->getAllCourierByUser($utilisateurs, $reference,new OrderCriteria('dateCreation','DESC'), new PaginationCriteria($date,$limit));
     }
-    public function getAllCourrierByUserDateJson(Utilisateurs $utilisateurs, \DateTimeInterface $date, int $limit = 10): array
+    public function getAllCourrierByUserDateJson(Utilisateurs $utilisateurs,String $reference ,\DateTimeInterface $date, int $limit = 10): array
     {
-        $courriers = $this->getAllCourrierByUserDate($utilisateurs, $date, $limit);
+        $courriers = $this->getAllCourrierByUserDate($utilisateurs,$reference, $date, $limit);
         $excludes = ['deletedAt',"dateValidation","cloturePar"];
         $data = [];
         for ($i = 0; $i < count($courriers); $i++) {

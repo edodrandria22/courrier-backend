@@ -149,3 +149,4 @@ message
     --modifier getCourrier pour recuperer tous les courriers qu'il a creer -- a faire -- 30mn
     --modifier update courrier -- a faire -- 60mn
         --ne pas changer l'id et supprimer les anciennes detailPersonne
+    --mettre reference pour le liste de courrier qu'il a creer -- a faire -- 10mn

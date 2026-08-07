@@ -37,10 +37,11 @@ class CourrierController extends BaseApiController
         try {
             $user = $this->getUserFromRequest($request);
             $dateParam = $request->query->get('date');
+            $referenceParam = $request->query->get('reference') ?? '';
             $date = $dateParam ? new DateTimeImmutable($dateParam) : new DateTimeImmutable();
             $limitParam = $request->query->get('limit');
             $limit = $limitParam ? (int)$limitParam : ($_ENV['LIMIT_PAGINATIONS'] ?? 10);
-            $data = $this->courriersService->getAllCourrierByUserDateJson($user, $date, $limit);
+            $data = $this->courriersService->getAllCourrierByUserDateJson($user, $referenceParam, $date, $limit);
             return $this->jsonSuccess($data);
         } catch (\Throwable $e) {
             return $this->jsonError($e->getMessage(),  400);
