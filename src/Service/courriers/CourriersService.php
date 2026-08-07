@@ -210,18 +210,18 @@ class CourriersService extends BaseService
         $clone->setCloturePar($courrierOriginal->getCloturePar()); // le clone n’est pas encore clôturé
         return $clone;
     }
-    public function genererDivClorer(DetailPersonnes $detailPersonne,Utilisateurs $utilisateur)
+    public function genererDivClorer(DetailPersonnes $detailPersonne,Utilisateurs $utilisateur,Courriers $courrier)
     {
         $nom = $detailPersonne->getName() . ' ' . $detailPersonne->getPrenom();
-        $messageHtml = "Votre courier est cloturer , vous devier allez a la porte ".$utilisateur->getAdresse();
+        $messageHtml = "Votre courier  de reference ".$courrier->getReference()." est cloturé, vous devrez aller à la porte ".$utilisateur->getAdresse();
         return $this->mailService->getHtmlMail($nom, $messageHtml);
     }
     public function envoyerMailCloturer(Courriers $courrier,Utilisateurs $utilisateur)
     {
-        $subject = "Cloturation du courrier chez Espa";
+        $subject = "Cloturation du courrier chez Mesupres";
         $listeDetailsPersonnes = $courrier->getDetailPersonnes();
         foreach ($listeDetailsPersonnes as $detailPersonne) {
-            $html = $this->genererDivClorer($detailPersonne, $utilisateur);
+            $html = $this->genererDivClorer($detailPersonne, $utilisateur, $courrier);
             $this->mailService->sendEmail($detailPersonne->getEmail(), $subject, $html);
         }
     }

@@ -183,10 +183,6 @@ class Messages extends BaseValidation
         $expediteur = $this->getExpediteur();
         $destinataire = $this->getDestinataire();
 
-        $expNom = $expediteur 
-            ? trim(($expediteur->getNom() ?? '') . ' ' . ($expediteur->getPrenom() ?? ''))
-            : 'Inconnu';
-
         $destNom = $destinataire 
             ? trim(($destinataire->getNom() ?? '') . ' ' . ($destinataire->getPrenom() ?? ''))
             : 'Inconnu';
@@ -194,12 +190,18 @@ class Messages extends BaseValidation
         // 👉 date du message (createdAt venant de BaseValidation)
         $date = $this->getCreatedAt()?->format('d/m/Y H:i') ?? 'Date inconnue';
 
+        $expediteurLine = '';
+        if ($expediteur) {
+            $expNom = trim(($expediteur->getNom() ?? '') . ' ' . ($expediteur->getPrenom() ?? ''));
+            $expediteurLine = "<strong>Expéditeur :</strong> {$expNom} <br>";
+        }
+
         return "
             <div style='padding:10px;border:1px solid #ddd;border-radius:8px;margin-bottom:10px'>
                 <div style='font-size:12px;color:#888;margin-bottom:5px'>
                     {$date}
                 </div>
-                <strong>Expéditeur :</strong> {$expNom} <br>
+                {$expediteurLine}
                 <strong>Destinataire :</strong> {$destNom}
             </div>
         ";
