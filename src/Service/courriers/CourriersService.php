@@ -26,6 +26,7 @@ class CourriersService extends BaseService
         EntityManagerInterface $entityManager,
         private readonly MailService $mailService,
         private readonly VueHistoriqueDetailsService $vueHistoriqueDetailsService,
+        private readonly DetailPersonnesService $detailPersonnesService,
         private readonly HistoriquesService $historiquesService
     ) {
         parent::__construct($entityManager);
@@ -102,43 +103,52 @@ class CourriersService extends BaseService
     }
     public function saveDto(Utilisateurs $utilisateur,CourriersDto $dto): Courriers
     {
-        $courrier = new Courriers();
-        $courrier->setReference($this->generateReference());
-        $object = $dto->getIsConfidentiel() ? "Pli fermé" : $dto->getObject();
-        $courrier->setObject($object);
-        $courrier->setIsConfidentiel($dto->getIsConfidentiel());
-        if(!$dto->getIsConfidentiel()){
-            $courrier->setDescription($dto->getDescription());
-        }
-        $this->genererListeDetailPersonne($dto, $courrier);
-        $courrier->setCreateur($utilisateur);
-        $result = $this->save($courrier);
-        return $result;
-    }
-    public function updateDto(Utilisateurs $utilisateur,Courriers $courrierAncien, CourriersDto $dto): Courriers
-    {
-        if($courrierAncien->getCreateur()->getId() != $utilisateur->getId()){
-            throw new Exception("Seule l'auteur du courrier peut le modifier son courrier");
-        }
-        // if ($courrierAncien->getDateMessage()) {
-        //     throw new Exception("Le courrier a déjà été envoyé, vous ne pouvez plus le modifier");
-        // }
-        $object = $dto->getIsConfidentiel() ? "Pli fermé" : $dto->getObject();
-        $courrier = new Courriers();
-        $courrier->setId($courrierAncien->getId());
-        $courrier->setReference($courrierAncien->getReference());
-        $courrier->setCreateur($courrierAncien->getCreateur());
-        $courrier->setObject($object);
-        $courrier->setIsConfidentiel($dto->getIsConfidentiel());
-        if(!$dto->getIsConfidentiel()){
-            $courrier->setDescription($dto->getDescription());
+        $this->em->getConnection()->beginTransaction();
+        try {
+            $courrier = new Courriers();
+            $courrier->setReference($this->generateReference());
+            $object = $dto->getIsConfidentiel() ? "Pli fermé" : $dto->getObject();
+            $courrier->setObject($object);
+            $courrier->setIsConfidentiel($dto->getIsConfidentiel());
+            if(!$dto->getIsConfidentiel()){
+                $courrier->setDescription($dto->getDescription());
+            }
+            $this->genererListeDetailPersonne($dto, $courrier);
+            $courrier->setCreateur($utilisateur);
+            $result = $this->save($courrier);
+            $this->em->getConnection()->commit();
+            return $result;
             
+        } catch (Exception $e) {
+            $this->em->getConnection()->rollBack();
+            throw $e;
         }
-        $this->genererListeDetailPersonne($dto, $courrier);
-
-        $this->delete($courrierAncien);
-        $result = $this->save($courrier);
-        return $result;
+    }
+    public function updateDto(Utilisateurs $utilisateur,Courriers $courrier, CourriersDto $dto): Courriers
+    {
+        $this->em->getConnection()->beginTransaction();
+        try {
+            if($courrier->getCreateur()->getId() != $utilisateur->getId()){
+                throw new Exception("Seule l'auteur du courrier peut le modifier son courrier");
+            }
+            // if ($courriers->getDateMessage()) {
+            //     throw new Exception("Le courrier a déjà été envoyé, vous ne pouvez plus le modifier");
+            // }
+            $object = $dto->getIsConfidentiel() ? "Pli fermé" : $dto->getObject();
+            $courrier->setObject($object);
+            $courrier->setIsConfidentiel($dto->getIsConfidentiel());
+            if(!$dto->getIsConfidentiel()){
+                $courrier->setDescription($dto->getDescription());
+            }
+            $this->detailPersonnesService->deteteDetailPersonne($courrier->getId());
+            $this->genererListeDetailPersonne($dto, $courrier);
+            $result = $this->save($courrier);
+            $this->em->getConnection()->commit();
+            return $result;
+        } catch (Exception $e) {
+            $this->em->getConnection()->rollBack();
+            throw $e;
+        }
     }
     public function updateDtoId(Utilisateurs $utilisateur,int $id, CourriersDto $dto): Courriers
     {
@@ -159,6 +169,18 @@ class CourriersService extends BaseService
     public function getAllCourrierByUserDate(Utilisateurs $utilisateurs, \DateTimeInterface $date, int $limit = 10): array
     {
         return $this->getAllCourierByUser($utilisateurs, new OrderCriteria('dateCreation','DESC'), new PaginationCriteria($date,$limit));
+    }
+    public function getAllCourrierByUserDateJson(Utilisateurs $utilisateurs, \DateTimeInterface $date, int $limit = 10): array
+    {
+        $courriers = $this->getAllCourrierByUserDate($utilisateurs, $date, $limit);
+        $excludes = ['deletedAt',"dateValidation","cloturePar"];
+        $data = [];
+        for ($i = 0; $i < count($courriers); $i++) {
+            $data[$i] = $courriers[$i]->toArray($excludes);
+            $detailPersonnes = $this->detailPersonnesService->getByCourrierId($courriers[$i]->getId());
+            $data[$i]['detailPersonnes'] = $this->detailPersonnesService->transformerArray($detailPersonnes, ['deletedAt','id']);
+        }
+        return $data;
     }
     public function getAllByUser(Utilisateurs $user,OrderCriteria $orderCriteria,PaginationCriteria $paginationCriteria,bool $isSend, ?bool $isTraiterAt = null,?bool $isRecu = null): array
     {

@@ -191,6 +191,8 @@ class VueHistoriqueDetailsService extends BaseService
     {
         return $this->getNbCourrierIsReadAll($utilisateurs, false);
     }
+    
+
 
 
     

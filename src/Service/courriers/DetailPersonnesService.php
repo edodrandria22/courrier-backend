@@ -31,7 +31,13 @@ class DetailPersonnesService extends BaseService
         ];
         return $this->search($conditions);
     }
-    
+    public function deteteDetailPersonne(int $courrierId): void
+    {
+        $detailPersonnes = $this->getByCourrierId($courrierId);
+        foreach ($detailPersonnes as $detailPersonne) {
+            $this->delete($detailPersonne);
+        }
+    }
     
     
 }

@@ -64,12 +64,4 @@ class Courriers extends BaseCourriers
         }
         return $this;
     }
-
-    public function toArray(array $exclude = []): array
-    {
-        $data = parent::toArray($exclude);
-        $excludePersonne = [...$exclude, 'id','createdAt'];
-        $data['detailPersonnes'] = $this->detailPersonnes->map(fn(DetailPersonnes $dp) => $dp->toArray($excludePersonne))->toArray();
-        return $data;
-    }
 }
