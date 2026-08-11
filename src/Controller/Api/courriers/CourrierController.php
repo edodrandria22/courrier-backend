@@ -372,6 +372,7 @@ class CourrierController extends BaseApiController
             $result = $this->vueHistoriqueDetailsService->searchByDto($user, $dto, $orderCriteria, $paginationCriteria);
             $excludes = ['deletedAt','mdp'];
             $data = $this->vueHistoriqueDetailsService->transformerArrayUtilisateur($result, $excludes);
+            // return $this->jsonSuccess(['count' => count($data), 'data' => $data]);
             return $this->jsonSuccess($data);
         } catch (\Throwable $e) {
             return $this->jsonError($e->getMessage(),  400);

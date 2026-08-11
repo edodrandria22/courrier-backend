@@ -9,7 +9,7 @@ use App\Dto\utils\JoinCriteria;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\QueryBuilder;
 use Doctrine\Persistence\ManagerRegistry;
-
+use Doctrine\ORM\Tools\Pagination\Paginator;
 abstract class BaseRepository extends ServiceEntityRepository
 {
     public function __construct(ManagerRegistry $registry, string $entityClass)
@@ -55,7 +55,6 @@ abstract class BaseRepository extends ServiceEntityRepository
      * @param OrderCriteria|null $order
      * @param PaginationCriteria|null $pagination
      * @param JoinCriteria[] $joins
-     * @param array $distinct
      * 
      * @return array
      */
@@ -63,8 +62,7 @@ abstract class BaseRepository extends ServiceEntityRepository
         array $conditions = [],
         ?OrderCriteria $order = null,
         ?PaginationCriteria $pagination = null,
-        array $joins = [],
-        array $distinct = []
+        array $joins = []
     ): array {
         $qb = $this->createQueryBuilder('m');
 
@@ -72,9 +70,16 @@ abstract class BaseRepository extends ServiceEntityRepository
         $this->applyConditions($qb, $conditions);
         $this->applyDeletedAtFilter($qb);
         $this->applyOrder($qb, $order);
+        $qb->select('DISTINCT m');
+        if (!$pagination) {
+            return $qb->getQuery()->getResult();
+        }
+
         $this->applyPagination($qb, $pagination);
-     
-        return $qb->getQuery()->getResult();
+
+        $paginator = new Paginator($qb->getQuery(), true);
+
+        return iterator_to_array($paginator->getIterator());
     }
     public function aggregate(
         string $function,

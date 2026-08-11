@@ -150,3 +150,5 @@ message
     --modifier update courrier -- a faire -- 60mn
         --ne pas changer l'id et supprimer les anciennes detailPersonne
     --mettre reference pour le liste de courrier qu'il a creer -- a faire -- 10mn
+11/08/2026
+    --recherche courrier doit etre 10 au lieu de 8 le nombre de courrier retourner -- a faire --60 mn

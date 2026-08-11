@@ -71,3 +71,13 @@ FROM vue_historique_details v
 LEFT JOIN detail_personnes dp
     ON dp.courrier_id = v.id
     AND dp.deleted_at IS NULL;
+
+
+SELECT historique_id, object
+FROM vue_historique_details
+WHERE utilisateur_id = 90
+AND is_send = false
+AND date_message between '2026-08-01' and '2026-08-08'
+ORDER BY date_message DESC;
+
+
