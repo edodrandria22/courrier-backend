@@ -144,7 +144,10 @@ message
     --statistique non traite et traite chiffre fausse-- a faire -- 60mn
 
 03/08/2026
-    --modifier courrier service pour inserer de nouvelle transfere message a la creation -- ok -- 120mn
+    --modifier courrier service pour inserer de nouvelle transfere message a la creation -- ok -- 120 mn
+        --installer git -- a faire -- 30 mn
+        --installer node -- a faire -- 30 mn
+        --installer php -- a faire -- 30 mn
 05/08/2026
     --modifier getCourrier pour recuperer tous les courriers qu'il a creer -- a faire -- 30mn
     --modifier update courrier -- a faire -- 60mn
@@ -152,3 +155,15 @@ message
     --mettre reference pour le liste de courrier qu'il a creer -- a faire -- 10mn
 11/08/2026
     --recherche courrier doit etre 10 au lieu de 8 le nombre de courrier retourner -- ok --60 mn
+
+18/08/2026
+    --installer les environnement du serveur putty -- ok --180 mn
+        --installer git -- ok -- 30 mn
+        --installer node -- ok -- 30 mn
+        --installer php -- ok -- 30 mn
+    --installer postgres -- ok -- 30 mn
+19/08/2026
+        --installer mercure -- ok -- 30 mn
+        --installer rabbitMQ -- ok -- 30mn
+
+        
