@@ -50,9 +50,6 @@ class MessagesService extends BaseService
     {
         $message = $this->getById($messageId);
         $this->validationService->throwIfNull($message, "Message avec l'ID $messageId introuvable.");
-        if($message->getIsReadAt() !== null) {
-            throw new Exception("Message déjà marqué comme lu");
-        }
         return $message;
     }
     private function createMessage(
@@ -189,6 +186,9 @@ class MessagesService extends BaseService
         $this->em->getConnection()->beginTransaction();
         try {
             $message = $this->getValidatedMessage($messageId);
+            if($message->getIsReadAt() !== null) {
+                throw new Exception("Message déjà marqué comme lu");
+            }
             if ($message->getDestinataire()->getId() !== $user->getId()) {
                 return $message;
             }
