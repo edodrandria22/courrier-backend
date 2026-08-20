@@ -166,4 +166,6 @@ message
         --installer mercure -- ok -- 30 mn
         --installer rabbitMQ -- ok -- 30mn
 
+quand une message est deja arrive on ne peut plus le marque comme arrive
+
         
