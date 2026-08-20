@@ -50,6 +50,9 @@ class MessagesService extends BaseService
     {
         $message = $this->getById($messageId);
         $this->validationService->throwIfNull($message, "Message avec l'ID $messageId introuvable.");
+        if($message->getIsReadAt() !== null) {
+            throw new Exception("Message déjà marqué comme lu");
+        }
         return $message;
     }
     private function createMessage(
