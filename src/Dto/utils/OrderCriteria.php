@@ -14,7 +14,8 @@ class OrderCriteria
         'createdAt',
         'dateMessage',
         'historiqueId',
-        'isTraiterAt'
+        'isTraiterAt',
+        'isReadAt'
     ];
 
     public function __construct(

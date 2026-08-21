@@ -128,3 +128,18 @@ sudo rabbitmqctl set_permissions -p / courrier ".*" ".*" ".*"
 
 #Pour donner une administration a l'interface web de rabbitMq
 sudo rabbitmqctl set_user_tags courrier administrator
+
+#Pour installer pm2 -- le lancement du serveur sans arret 
+sudo npm install -g pm2
+
+
+
+#Pour creer le serveur
+npm run build
+pm2 start npm --name "courrier-front" -- start -- --hostname 0.0.0.0
+pm2 start "php -S 0.0.0.0:8000 -t public" --name courrier-backend
+pm2 start "php bin/console messenger:consume async -vv" --name "symfony-messenger"
+
+#Pour lancer le serveur 
+pm2 start courrier-front
+pm2 start courrier-backend
