@@ -77,6 +77,9 @@ class VueHistoriqueDetailsService extends BaseService
                 null,
                 $isRecu ? 'IS NOT NULL' : 'IS NULL'
             );
+            $orderCriteria = $isRecu
+                ? new OrderCriteria('isReadAt', 'DESC')
+                : $orderCriteria;
         }
 
         $historiques = $this->search($conditions, $orderCriteria, $paginationCriteria);
