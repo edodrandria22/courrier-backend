@@ -10,7 +10,7 @@ class UtilisateursDto
     #[Assert\Email(message: "Format d'email invalide.")]
     public ?string $email = null;
 
-    #[Assert\NotBlank(message: "Le mot de passe est obligatoire.")]
+    // #[Assert\NotBlank(message: "Le mot de passe est obligatoire.")]
     #[Assert\Length(
         min: 6,
         minMessage: "Le mot de passe doit contenir au moins {{ limit }} caractères."
