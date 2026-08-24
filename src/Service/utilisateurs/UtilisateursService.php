@@ -52,44 +52,23 @@ class UtilisateursService extends BaseService
         return $user;
     }
     
-    public function updateUser(int $idUser, array $data): Utilisateurs
+    public function updateUser(int $idUser, UtilisateursDto $dto): Utilisateurs
     {
-        
         $user = $this->repository->find($idUser);
         if (!$user) {
             throw new Exception('Utilisateur non trouvé pour id=' . $idUser);
         }
-        if (isset($data['prenom'])) {
-            $prenom = $data['prenom'] ? mb_convert_case($data['prenom'], MB_CASE_TITLE, "UTF-8") : null;
-            $user->setPrenom($prenom);
-        }
 
-        if (isset($data['nom'])) {
-            $nom = mb_strtoupper($data['nom'], 'UTF-8');
-            $user->setNom($nom);
-        }
+        $user->setNom(mb_strtoupper($dto->getNom(), 'UTF-8'));
+        $user->setEmail($dto->getEmail());
 
-        if (isset($data['email'])) {
-            $user->setEmail($data['email']);
-        }
+        $dto->getPrenom() !== null && $user->setPrenom($dto->getPrenom() ? mb_convert_case($dto->getPrenom(), MB_CASE_TITLE, "UTF-8") : null);
+        $dto->getAdresse() !== null && $user->setAdresse($dto->getAdresse());
 
-        if (isset($data['adresse'])) {
-            $user->setAdresse($data['adresse']);
-        }
+        $role = $this->roleRepository->getById($dto->getIdRole()) ?? throw new \InvalidArgumentException('Rôle introuvable');
+        $user->setRole($role);
 
-        if (isset($data['id_role'])) {
-            $role = $this->roleRepository->getById($data['id_role']);
-            if (!$role) {
-                throw new \InvalidArgumentException('Rôle introuvable');
-            }
-            $user->setRole($role);
-        }
-
-
-        if (isset($data['mdp']) && !empty($data['mdp'])) {
-            $hashedPassword = password_hash($data['mdp'], PASSWORD_BCRYPT);
-            $user->setMdp($hashedPassword);
-        }
+        $dto->getMdp() && $user->setMdp(password_hash($dto->getMdp(), PASSWORD_BCRYPT));
 
         $this->em->flush();
 

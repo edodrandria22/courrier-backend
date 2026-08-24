@@ -92,16 +92,14 @@ class UtilisateurController extends BaseApiController
     #[TokenRequired(['Admin'])]
     public function updateUser(int $id, Request $request): JsonResponse
     {
-        $data = json_decode($request->getContent(), true);
-
-        if (!is_array($data)) {
-            return $this->jsonError('Données invalides ou JSON mal formé', 400);
-        }
-
         try {
-            $user = $this->utilisateurService->updateUser($id, $data);
+            $dto = $this->deserializeAndValidate(
+                $request,
+                UtilisateursDto::class
+            );
+            $user = $this->utilisateurService->updateUser($id, $dto);
             
-            $excludes = ['createdAt', 'deletedAt'];
+            $excludes = ['createdAt', 'deletedAt', 'mdp'];
             $data = $user->toArray($excludes);
             return $this->jsonSuccess($data);
             
