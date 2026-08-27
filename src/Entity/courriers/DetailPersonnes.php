@@ -11,7 +11,7 @@ class DetailPersonnes extends BaseEntite
     #[ORM\Column(type: "string", length: 255, nullable: true)]
     protected ?string $name = null;
 
-    #[ORM\Column(type: "string", length: 255, nullable: false)]
+    #[ORM\Column(type: "string", length: 255, nullable: true)]
     protected ?string $email = null;
 
     #[ORM\Column(type: "string", length: 255, nullable: true)]

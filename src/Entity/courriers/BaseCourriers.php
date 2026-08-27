@@ -13,7 +13,7 @@ abstract class BaseCourriers extends BaseSansId
     #[ORM\Column(type: "string", length: 100, nullable: false)]
     protected ?string $reference = null;
 
-    #[ORM\Column(type: "string", length: 255, nullable: false)]
+    #[ORM\Column(type: "text", nullable: false)]
     protected ?string $object = null;
 
     #[ORM\Column(type: "text", nullable: true)]
