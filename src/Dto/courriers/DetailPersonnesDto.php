@@ -12,7 +12,7 @@ class DetailPersonnesDto
     private ?string $prenom = null;
 
     #[Assert\Email(message: "L'adresse email n'est pas valide.")]
-    #[Assert\NotBlank(message: "L'adresse email est obligatoire.")]
+    // #[Assert\NotBlank(message: "L'adresse email est obligatoire.")]
     private ?string $email = null;
 
     private ?string $telephone = null;
