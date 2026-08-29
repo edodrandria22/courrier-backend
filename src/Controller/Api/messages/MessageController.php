@@ -62,6 +62,7 @@ class MessageController extends BaseApiController
                 expediteurId: $user->getId(),
                 nouveauDestinataireId: (int) $data['destId'],
                 observation: $data['observation'] ?? null,
+                bordureau: $data['bordureau'] ?? null,
                 files: is_array($uploadedFiles) ? $uploadedFiles : [$uploadedFiles]
             );
             $excludes = ['createdAt', 'deletedAt'];

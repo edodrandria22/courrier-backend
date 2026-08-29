@@ -56,13 +56,15 @@ class MessagesService extends BaseService
         ?Utilisateurs $expediteur,
         Utilisateurs $destinataire,
         Courriers $courrier,
-        ?string $observation
+        ?string $observation,
+        ?string $bordureau
     ): Messages {
         $message = new Messages();
         $message->setExpediteur($expediteur);
         $message->setDestinataire($destinataire);
         $message->setCourrier($courrier);
         $message->setObservation($observation);
+        $message->setBordureau($bordureau);
         if (!$courrier->getDateMessage()) {
             $courrier->setDateMessage(new DateTimeImmutable());
             $this->save($courrier);
@@ -84,6 +86,7 @@ class MessagesService extends BaseService
         int $destId,
         int $courrierId,
         ?string $observation = null,
+        ?string $bordureau = null,
         array $files = []
     ): Messages {
         $this->em->getConnection()->beginTransaction();
@@ -94,7 +97,7 @@ class MessagesService extends BaseService
             $destinataire = $this->utilisateursService->getValidatedUser($destId, "Destinataire");
             $courrier = $this->courriersService->getValidatedCourrier($courrierId);
                 // Création et persistance du message
-            $message = $this->createMessage($expediteur, $destinataire, $courrier, $observation);
+            $message = $this->createMessage($expediteur, $destinataire, $courrier, $observation,$bordureau);
             // Persistance des fichiers liés
             $this->fichiersService->persistFiles($files, $message);
             // $this->historiquesService->tranformerMessageEnHistorique($message);
@@ -117,6 +120,7 @@ class MessagesService extends BaseService
         Utilisateurs $utilisateur,
         Courriers $courrier,
         ?string $observation = null,
+        ?string $bordureau,
         array $files = []
     ): Messages {
         try {
@@ -126,7 +130,7 @@ class MessagesService extends BaseService
                 throw new Exception('Courrier deja fait en message');
             }
                 // Création et persistance du message
-            $message = $this->createMessage(null,$utilisateur, $courrier, $observation);
+            $message = $this->createMessage(null,$utilisateur, $courrier, $observation,$bordureau);
             $date = new DateTimeImmutable();
             $message->setIsReadAt($date);
             // Persistance des fichiers liés
@@ -298,6 +302,7 @@ class MessagesService extends BaseService
         Utilisateurs $utilisateur,
         Utilisateurs $nouveauDestinataire,
         ?string $observation = null,
+        ?string $bordureau = null,
         array $files = []
     ): Messages {
         $this->em->getConnection()->beginTransaction();
@@ -314,6 +319,7 @@ class MessagesService extends BaseService
                 $nouveauDestinataire->getId(),
                 $message->getCourrier()->getId(),
                 $observation,
+                $bordureau,
                 $files
             );
             // Mise à jour de la date de validation
@@ -355,6 +361,7 @@ class MessagesService extends BaseService
         int $expediteurId,
         int $nouveauDestinataireId,
         ?string $observation = null,
+        ?string $bordureau,
         array $files = []
     ): Messages {
         // Récupération et validation du message
@@ -365,7 +372,7 @@ class MessagesService extends BaseService
         $nouveauDestinataire = $this->utilisateursService->getValidatedUser($nouveauDestinataireId, 'Nouveau destinataire');
 
         // Transfert du message
-        return $this->transfererMessage($message, $expediteur, $nouveauDestinataire, $observation, $files);
+        return $this->transfererMessage($message, $expediteur, $nouveauDestinataire, $observation, $bordureau,$files);
     }
     public function envoyerEmailSuivre(string $reference)
     {
@@ -444,7 +451,7 @@ class MessagesService extends BaseService
     ): Messages {
         $expediteurPrecedent = $message->getExpediteur();
         $this->validerTranfers($expediteurPrecedent, $nouveauDestinataire);
-        return $this->transfererMessage($message, $utisateurExterne, $nouveauDestinataire, $observation, $files);
+        return $this->transfererMessage($message, $utisateurExterne, $nouveauDestinataire, $observation, null, $files);
 
     }
     public function recupererMessageExterneById(

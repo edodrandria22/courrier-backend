@@ -45,6 +45,10 @@ class Messages extends BaseValidation
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
     private ?\DateTimeInterface $isTraiterAt = null;
+    
+    #[ORM\Column(type: Types::TEXT, nullable: true)]
+    protected ?string $bordureau = null;
+
 
 
     public function __construct()
@@ -136,6 +140,18 @@ class Messages extends BaseValidation
         $this->observation = $observation;
         return $this;
     }
+    public function getBordureau(): ?string
+    {
+        return $this->bordureau;
+    }
+
+    public function setBordureau(?string $bordureau): static
+    {
+        $this->bordureau = $bordureau;
+        return $this;
+    }
+
+
 
     /**
      * @return Collection<int, Fichiers>

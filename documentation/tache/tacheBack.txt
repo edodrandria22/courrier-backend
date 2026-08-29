@@ -166,6 +166,14 @@ message
         --installer mercure -- ok -- 30 mn
         --installer rabbitMQ -- ok -- 30mn
 
-quand une message est deja arrive on ne peut plus le marque comme arrive
+27/08/2026
+    -- ex et de icone -- ok -- 30 mn
+    --serveur ngnx -- ok -- 60 mn
+    --quand une message est deja arrive on ne peut plus le marque comme arrive --ok 30 mn    
+29/082026
+    --bordureau d'envoie avant transfere message -- ok -- 30 mn  
+numero d'arrive pendant le reception et pendant la creation
 
-        
+numero de depart lors de l'envoie message 
+heure doit etre heure local 
+whatsapp
