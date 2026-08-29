@@ -119,9 +119,9 @@ class MessagesService extends BaseService
     public function envoyerNouvelleMessage(
         Utilisateurs $utilisateur,
         Courriers $courrier,
-        ?string $observation = null,
-        ?string $bordureau,
-        array $files = []
+        ?string $observation,
+        ?int $numeroArrive,
+        array $files = [],
     ): Messages {
         try {
             // Récupération et validation des entités
@@ -130,12 +130,12 @@ class MessagesService extends BaseService
                 throw new Exception('Courrier deja fait en message');
             }
                 // Création et persistance du message
-            $message = $this->createMessage(null,$utilisateur, $courrier, $observation,$bordureau);
+            $message = $this->createMessage(null,$utilisateur, $courrier, $observation,null);
             $date = new DateTimeImmutable();
             $message->setIsReadAt($date);
             // Persistance des fichiers liés
             $this->fichiersService->persistFiles($files, $message);
-            $historique= $this->historiquesService->updateHistoriqueNouvelleMessage($utilisateur, $courrier, false, $message);
+            $historique= $this->historiquesService->updateHistoriqueNouvelleMessage($utilisateur, $courrier, $message,$numeroArrive);
             $this->save($historique);
             
             $message->setNumeroDestinataire($historique->getNumero());
@@ -165,7 +165,7 @@ class MessagesService extends BaseService
         $this->em->getConnection()->beginTransaction();
         try {
             $courrier = $this->courriersService->saveDto($utilisateur, $dto);
-            $this->envoyerNouvelleMessage($utilisateur,$courrier,$dto->getObservation(), $files);
+            $this->envoyerNouvelleMessage($utilisateur,$courrier,$dto->getObservation(),$dto->getNumeroArrive() ,$files);
             $this->em->getConnection()->commit();
             return $courrier;
         } catch (\Throwable $th) {

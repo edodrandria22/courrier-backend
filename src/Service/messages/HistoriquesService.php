@@ -53,19 +53,23 @@ class HistoriquesService extends BaseService
         return $valiny + $numeroDepart;
 
     }
-    public function updateHistoriqueNouvelleMessage(Utilisateurs $utilisateur, Courriers $courrier, bool $isSend,Messages $messages): Historiques
+    public function updateHistoriqueNouvelleMessage(Utilisateurs $utilisateur, Courriers $courrier, Messages $messages,?int $numero = null): Historiques
     {
         // Créer nouveau historique
+        $isSend = false;
         $historique = new Historiques();
         $historique->setUtilisateur($utilisateur);
         $historique->setCourrier($courrier);
         $historique->setIsSend($isSend);
         $historique->setMessage($messages);
         $historique->setObservation($messages->getObservation());
-        if($isSend  == false){
-            $nbCourriers = $this->getNbCourrierByUser($utilisateur,$isSend) +1;
-            $historique->setNumero($nbCourriers);   
+        
+        $nbCourriers = $this->getNbCourrierByUser($utilisateur,$isSend) +1;
+        if($numero)
+        {
+            $nbCourriers = $numero;
         }
+        $historique->setNumero($nbCourriers);   
         return $historique;
     }
     public function updateHistorique(Utilisateurs $utilisateur, Courriers $courrier, bool $isSend,Messages $messages): Historiques

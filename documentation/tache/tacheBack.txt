@@ -172,6 +172,7 @@ message
     --quand une message est deja arrive on ne peut plus le marque comme arrive --ok 30 mn    
 29/082026
     --bordureau d'envoie avant transfere message -- ok -- 30 mn  
+    --numero d'arrive pendant le creation de la courrier -- a faire -- 30 mm
 numero d'arrive pendant le reception et pendant la creation
 
 numero de depart lors de l'envoie message 
