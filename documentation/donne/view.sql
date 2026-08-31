@@ -1,3 +1,5 @@
+psql -h 127.0.0.1 -p 5432 -U mesupres -d courrier
+
 drop view if exists vue_historique_details;
 create view vue_historique_details as
 select c.*,h.utilisateur_id,h.is_send,h.numero,destinataire_id,expediteur_id,message_id as message_id, m.is_read_at from Historiques h
