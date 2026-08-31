@@ -74,10 +74,6 @@ class HistoriquesService extends BaseService
     }
     public function updateHistorique(Utilisateurs $utilisateur, Courriers $courrier, bool $isSend,Messages $messages, ?int $numeroDepart = null): Historiques
     {
-        if ($numeroDepart !== null && $numeroDepart < 0) {
-            throw new \InvalidArgumentException('Le numéro de départ ne peut pas être négatif');
-        }
-
         // Créer nouveau historique
         $historique = new Historiques();
         $historique->setUtilisateur($utilisateur);
