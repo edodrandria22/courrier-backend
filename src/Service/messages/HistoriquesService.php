@@ -166,7 +166,7 @@ class HistoriquesService extends BaseService
 
             $this->verifierUtilisateur($utilisateur, $historique->getUtilisateur(), "modifier l'observation");
 
-            $this->mettreAJourDateReception($historique);
+            // $this->mettreAJourDateReception($historique);
 
             $historique->setObservation($observation);
 

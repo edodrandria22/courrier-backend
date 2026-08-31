@@ -177,4 +177,5 @@ message
     --numero d'arrive pendant le reception -- ok -- 30 mn
     --numero de depart lors de l'envoie message -- ok -- 30 mn
     --heure doit etre heure local -- a faire -- 30 mn
-    --whatsapp -- a faire -- 60 mn
+    
+--whatsapp -- a faire -- 120 mn
