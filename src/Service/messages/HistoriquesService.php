@@ -176,10 +176,10 @@ class HistoriquesService extends BaseService
             throw $e;
         }
     }
-    public function modifierHistoriqueVoirMessage(Utilisateurs $utilisateur,Messages $message): array
+    public function modifierHistoriqueVoirMessage(Utilisateurs $utilisateur,Messages $message,int $numeroArrivee): array
     {
         $this->verifierUtilisateur($utilisateur, $message->getDestinataire(), "voir le message");
-        $numeroArrivee = $this->getNbCourrierByUser($utilisateur,false) +1;
+        // $numeroArrivee = $this->getNbCourrierByUser($utilisateur,false) +1;
         $historiqueRecepteur = $this->getByMessageAndIsSend($message, false);
         $historiqueRecepteur->setNumero($numeroArrivee);
         $historiqueExpediteur = $this->getByMessageAndIsSend($message, true);

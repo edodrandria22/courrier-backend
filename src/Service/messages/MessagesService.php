@@ -185,7 +185,7 @@ class MessagesService extends BaseService
         $this->mercureService->sendNotification("lectureMessage",$data);
     }
 
-    public function lireMessage(int $messageId,Utilisateurs $user): Messages
+    public function lireMessage(int $messageId,Utilisateurs $user, int $numeroArrivee): Messages
     {
         $this->em->getConnection()->beginTransaction();
         try {
@@ -194,10 +194,10 @@ class MessagesService extends BaseService
                 throw new Exception("Message déjà marqué comme lu");
             }
             if ($message->getDestinataire()->getId() !== $user->getId()) {
-                return $message;
+                throw new Exception("Vous n'êtes pas le destinataire de ce message");
             }
             $message->setIsReadAt(new DateTimeImmutable());
-            $historiques = $this->historiquesService->modifierHistoriqueVoirMessage($user, $message);
+            $historiques = $this->historiquesService->modifierHistoriqueVoirMessage($user, $message, $numeroArrivee);
             $excludes = ['deletedAt','observation'];
             $message->setNumeroDestinataire($historiques[1]->getNumero());
             $this->sendNotificationMessage($message, $excludes);
