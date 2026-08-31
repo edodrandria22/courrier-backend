@@ -303,6 +303,7 @@ class MessagesService extends BaseService
         Utilisateurs $nouveauDestinataire,
         ?string $observation = null,
         ?string $bordureau = null,
+        ?int $numeroDepart = null,
         array $files = []
     ): Messages {
         $this->em->getConnection()->beginTransaction();
@@ -330,7 +331,7 @@ class MessagesService extends BaseService
             $this->save($message);
             $this->save($nouveauMessage);
             $excludes = ['deletedAt','observation'];    
-            $historiques= $this->historiquesService->tranformerMessageEnHistorique($nouveauMessage);
+            $historiques= $this->historiquesService->tranformerMessageEnHistorique($nouveauMessage,$numeroDepart);
 
             if (count($historiques) < 2) {
                 throw new Exception('Le message doit avoir au moins 2 historiques');
@@ -361,7 +362,8 @@ class MessagesService extends BaseService
         int $expediteurId,
         int $nouveauDestinataireId,
         ?string $observation = null,
-        ?string $bordureau,
+        ?string $bordureau = null,
+        ?int $numeroDepart = null,
         array $files = []
     ): Messages {
         // Récupération et validation du message
@@ -372,7 +374,7 @@ class MessagesService extends BaseService
         $nouveauDestinataire = $this->utilisateursService->getValidatedUser($nouveauDestinataireId, 'Nouveau destinataire');
 
         // Transfert du message
-        return $this->transfererMessage($message, $expediteur, $nouveauDestinataire, $observation, $bordureau,$files);
+        return $this->transfererMessage($message, $expediteur, $nouveauDestinataire, $observation, $bordureau, $numeroDepart, $files);
     }
     public function envoyerEmailSuivre(string $reference)
     {
@@ -451,7 +453,7 @@ class MessagesService extends BaseService
     ): Messages {
         $expediteurPrecedent = $message->getExpediteur();
         $this->validerTranfers($expediteurPrecedent, $nouveauDestinataire);
-        return $this->transfererMessage($message, $utisateurExterne, $nouveauDestinataire, $observation, null, $files);
+        return $this->transfererMessage($message, $utisateurExterne, $nouveauDestinataire, $observation, null, null, $files);
 
     }
     public function recupererMessageExterneById(

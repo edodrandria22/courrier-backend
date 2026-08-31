@@ -55,7 +55,7 @@ class MessageController extends BaseApiController
             $data = $request->request->all();
             $uploadedFiles = $request->files->get('fichiers', []);
 
-            $this->validatorService->validateRequiredFields($data, ['id', 'destId']);
+            $this->validatorService->validateRequiredFields($data, ['id', 'destId','numeroDepart']);
 
             $message = $this->messagesService->transfererMessageById(
                 messageId: (int) $data['id'],
@@ -63,6 +63,7 @@ class MessageController extends BaseApiController
                 nouveauDestinataireId: (int) $data['destId'],
                 observation: $data['observation'] ?? null,
                 bordureau: $data['bordureau'] ?? null,
+                numeroDepart: (int)$data['numeroDepart'],
                 files: is_array($uploadedFiles) ? $uploadedFiles : [$uploadedFiles]
             );
             $excludes = ['createdAt', 'deletedAt'];
