@@ -125,6 +125,9 @@ class VueHistoriqueDetailPersonnesService extends BaseService
         } elseif ($this->notEmpty($dto->statut) && $dto->statut === 'en_cours') {
             $conditions[] = new ConditionCriteria('dateValidation', null, 'IS NULL');
         }
+        if($this->notEmpty($dto->bordureau)) {
+            $conditions[] = new ConditionCriteria('bordureau',$dto->bordureau, 'LIKE');
+        }
 
         
         return $this->search($conditions, $orderCriteria, $paginationCriteria);
