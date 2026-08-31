@@ -53,22 +53,26 @@ class HistoriquesService extends BaseService
         return $valiny + $numeroDepart;
 
     }
-    public function updateHistoriqueNouvelleMessage(Utilisateurs $utilisateur, Courriers $courrier, bool $isSend,Messages $messages): Historiques
+    public function updateHistoriqueNouvelleMessage(Utilisateurs $utilisateur, Courriers $courrier, Messages $messages,?int $numero = null): Historiques
     {
         // Créer nouveau historique
+        $isSend = false;
         $historique = new Historiques();
         $historique->setUtilisateur($utilisateur);
         $historique->setCourrier($courrier);
         $historique->setIsSend($isSend);
         $historique->setMessage($messages);
         $historique->setObservation($messages->getObservation());
-        if($isSend  == false){
-            $nbCourriers = $this->getNbCourrierByUser($utilisateur,$isSend) +1;
-            $historique->setNumero($nbCourriers);   
+        
+        $nbCourriers = $this->getNbCourrierByUser($utilisateur,$isSend) +1;
+        if($numero)
+        {
+            $nbCourriers = $numero;
         }
+        $historique->setNumero($nbCourriers);   
         return $historique;
     }
-    public function updateHistorique(Utilisateurs $utilisateur, Courriers $courrier, bool $isSend,Messages $messages): Historiques
+    public function updateHistorique(Utilisateurs $utilisateur, Courriers $courrier, bool $isSend,Messages $messages, ?int $numeroDepart = null): Historiques
     {
         // Créer nouveau historique
         $historique = new Historiques();
@@ -78,11 +82,12 @@ class HistoriquesService extends BaseService
         $historique->setMessage($messages);
         if($isSend  == true){
             $nbCourriers = $this->getNbCourrierByUser($utilisateur,$isSend) +1;
+            $nbCourriers = $numeroDepart ? $numeroDepart : $nbCourriers;
             $historique->setNumero($nbCourriers);
         }
         return $historique;
     }
-    public function tranformerMessageEnHistorique(Messages $messages): array
+    public function tranformerMessageEnHistorique(Messages $messages, ?int $numeroDepart = null): array
     {
         $courrier = $messages->getCourrier();
       
@@ -91,7 +96,8 @@ class HistoriquesService extends BaseService
             $messages->getExpediteur(),
             $courrier,
             true,
-            $messages
+            $messages,
+            $numeroDepart
         );
 
         #Ajouter une nouvelle historique pour le destinataire
@@ -172,10 +178,10 @@ class HistoriquesService extends BaseService
             throw $e;
         }
     }
-    public function modifierHistoriqueVoirMessage(Utilisateurs $utilisateur,Messages $message): array
+    public function modifierHistoriqueVoirMessage(Utilisateurs $utilisateur,Messages $message,int $numeroArrivee): array
     {
         $this->verifierUtilisateur($utilisateur, $message->getDestinataire(), "voir le message");
-        $numeroArrivee = $this->getNbCourrierByUser($utilisateur,false) +1;
+        // $numeroArrivee = $this->getNbCourrierByUser($utilisateur,false) +1;
         $historiqueRecepteur = $this->getByMessageAndIsSend($message, false);
         $historiqueRecepteur->setNumero($numeroArrivee);
         $historiqueExpediteur = $this->getByMessageAndIsSend($message, true);

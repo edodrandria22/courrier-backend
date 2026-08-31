@@ -14,6 +14,12 @@ class CourriersDto
     private ?bool $isConfidentiel = false;
     private ?string $observation = null;
 
+    #[Assert\NotBlank(message: "Le numero d' arrivée est obligatoire.")]
+    #[Assert\Positive(message: "Le numero d' arrivée doit être positif.")]
+    #[Assert\Type('integer', message: "Le numero d' arrivée doit être un entier.")]
+    
+    private ?int $numeroArrive = null;
+
 
     /**
      * @var DetailPersonnesDto[]
@@ -73,6 +79,15 @@ class CourriersDto
     {
         $this->isConfidentiel = $isConfidentiel;
         return $this;
+    }
+    public function setNumeroArrive(?int $numeroArrive): self 
+    {
+        $this->numeroArrive = $numeroArrive;
+        return $this;
+    }
+    public function getNumeroarrive(): ?int
+    {
+        return $this->numeroArrive;
     }
 
     /**

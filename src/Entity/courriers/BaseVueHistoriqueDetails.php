@@ -55,6 +55,10 @@ abstract class BaseVueHistoriqueDetails extends BaseCourriers
     protected ?string $observation = null;
     #[ORM\Column(type: "datetime_immutable", nullable: true)]
     protected ?\DateTimeImmutable $dateReception = null;
+    
+    #[ORM\Column(type: "string", length: 200, nullable: true)]
+    protected ?string $bordureau = null;
+
     /**
  * @var DetailPersonnes[]
  */
@@ -206,6 +210,17 @@ abstract class BaseVueHistoriqueDetails extends BaseCourriers
         $this->observation = $observation;
         return $this;
     }
+    public function getBordureau(): ?string
+    {
+        return $this->bordureau;
+    }
+
+    public function setBordureau(?string $bordureau): static
+    {
+        $this->bordureau = $bordureau;
+        return $this;
+    }
+
     public function getDateReception(): ?\DateTimeImmutable
     {
         return $this->dateReception;

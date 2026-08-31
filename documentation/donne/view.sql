@@ -36,23 +36,13 @@ SELECT
     h.date_reception,
     m.is_traiter_at,
     m.numero_expediteur,
-    m.numero_destinataire
+    m.numero_destinataire,
+    m.bordureau
 
 FROM Historiques h
 JOIN courriers c ON h.courrier_id = c.id
 LEFT JOIN messages m ON h.message_id = m.id
 WHERE h.deleted_at IS NULL;
-
-
-DROP VIEW IF EXISTS vue_utilisateurs;
-
-CREATE OR REPLACE VIEW vue_utilisateurs AS
-SELECT
-    *,
-    LOWER(
-        COALESCE(nom, '') || ' ' || COALESCE(prenom, '')
-    ) AS nom_complet
-FROM utilisateurs;
 
 
 DROP VIEW IF EXISTS vue_historique_detail_personnes;
@@ -72,6 +62,16 @@ LEFT JOIN detail_personnes dp
     ON dp.courrier_id = v.id
     AND dp.deleted_at IS NULL;
 
+
+DROP VIEW IF EXISTS vue_utilisateurs;
+
+CREATE OR REPLACE VIEW vue_utilisateurs AS
+SELECT
+    *,
+    LOWER(
+        COALESCE(nom, '') || ' ' || COALESCE(prenom, '')
+    ) AS nom_complet
+FROM utilisateurs;
 
 SELECT historique_id, object
 FROM vue_historique_details

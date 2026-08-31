@@ -55,13 +55,15 @@ class MessageController extends BaseApiController
             $data = $request->request->all();
             $uploadedFiles = $request->files->get('fichiers', []);
 
-            $this->validatorService->validateRequiredFields($data, ['id', 'destId']);
+            $this->validatorService->validateRequiredFields($data, ['id', 'destId','numeroDepart']);
 
             $message = $this->messagesService->transfererMessageById(
                 messageId: (int) $data['id'],
                 expediteurId: $user->getId(),
                 nouveauDestinataireId: (int) $data['destId'],
                 observation: $data['observation'] ?? null,
+                bordureau: $data['bordureau'] ?? null,
+                numeroDepart: (int)$data['numeroDepart'],
                 files: is_array($uploadedFiles) ? $uploadedFiles : [$uploadedFiles]
             );
             $excludes = ['createdAt', 'deletedAt'];
@@ -81,7 +83,11 @@ class MessageController extends BaseApiController
     {
         try {
             $user = $this->getUserFromRequest($request);
-            $message = $this->messagesService->lireMessage($id, $user);
+            $data = $request->toArray();
+            $this->validatorService->validateRequiredFields($data, ['numeroArrivee']);
+            
+            $numeroArrivee = $data['numeroArrivee'];
+            $message = $this->messagesService->lireMessage($id, $user, $numeroArrivee);
             $excludes = ['createdAt', 'deletedAt'];
             $data = $message->toArray($excludes);
             return $this->jsonSuccess($data);
@@ -93,20 +99,20 @@ class MessageController extends BaseApiController
     /**
      * Marque un message comme non lu (réinitialise isReadAt à null)
      */
-    #[Route('/{id}/non-lu', name: 'api_messages_non_lu', methods: ['PATCH'], requirements: ['id' => '\d+'])]
-    #[TokenRequired]
-    public function nonLu(int $id, Request $request): JsonResponse
-    {
-        try {
-            $user = $this->getUserFromRequest($request);
-            $message = $this->messagesService->marquerNonLu($id, $user);
-            $excludes = ['createdAt', 'deletedAt'];
-            $data = $message->toArray($excludes);
-            return $this->jsonSuccess($data);
-        } catch (\Throwable $e) {
-            return $this->jsonError($e->getMessage(), $e->getCode() ?: 400);
-        }
-    }
+    // #[Route('/{id}/non-lu', name: 'api_messages_non_lu', methods: ['PATCH'], requirements: ['id' => '\d+'])]
+    // #[TokenRequired]
+    // public function nonLu(int $id, Request $request): JsonResponse
+    // {
+    //     try {
+    //         $user = $this->getUserFromRequest($request);
+    //         $message = $this->messagesService->marquerNonLu($id, $user);
+    //         $excludes = ['createdAt', 'deletedAt'];
+    //         $data = $message->toArray($excludes);
+    //         return $this->jsonSuccess($data);
+    //     } catch (\Throwable $e) {
+    //         return $this->jsonError($e->getMessage(), $e->getCode() ?: 400);
+    //     }
+    // }
 
     /**
      * Récupère le détail d'un message

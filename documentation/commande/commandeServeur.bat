@@ -138,8 +138,38 @@ sudo npm install -g pm2
 npm run build
 pm2 start npm --name "courrier-front" -- start -- --hostname 0.0.0.0
 pm2 start "php -S 0.0.0.0:8000 -t public" --name courrier-backend
-pm2 start "php bin/console messenger:consume async -vv" --name "symfony-messenger"
+pm2 start "php bin/console messenger:consume async_mail -vv" --name "symfony-messenger"
 
 #Pour lancer le serveur 
 pm2 start courrier-front
 pm2 start courrier-backend
+pm2 start symfony-messenger
+
+GRANT SELECT ON vue_historique_details TO courrier;
+
+#Pour installer ngnix
+sudo apt update
+sudo apt upgrade -y
+sudo apt install nginx -y
+sudo systemctl status nginx
+
+sudo systemctl start nginx
+#Et pour qu'il démarre automatiquement après un redémarrage du serveur :
+sudo systemctl enable nginx
+
+
+Test-NetConnection 102.216.23.143 -Port 80
+
+sudo ufw status
+
+sudo ufw allow 80/tcp
+sudo ufw allow 443/tcp
+
+#Pour la configuration de ngnix
+sudo nano /etc/nginx/sites-available/mesupres
+
+#Pour activer le site 
+sudo ln -s /etc/nginx/sites-available/mesupres /etc/nginx/sites-enabled/mesupres
+
+#Pour verifier la configuration
+sudo nginx -t
