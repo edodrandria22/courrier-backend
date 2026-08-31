@@ -196,7 +196,7 @@ class CourriersService extends BaseService
         // if($isRecu == true) {
         //     $orderCriteria= new OrderCriteria('isReadAt','DESC');
         // }
-        $exclude = ['deletedAt','utilisateurId','destinataireId','expediteurId'];
+        $exclude = ['deletedAt','utilisateurId','destinataireId','expediteurId','dateReception'];
         $historique = $this->getAllByUser($user, $orderCriteria, $paginationCriteria, $isSend, $isTraiterAt, $isRecu);
         return $this->vueHistoriqueDetailsService->transformerArrayUtilisateur($historique, $exclude);
     }
