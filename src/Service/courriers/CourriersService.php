@@ -279,7 +279,7 @@ class CourriersService extends BaseService
     {
         $nom = $detailPersonne->getName() . ' ' . $detailPersonne->getPrenom();
         $messageHtml = "Votre référence courrier est : <b>" . $courrier->getReference() . "</b><br>"
-            . "Voici le lien pour suivre votre courrier : http://localhost:3000/suivi";
+            . "Voici le lien pour suivre votre courrier : https://courrier.mesupres.mg";
         return $this->mailService->getHtmlMail($nom, $messageHtml);
     }
     public function getStatistique(
