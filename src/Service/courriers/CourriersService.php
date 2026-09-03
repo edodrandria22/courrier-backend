@@ -96,7 +96,7 @@ class CourriersService extends BaseService
             $detailPersonneEntity->setTelephone($detailPersonne->getTelephone());
 
             $messageCourrier = $this->genererMessageInsertionCourrier($detailPersonneEntity, $courrier);
-            $this->mailService->sendEmail($detailPersonneEntity->getEmail(),"Reference du suivi courrier" ,$messageCourrier);
+            $this->mailService->sendEmail($detailPersonneEntity->getEmail(),"Référence de suivi de votre courrier au Mesupres" ,$messageCourrier);
             $courrier->addDetailPersonne($detailPersonneEntity);
         }
         
@@ -217,12 +217,17 @@ class CourriersService extends BaseService
     public function genererDivClorer(DetailPersonnes $detailPersonne,Utilisateurs $utilisateur,Courriers $courrier)
     {
         $nom = $detailPersonne->getName() . ' ' . $detailPersonne->getPrenom();
-        $messageHtml = "Votre courier  de reference ".$courrier->getReference()." est cloturé, vous devrez aller à la porte ".$utilisateur->getAdresse();
+        $adresse = $utilisateur->getAdresse();
+        $messageHtml = "Nous vous informons que votre courrier portant la référence <bolt>".$courrier->getReference()."</bolt> a été traité.<br> 
+                        Object du courrier : <bolt>".$courrier->getObject()."</bolt><br> 
+                        <p>Vous êtes invité à vous présenter aux coordonnées suivantes pour la suite de votre démarche :</p> 
+                        <p><strong>Adresse :</strong> {$adresse}</p> 
+                        <p>Merci de vous munir d’une pièce d’identité lors de votre passage.</p>";
         return $this->mailService->getHtmlMail($nom, $messageHtml);
     }
     public function envoyerMailCloturer(Courriers $courrier,Utilisateurs $utilisateur)
     {
-        $subject = "Cloturation du courrier chez Mesupres";
+        $subject = "Votre courrier au Mesupres n° ".$courrier->getReference()." est traité";
         $listeDetailsPersonnes = $courrier->getDetailPersonnes();
         foreach ($listeDetailsPersonnes as $detailPersonne) {
             $html = $this->genererDivClorer($detailPersonne, $utilisateur, $courrier);
@@ -278,8 +283,9 @@ class CourriersService extends BaseService
     public function genererMessageInsertionCourrier(DetailPersonnes $detailPersonne,Courriers $courrier)
     {
         $nom = $detailPersonne->getName() . ' ' . $detailPersonne->getPrenom();
-        $messageHtml = "Votre référence courrier est : <b>" . $courrier->getReference() . "</b><br>"
-            . "Voici le lien pour suivre votre courrier : https://courrier.mesupres.mg";
+        $objet = "Votre courrier ayant comme objet \"" . $courrier->getObject() . "\" a été bien enregistré.<b>";
+        $messageHtml = "<bolt>Référence : " . $courrier->getReference() . " </bolt><br>"
+            . "Vous pouvez suivre son traitement en ligne à l'adresse suivante : https://courrier.mesupres.mg";
         return $this->mailService->getHtmlMail($nom, $messageHtml);
     }
     public function getStatistique(

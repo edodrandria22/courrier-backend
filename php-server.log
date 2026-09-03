@@ -1,0 +1,205 @@
+nohup: ignoring input
+[Fri Aug 21 06:36:50 2026] PHP 8.2.33 Development Server (http://0.0.0.0:8000) started
+[Fri Aug 21 06:38:14 2026] 102.216.23.143:48662 Accepted
+[Fri Aug 21 06:38:14 2026] [info] Matched route "api_utilisateur_login".
+[Fri Aug 21 06:38:14 2026] [debug] Notified event "kernel.request" to listener "Symfony\Component\HttpKernel\EventListener\DebugHandlersListener::configure".
+[Fri Aug 21 06:38:14 2026] [debug] Notified event "kernel.request" to listener "Symfony\Component\HttpKernel\EventListener\ValidateRequestListener::onKernelRequest".
+[Fri Aug 21 06:38:14 2026] [debug] Notified event "kernel.request" to listener "Nelmio\CorsBundle\EventListener\CorsListener::onKernelRequest".
+[Fri Aug 21 06:38:14 2026] [debug] Notified event "kernel.request" to listener "Symfony\Bridge\Doctrine\Middleware\IdleConnection\Listener::onKernelRequest".
+[Fri Aug 21 06:38:14 2026] [debug] Notified event "kernel.request" to listener "Symfony\Component\HttpKernel\EventListener\SessionListener::onKernelRequest".
+[Fri Aug 21 06:38:14 2026] [debug] Notified event "kernel.request" to listener "Symfony\Component\HttpKernel\EventListener\LocaleListener::setDefaultLocale".
+[Fri Aug 21 06:38:14 2026] [debug] Notified event "kernel.request" to listener "Symfony\Component\HttpKernel\EventListener\RouterListener::onKernelRequest".
+[Fri Aug 21 06:38:14 2026] [debug] Notified event "kernel.request" to listener "Symfony\Component\HttpKernel\EventListener\LocaleListener::onKernelRequest".
+[Fri Aug 21 06:38:14 2026] [debug] Notified event "kernel.request" to listener "Symfony\Component\HttpKernel\EventListener\LocaleAwareListener::onKernelRequest".
+[Fri Aug 21 06:38:14 2026] [debug] Notified event "kernel.controller" to listener "App\EventListener\TokenListener::onKernelController".
+[Fri Aug 21 06:38:14 2026] [debug] Notified event "kernel.controller_arguments" to listener "Symfony\Component\HttpKernel\EventListener\CacheAttributeListener::onKernelControllerArguments".
+[Fri Aug 21 06:38:14 2026] [debug] Notified event "kernel.controller_arguments" to listener "ContainerXLzFpzf\RequestPayloadValueResolverGhost01ca9cc::onKernelControllerArguments".
+[Fri Aug 21 06:38:14 2026] [debug] Notified event "kernel.controller_arguments" to listener "Symfony\Component\HttpKernel\EventListener\ErrorListener::onControllerArguments".
+[Fri Aug 21 06:38:15 2026] [debug] Notified event "kernel.response" to listener "Nelmio\CorsBundle\EventListener\CorsListener::onKernelResponse".
+[Fri Aug 21 06:38:15 2026] [debug] Notified event "kernel.response" to listener "Symfony\Component\HttpKernel\EventListener\ResponseListener::onKernelResponse".
+[Fri Aug 21 06:38:15 2026] [debug] Notified event "kernel.response" to listener "Symfony\Component\WebLink\EventListener\AddLinkHeaderListener::onKernelResponse".
+[Fri Aug 21 06:38:15 2026] [debug] Notified event "kernel.response" to listener "Symfony\Component\Mercure\EventSubscriber\SetCookieSubscriber::onKernelResponse".
+[Fri Aug 21 06:38:15 2026] [debug] Notified event "kernel.response" to listener "Nelmio\CorsBundle\EventListener\CacheableResponseVaryListener::onResponse".
+[Fri Aug 21 06:38:15 2026] [debug] Notified event "kernel.response" to listener "Symfony\Component\HttpKernel\EventListener\CacheAttributeListener::onKernelResponse".
+[Fri Aug 21 06:38:15 2026] [debug] Notified event "kernel.response" to listener "Symfony\Component\HttpKernel\EventListener\ErrorListener::removeCspHeader".
+[Fri Aug 21 06:38:15 2026] [debug] Notified event "kernel.response" to listener "Symfony\Component\HttpKernel\EventListener\DisallowRobotsIndexingListener::onResponse".
+[Fri Aug 21 06:38:15 2026] [debug] Notified event "kernel.response" to listener "Symfony\Component\HttpKernel\EventListener\SessionListener::onKernelResponse".
+[Fri Aug 21 06:38:15 2026] [debug] Notified event "kernel.finish_request" to listener "Symfony\Component\HttpKernel\EventListener\LocaleListener::onKernelFinishRequest".
+[Fri Aug 21 06:38:15 2026] [debug] Notified event "kernel.finish_request" to listener "Symfony\Component\HttpKernel\EventListener\RouterListener::onKernelFinishRequest".
+[Fri Aug 21 06:38:15 2026] [debug] Notified event "kernel.finish_request" to listener "Symfony\Component\HttpKernel\EventListener\LocaleAwareListener::onKernelFinishRequest".
+[Fri Aug 21 06:38:15 2026] 102.216.23.143:48662 [404]: POST /utilisateurs/login
+[Fri Aug 21 06:38:15 2026] 102.216.23.143:48662 Closing
+[Fri Aug 21 06:38:29 2026] 102.216.23.143:60982 Accepted
+[Fri Aug 21 06:38:29 2026] [info] Matched route "api_utilisateur_login".
+[Fri Aug 21 06:38:29 2026] [debug] Notified event "kernel.request" to listener "Symfony\Component\HttpKernel\EventListener\DebugHandlersListener::configure".
+[Fri Aug 21 06:38:29 2026] [debug] Notified event "kernel.request" to listener "Symfony\Component\HttpKernel\EventListener\ValidateRequestListener::onKernelRequest".
+[Fri Aug 21 06:38:29 2026] [debug] Notified event "kernel.request" to listener "Nelmio\CorsBundle\EventListener\CorsListener::onKernelRequest".
+[Fri Aug 21 06:38:29 2026] [debug] Notified event "kernel.request" to listener "Symfony\Bridge\Doctrine\Middleware\IdleConnection\Listener::onKernelRequest".
+[Fri Aug 21 06:38:29 2026] [debug] Notified event "kernel.request" to listener "Symfony\Component\HttpKernel\EventListener\SessionListener::onKernelRequest".
+[Fri Aug 21 06:38:29 2026] [debug] Notified event "kernel.request" to listener "Symfony\Component\HttpKernel\EventListener\LocaleListener::setDefaultLocale".
+[Fri Aug 21 06:38:29 2026] [debug] Notified event "kernel.request" to listener "Symfony\Component\HttpKernel\EventListener\RouterListener::onKernelRequest".
+[Fri Aug 21 06:38:29 2026] [debug] Notified event "kernel.request" to listener "Symfony\Component\HttpKernel\EventListener\LocaleListener::onKernelRequest".
+[Fri Aug 21 06:38:29 2026] [debug] Notified event "kernel.request" to listener "Symfony\Component\HttpKernel\EventListener\LocaleAwareListener::onKernelRequest".
+[Fri Aug 21 06:38:29 2026] [debug] Notified event "kernel.controller" to listener "App\EventListener\TokenListener::onKernelController".
+[Fri Aug 21 06:38:29 2026] [debug] Notified event "kernel.controller_arguments" to listener "Symfony\Component\HttpKernel\EventListener\CacheAttributeListener::onKernelControllerArguments".
+[Fri Aug 21 06:38:29 2026] [debug] Notified event "kernel.controller_arguments" to listener "ContainerXLzFpzf\RequestPayloadValueResolverGhost01ca9cc::onKernelControllerArguments".
+[Fri Aug 21 06:38:29 2026] [debug] Notified event "kernel.controller_arguments" to listener "Symfony\Component\HttpKernel\EventListener\ErrorListener::onControllerArguments".
+[Fri Aug 21 06:38:29 2026] [debug] Notified event "kernel.response" to listener "Nelmio\CorsBundle\EventListener\CorsListener::onKernelResponse".
+[Fri Aug 21 06:38:29 2026] [debug] Notified event "kernel.response" to listener "Symfony\Component\HttpKernel\EventListener\ResponseListener::onKernelResponse".
+[Fri Aug 21 06:38:29 2026] [debug] Notified event "kernel.response" to listener "Symfony\Component\WebLink\EventListener\AddLinkHeaderListener::onKernelResponse".
+[Fri Aug 21 06:38:29 2026] [debug] Notified event "kernel.response" to listener "Symfony\Component\Mercure\EventSubscriber\SetCookieSubscriber::onKernelResponse".
+[Fri Aug 21 06:38:29 2026] [debug] Notified event "kernel.response" to listener "Nelmio\CorsBundle\EventListener\CacheableResponseVaryListener::onResponse".
+[Fri Aug 21 06:38:29 2026] [debug] Notified event "kernel.response" to listener "Symfony\Component\HttpKernel\EventListener\CacheAttributeListener::onKernelResponse".
+[Fri Aug 21 06:38:29 2026] [debug] Notified event "kernel.response" to listener "Symfony\Component\HttpKernel\EventListener\ErrorListener::removeCspHeader".
+[Fri Aug 21 06:38:29 2026] [debug] Notified event "kernel.response" to listener "Symfony\Component\HttpKernel\EventListener\DisallowRobotsIndexingListener::onResponse".
+[Fri Aug 21 06:38:29 2026] [debug] Notified event "kernel.response" to listener "Symfony\Component\HttpKernel\EventListener\SessionListener::onKernelResponse".
+[Fri Aug 21 06:38:29 2026] [debug] Notified event "kernel.finish_request" to listener "Symfony\Component\HttpKernel\EventListener\LocaleListener::onKernelFinishRequest".
+[Fri Aug 21 06:38:29 2026] [debug] Notified event "kernel.finish_request" to listener "Symfony\Component\HttpKernel\EventListener\RouterListener::onKernelFinishRequest".
+[Fri Aug 21 06:38:29 2026] [debug] Notified event "kernel.finish_request" to listener "Symfony\Component\HttpKernel\EventListener\LocaleAwareListener::onKernelFinishRequest".
+[Fri Aug 21 06:38:29 2026] 102.216.23.143:60982 [200]: POST /utilisateurs/login
+[Fri Aug 21 06:38:29 2026] 102.216.23.143:60982 Closing
+[Fri Aug 21 06:38:30 2026] 102.216.23.143:60992 Accepted
+[Fri Aug 21 06:38:30 2026] [info] Matched route "api_nonTraite".
+[Fri Aug 21 06:38:30 2026] [debug] Notified event "kernel.request" to listener "Symfony\Component\HttpKernel\EventListener\DebugHandlersListener::configure".
+[Fri Aug 21 06:38:30 2026] [debug] Notified event "kernel.request" to listener "Symfony\Component\HttpKernel\EventListener\ValidateRequestListener::onKernelRequest".
+[Fri Aug 21 06:38:30 2026] [debug] Notified event "kernel.request" to listener "Nelmio\CorsBundle\EventListener\CorsListener::onKernelRequest".
+[Fri Aug 21 06:38:30 2026] [debug] Notified event "kernel.request" to listener "Symfony\Bridge\Doctrine\Middleware\IdleConnection\Listener::onKernelRequest".
+[Fri Aug 21 06:38:30 2026] [debug] Notified event "kernel.request" to listener "Symfony\Component\HttpKernel\EventListener\SessionListener::onKernelRequest".
+[Fri Aug 21 06:38:30 2026] [debug] Notified event "kernel.request" to listener "Symfony\Component\HttpKernel\EventListener\LocaleListener::setDefaultLocale".
+[Fri Aug 21 06:38:30 2026] [debug] Notified event "kernel.request" to listener "Symfony\Component\HttpKernel\EventListener\RouterListener::onKernelRequest".
+[Fri Aug 21 06:38:30 2026] [debug] Notified event "kernel.request" to listener "Symfony\Component\HttpKernel\EventListener\LocaleListener::onKernelRequest".
+[Fri Aug 21 06:38:30 2026] [debug] Notified event "kernel.request" to listener "Symfony\Component\HttpKernel\EventListener\LocaleAwareListener::onKernelRequest".
+[Fri Aug 21 06:38:30 2026] [debug] Notified event "kernel.controller" to listener "App\EventListener\TokenListener::onKernelController".
+[Fri Aug 21 06:38:30 2026] [debug] Notified event "kernel.controller_arguments" to listener "Symfony\Component\HttpKernel\EventListener\CacheAttributeListener::onKernelControllerArguments".
+[Fri Aug 21 06:38:30 2026] [debug] Notified event "kernel.controller_arguments" to listener "ContainerXLzFpzf\RequestPayloadValueResolverGhost01ca9cc::onKernelControllerArguments".
+[Fri Aug 21 06:38:30 2026] [debug] Notified event "kernel.controller_arguments" to listener "Symfony\Component\HttpKernel\EventListener\ErrorListener::onControllerArguments".
+[Fri Aug 21 06:38:30 2026] [debug] Notified event "kernel.response" to listener "Nelmio\CorsBundle\EventListener\CorsListener::onKernelResponse".
+[Fri Aug 21 06:38:30 2026] [debug] Notified event "kernel.response" to listener "Symfony\Component\HttpKernel\EventListener\ResponseListener::onKernelResponse".
+[Fri Aug 21 06:38:30 2026] [debug] Notified event "kernel.response" to listener "Symfony\Component\WebLink\EventListener\AddLinkHeaderListener::onKernelResponse".
+[Fri Aug 21 06:38:30 2026] [debug] Notified event "kernel.response" to listener "Symfony\Component\Mercure\EventSubscriber\SetCookieSubscriber::onKernelResponse".
+[Fri Aug 21 06:38:30 2026] [debug] Notified event "kernel.response" to listener "Nelmio\CorsBundle\EventListener\CacheableResponseVaryListener::onResponse".
+[Fri Aug 21 06:38:30 2026] [debug] Notified event "kernel.response" to listener "Symfony\Component\HttpKernel\EventListener\CacheAttributeListener::onKernelResponse".
+[Fri Aug 21 06:38:30 2026] [debug] Notified event "kernel.response" to listener "Symfony\Component\HttpKernel\EventListener\ErrorListener::removeCspHeader".
+[Fri Aug 21 06:38:30 2026] [debug] Notified event "kernel.response" to listener "Symfony\Component\HttpKernel\EventListener\DisallowRobotsIndexingListener::onResponse".
+[Fri Aug 21 06:38:30 2026] [debug] Notified event "kernel.response" to listener "Symfony\Component\HttpKernel\EventListener\SessionListener::onKernelResponse".
+[Fri Aug 21 06:38:30 2026] [debug] Notified event "kernel.finish_request" to listener "Symfony\Component\HttpKernel\EventListener\LocaleListener::onKernelFinishRequest".
+[Fri Aug 21 06:38:30 2026] [debug] Notified event "kernel.finish_request" to listener "Symfony\Component\HttpKernel\EventListener\RouterListener::onKernelFinishRequest".
+[Fri Aug 21 06:38:30 2026] [debug] Notified event "kernel.finish_request" to listener "Symfony\Component\HttpKernel\EventListener\LocaleAwareListener::onKernelFinishRequest".
+[Fri Aug 21 06:38:30 2026] 102.216.23.143:60992 [200]: GET /courriers/nonTraite
+[Fri Aug 21 06:38:30 2026] 102.216.23.143:60992 Closing
+[Fri Aug 21 06:38:30 2026] 102.216.23.143:60994 Accepted
+[Fri Aug 21 06:38:30 2026] [info] Matched route "api_courriers_get_all_by_user".
+[Fri Aug 21 06:38:30 2026] [debug] Notified event "kernel.request" to listener "Symfony\Component\HttpKernel\EventListener\DebugHandlersListener::configure".
+[Fri Aug 21 06:38:30 2026] [debug] Notified event "kernel.request" to listener "Symfony\Component\HttpKernel\EventListener\ValidateRequestListener::onKernelRequest".
+[Fri Aug 21 06:38:30 2026] [debug] Notified event "kernel.request" to listener "Nelmio\CorsBundle\EventListener\CorsListener::onKernelRequest".
+[Fri Aug 21 06:38:30 2026] [debug] Notified event "kernel.request" to listener "Symfony\Bridge\Doctrine\Middleware\IdleConnection\Listener::onKernelRequest".
+[Fri Aug 21 06:38:30 2026] [debug] Notified event "kernel.request" to listener "Symfony\Component\HttpKernel\EventListener\SessionListener::onKernelRequest".
+[Fri Aug 21 06:38:30 2026] [debug] Notified event "kernel.request" to listener "Symfony\Component\HttpKernel\EventListener\LocaleListener::setDefaultLocale".
+[Fri Aug 21 06:38:30 2026] [debug] Notified event "kernel.request" to listener "Symfony\Component\HttpKernel\EventListener\RouterListener::onKernelRequest".
+[Fri Aug 21 06:38:30 2026] [debug] Notified event "kernel.request" to listener "Symfony\Component\HttpKernel\EventListener\LocaleListener::onKernelRequest".
+[Fri Aug 21 06:38:30 2026] [debug] Notified event "kernel.request" to listener "Symfony\Component\HttpKernel\EventListener\LocaleAwareListener::onKernelRequest".
+[Fri Aug 21 06:38:30 2026] [debug] Notified event "kernel.controller" to listener "App\EventListener\TokenListener::onKernelController".
+[Fri Aug 21 06:38:30 2026] [debug] Notified event "kernel.controller_arguments" to listener "Symfony\Component\HttpKernel\EventListener\CacheAttributeListener::onKernelControllerArguments".
+[Fri Aug 21 06:38:30 2026] [debug] Notified event "kernel.controller_arguments" to listener "ContainerXLzFpzf\RequestPayloadValueResolverGhost01ca9cc::onKernelControllerArguments".
+[Fri Aug 21 06:38:30 2026] [debug] Notified event "kernel.controller_arguments" to listener "Symfony\Component\HttpKernel\EventListener\ErrorListener::onControllerArguments".
+[Fri Aug 21 06:38:30 2026] [debug] Notified event "kernel.response" to listener "Nelmio\CorsBundle\EventListener\CorsListener::onKernelResponse".
+[Fri Aug 21 06:38:30 2026] [debug] Notified event "kernel.response" to listener "Symfony\Component\HttpKernel\EventListener\ResponseListener::onKernelResponse".
+[Fri Aug 21 06:38:30 2026] [debug] Notified event "kernel.response" to listener "Symfony\Component\WebLink\EventListener\AddLinkHeaderListener::onKernelResponse".
+[Fri Aug 21 06:38:30 2026] [debug] Notified event "kernel.response" to listener "Symfony\Component\Mercure\EventSubscriber\SetCookieSubscriber::onKernelResponse".
+[Fri Aug 21 06:38:30 2026] [debug] Notified event "kernel.response" to listener "Nelmio\CorsBundle\EventListener\CacheableResponseVaryListener::onResponse".
+[Fri Aug 21 06:38:30 2026] [debug] Notified event "kernel.response" to listener "Symfony\Component\HttpKernel\EventListener\CacheAttributeListener::onKernelResponse".
+[Fri Aug 21 06:38:30 2026] [debug] Notified event "kernel.response" to listener "Symfony\Component\HttpKernel\EventListener\ErrorListener::removeCspHeader".
+[Fri Aug 21 06:38:30 2026] [debug] Notified event "kernel.response" to listener "Symfony\Component\HttpKernel\EventListener\DisallowRobotsIndexingListener::onResponse".
+[Fri Aug 21 06:38:30 2026] [debug] Notified event "kernel.response" to listener "Symfony\Component\HttpKernel\EventListener\SessionListener::onKernelResponse".
+[Fri Aug 21 06:38:30 2026] [debug] Notified event "kernel.finish_request" to listener "Symfony\Component\HttpKernel\EventListener\LocaleListener::onKernelFinishRequest".
+[Fri Aug 21 06:38:30 2026] [debug] Notified event "kernel.finish_request" to listener "Symfony\Component\HttpKernel\EventListener\RouterListener::onKernelFinishRequest".
+[Fri Aug 21 06:38:30 2026] [debug] Notified event "kernel.finish_request" to listener "Symfony\Component\HttpKernel\EventListener\LocaleAwareListener::onKernelFinishRequest".
+[Fri Aug 21 06:38:30 2026] 102.216.23.143:60994 [200]: GET /courriers/getAllbyUser?limit=10
+[Fri Aug 21 06:38:30 2026] 102.216.23.143:60994 Closing
+[Fri Aug 21 06:38:31 2026] 102.216.23.143:32778 Accepted
+[Fri Aug 21 06:38:31 2026] [info] Matched route "api_courriers_get_all_by_user_recu".
+[Fri Aug 21 06:38:31 2026] [debug] Notified event "kernel.request" to listener "Symfony\Component\HttpKernel\EventListener\DebugHandlersListener::configure".
+[Fri Aug 21 06:38:31 2026] [debug] Notified event "kernel.request" to listener "Symfony\Component\HttpKernel\EventListener\ValidateRequestListener::onKernelRequest".
+[Fri Aug 21 06:38:31 2026] [debug] Notified event "kernel.request" to listener "Nelmio\CorsBundle\EventListener\CorsListener::onKernelRequest".
+[Fri Aug 21 06:38:31 2026] [debug] Notified event "kernel.request" to listener "Symfony\Bridge\Doctrine\Middleware\IdleConnection\Listener::onKernelRequest".
+[Fri Aug 21 06:38:31 2026] [debug] Notified event "kernel.request" to listener "Symfony\Component\HttpKernel\EventListener\SessionListener::onKernelRequest".
+[Fri Aug 21 06:38:31 2026] [debug] Notified event "kernel.request" to listener "Symfony\Component\HttpKernel\EventListener\LocaleListener::setDefaultLocale".
+[Fri Aug 21 06:38:31 2026] [debug] Notified event "kernel.request" to listener "Symfony\Component\HttpKernel\EventListener\RouterListener::onKernelRequest".
+[Fri Aug 21 06:38:31 2026] [debug] Notified event "kernel.request" to listener "Symfony\Component\HttpKernel\EventListener\LocaleListener::onKernelRequest".
+[Fri Aug 21 06:38:31 2026] [debug] Notified event "kernel.request" to listener "Symfony\Component\HttpKernel\EventListener\LocaleAwareListener::onKernelRequest".
+[Fri Aug 21 06:38:31 2026] [debug] Notified event "kernel.controller" to listener "App\EventListener\TokenListener::onKernelController".
+[Fri Aug 21 06:38:31 2026] [debug] Notified event "kernel.controller_arguments" to listener "Symfony\Component\HttpKernel\EventListener\CacheAttributeListener::onKernelControllerArguments".
+[Fri Aug 21 06:38:31 2026] [debug] Notified event "kernel.controller_arguments" to listener "ContainerXLzFpzf\RequestPayloadValueResolverGhost01ca9cc::onKernelControllerArguments".
+[Fri Aug 21 06:38:31 2026] [debug] Notified event "kernel.controller_arguments" to listener "Symfony\Component\HttpKernel\EventListener\ErrorListener::onControllerArguments".
+[Fri Aug 21 06:38:31 2026] [debug] Notified event "kernel.response" to listener "Nelmio\CorsBundle\EventListener\CorsListener::onKernelResponse".
+[Fri Aug 21 06:38:31 2026] [debug] Notified event "kernel.response" to listener "Symfony\Component\HttpKernel\EventListener\ResponseListener::onKernelResponse".
+[Fri Aug 21 06:38:31 2026] [debug] Notified event "kernel.response" to listener "Symfony\Component\WebLink\EventListener\AddLinkHeaderListener::onKernelResponse".
+[Fri Aug 21 06:38:31 2026] [debug] Notified event "kernel.response" to listener "Symfony\Component\Mercure\EventSubscriber\SetCookieSubscriber::onKernelResponse".
+[Fri Aug 21 06:38:31 2026] [debug] Notified event "kernel.response" to listener "Nelmio\CorsBundle\EventListener\CacheableResponseVaryListener::onResponse".
+[Fri Aug 21 06:38:31 2026] [debug] Notified event "kernel.response" to listener "Symfony\Component\HttpKernel\EventListener\CacheAttributeListener::onKernelResponse".
+[Fri Aug 21 06:38:31 2026] [debug] Notified event "kernel.response" to listener "Symfony\Component\HttpKernel\EventListener\ErrorListener::removeCspHeader".
+[Fri Aug 21 06:38:31 2026] [debug] Notified event "kernel.response" to listener "Symfony\Component\HttpKernel\EventListener\DisallowRobotsIndexingListener::onResponse".
+[Fri Aug 21 06:38:31 2026] [debug] Notified event "kernel.response" to listener "Symfony\Component\HttpKernel\EventListener\SessionListener::onKernelResponse".
+[Fri Aug 21 06:38:31 2026] [debug] Notified event "kernel.finish_request" to listener "Symfony\Component\HttpKernel\EventListener\LocaleListener::onKernelFinishRequest".
+[Fri Aug 21 06:38:31 2026] [debug] Notified event "kernel.finish_request" to listener "Symfony\Component\HttpKernel\EventListener\RouterListener::onKernelFinishRequest".
+[Fri Aug 21 06:38:31 2026] [debug] Notified event "kernel.finish_request" to listener "Symfony\Component\HttpKernel\EventListener\LocaleAwareListener::onKernelFinishRequest".
+[Fri Aug 21 06:38:31 2026] 102.216.23.143:32778 [200]: GET /courriers/getAllbyUserSend?limit=10
+[Fri Aug 21 06:38:31 2026] 102.216.23.143:32778 Closing
+[Fri Aug 21 06:38:34 2026] 102.216.23.143:33172 Accepted
+[Fri Aug 21 06:38:34 2026] [info] Matched route "api_nonTraite".
+[Fri Aug 21 06:38:34 2026] [debug] Notified event "kernel.request" to listener "Symfony\Component\HttpKernel\EventListener\DebugHandlersListener::configure".
+[Fri Aug 21 06:38:34 2026] [debug] Notified event "kernel.request" to listener "Symfony\Component\HttpKernel\EventListener\ValidateRequestListener::onKernelRequest".
+[Fri Aug 21 06:38:34 2026] [debug] Notified event "kernel.request" to listener "Nelmio\CorsBundle\EventListener\CorsListener::onKernelRequest".
+[Fri Aug 21 06:38:34 2026] [debug] Notified event "kernel.request" to listener "Symfony\Bridge\Doctrine\Middleware\IdleConnection\Listener::onKernelRequest".
+[Fri Aug 21 06:38:34 2026] [debug] Notified event "kernel.request" to listener "Symfony\Component\HttpKernel\EventListener\SessionListener::onKernelRequest".
+[Fri Aug 21 06:38:34 2026] [debug] Notified event "kernel.request" to listener "Symfony\Component\HttpKernel\EventListener\LocaleListener::setDefaultLocale".
+[Fri Aug 21 06:38:34 2026] [debug] Notified event "kernel.request" to listener "Symfony\Component\HttpKernel\EventListener\RouterListener::onKernelRequest".
+[Fri Aug 21 06:38:34 2026] [debug] Notified event "kernel.request" to listener "Symfony\Component\HttpKernel\EventListener\LocaleListener::onKernelRequest".
+[Fri Aug 21 06:38:34 2026] [debug] Notified event "kernel.request" to listener "Symfony\Component\HttpKernel\EventListener\LocaleAwareListener::onKernelRequest".
+[Fri Aug 21 06:38:34 2026] [debug] Notified event "kernel.controller" to listener "App\EventListener\TokenListener::onKernelController".
+[Fri Aug 21 06:38:34 2026] [debug] Notified event "kernel.controller_arguments" to listener "Symfony\Component\HttpKernel\EventListener\CacheAttributeListener::onKernelControllerArguments".
+[Fri Aug 21 06:38:34 2026] [debug] Notified event "kernel.controller_arguments" to listener "ContainerXLzFpzf\RequestPayloadValueResolverGhost01ca9cc::onKernelControllerArguments".
+[Fri Aug 21 06:38:34 2026] [debug] Notified event "kernel.controller_arguments" to listener "Symfony\Component\HttpKernel\EventListener\ErrorListener::onControllerArguments".
+[Fri Aug 21 06:38:34 2026] [debug] Notified event "kernel.response" to listener "Nelmio\CorsBundle\EventListener\CorsListener::onKernelResponse".
+[Fri Aug 21 06:38:34 2026] [debug] Notified event "kernel.response" to listener "Symfony\Component\HttpKernel\EventListener\ResponseListener::onKernelResponse".
+[Fri Aug 21 06:38:34 2026] [debug] Notified event "kernel.response" to listener "Symfony\Component\WebLink\EventListener\AddLinkHeaderListener::onKernelResponse".
+[Fri Aug 21 06:38:34 2026] [debug] Notified event "kernel.response" to listener "Symfony\Component\Mercure\EventSubscriber\SetCookieSubscriber::onKernelResponse".
+[Fri Aug 21 06:38:34 2026] [debug] Notified event "kernel.response" to listener "Nelmio\CorsBundle\EventListener\CacheableResponseVaryListener::onResponse".
+[Fri Aug 21 06:38:34 2026] [debug] Notified event "kernel.response" to listener "Symfony\Component\HttpKernel\EventListener\CacheAttributeListener::onKernelResponse".
+[Fri Aug 21 06:38:34 2026] [debug] Notified event "kernel.response" to listener "Symfony\Component\HttpKernel\EventListener\ErrorListener::removeCspHeader".
+[Fri Aug 21 06:38:34 2026] [debug] Notified event "kernel.response" to listener "Symfony\Component\HttpKernel\EventListener\DisallowRobotsIndexingListener::onResponse".
+[Fri Aug 21 06:38:34 2026] [debug] Notified event "kernel.response" to listener "Symfony\Component\HttpKernel\EventListener\SessionListener::onKernelResponse".
+[Fri Aug 21 06:38:34 2026] [debug] Notified event "kernel.finish_request" to listener "Symfony\Component\HttpKernel\EventListener\LocaleListener::onKernelFinishRequest".
+[Fri Aug 21 06:38:34 2026] [debug] Notified event "kernel.finish_request" to listener "Symfony\Component\HttpKernel\EventListener\RouterListener::onKernelFinishRequest".
+[Fri Aug 21 06:38:34 2026] [debug] Notified event "kernel.finish_request" to listener "Symfony\Component\HttpKernel\EventListener\LocaleAwareListener::onKernelFinishRequest".
+[Fri Aug 21 06:38:34 2026] 102.216.23.143:33172 [200]: GET /courriers/nonTraite
+[Fri Aug 21 06:38:34 2026] 102.216.23.143:33172 Closing
+[Fri Aug 21 06:38:34 2026] 102.216.23.143:33184 Accepted
+[Fri Aug 21 06:38:34 2026] [info] Matched route "api_courriers_get_all_by_user".
+[Fri Aug 21 06:38:34 2026] [debug] Notified event "kernel.request" to listener "Symfony\Component\HttpKernel\EventListener\DebugHandlersListener::configure".
+[Fri Aug 21 06:38:34 2026] [debug] Notified event "kernel.request" to listener "Symfony\Component\HttpKernel\EventListener\ValidateRequestListener::onKernelRequest".
+[Fri Aug 21 06:38:34 2026] [debug] Notified event "kernel.request" to listener "Nelmio\CorsBundle\EventListener\CorsListener::onKernelRequest".
+[Fri Aug 21 06:38:34 2026] [debug] Notified event "kernel.request" to listener "Symfony\Bridge\Doctrine\Middleware\IdleConnection\Listener::onKernelRequest".
+[Fri Aug 21 06:38:34 2026] [debug] Notified event "kernel.request" to listener "Symfony\Component\HttpKernel\EventListener\SessionListener::onKernelRequest".
+[Fri Aug 21 06:38:34 2026] [debug] Notified event "kernel.request" to listener "Symfony\Component\HttpKernel\EventListener\LocaleListener::setDefaultLocale".
+[Fri Aug 21 06:38:34 2026] [debug] Notified event "kernel.request" to listener "Symfony\Component\HttpKernel\EventListener\RouterListener::onKernelRequest".
+[Fri Aug 21 06:38:34 2026] [debug] Notified event "kernel.request" to listener "Symfony\Component\HttpKernel\EventListener\LocaleListener::onKernelRequest".
+[Fri Aug 21 06:38:34 2026] [debug] Notified event "kernel.request" to listener "Symfony\Component\HttpKernel\EventListener\LocaleAwareListener::onKernelRequest".
+[Fri Aug 21 06:38:34 2026] [debug] Notified event "kernel.controller" to listener "App\EventListener\TokenListener::onKernelController".
+[Fri Aug 21 06:38:34 2026] [debug] Notified event "kernel.controller_arguments" to listener "Symfony\Component\HttpKernel\EventListener\CacheAttributeListener::onKernelControllerArguments".
+[Fri Aug 21 06:38:34 2026] [debug] Notified event "kernel.controller_arguments" to listener "ContainerXLzFpzf\RequestPayloadValueResolverGhost01ca9cc::onKernelControllerArguments".
+[Fri Aug 21 06:38:34 2026] [debug] Notified event "kernel.controller_arguments" to listener "Symfony\Component\HttpKernel\EventListener\ErrorListener::onControllerArguments".
+[Fri Aug 21 06:38:34 2026] [debug] Notified event "kernel.response" to listener "Nelmio\CorsBundle\EventListener\CorsListener::onKernelResponse".
+[Fri Aug 21 06:38:34 2026] [debug] Notified event "kernel.response" to listener "Symfony\Component\HttpKernel\EventListener\ResponseListener::onKernelResponse".
+[Fri Aug 21 06:38:34 2026] [debug] Notified event "kernel.response" to listener "Symfony\Component\WebLink\EventListener\AddLinkHeaderListener::onKernelResponse".
+[Fri Aug 21 06:38:34 2026] [debug] Notified event "kernel.response" to listener "Symfony\Component\Mercure\EventSubscriber\SetCookieSubscriber::onKernelResponse".
+[Fri Aug 21 06:38:34 2026] [debug] Notified event "kernel.response" to listener "Nelmio\CorsBundle\EventListener\CacheableResponseVaryListener::onResponse".
+[Fri Aug 21 06:38:34 2026] [debug] Notified event "kernel.response" to listener "Symfony\Component\HttpKernel\EventListener\CacheAttributeListener::onKernelResponse".
+[Fri Aug 21 06:38:34 2026] [debug] Notified event "kernel.response" to listener "Symfony\Component\HttpKernel\EventListener\ErrorListener::removeCspHeader".
+[Fri Aug 21 06:38:34 2026] [debug] Notified event "kernel.response" to listener "Symfony\Component\HttpKernel\EventListener\DisallowRobotsIndexingListener::onResponse".
+[Fri Aug 21 06:38:34 2026] [debug] Notified event "kernel.response" to listener "Symfony\Component\HttpKernel\EventListener\SessionListener::onKernelResponse".
+[Fri Aug 21 06:38:34 2026] [debug] Notified event "kernel.finish_request" to listener "Symfony\Component\HttpKernel\EventListener\LocaleListener::onKernelFinishRequest".
+[Fri Aug 21 06:38:34 2026] [debug] Notified event "kernel.finish_request" to listener "Symfony\Component\HttpKernel\EventListener\RouterListener::onKernelFinishRequest".
+[Fri Aug 21 06:38:34 2026] [debug] Notified event "kernel.finish_request" to listener "Symfony\Component\HttpKernel\EventListener\LocaleAwareListener::onKernelFinishRequest".
+[Fri Aug 21 06:38:34 2026] 102.216.23.143:33184 [200]: GET /courriers/getAllbyUser?limit=10
+[Fri Aug 21 06:38:34 2026] 102.216.23.143:33184 Closing
