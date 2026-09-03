@@ -218,8 +218,8 @@ class CourriersService extends BaseService
     {
         $nom = $detailPersonne->getName() . ' ' . $detailPersonne->getPrenom();
         $adresse = $utilisateur->getAdresse();
-        $messageHtml = "Nous vous informons que votre courrier portant la référence <bolt>".$courrier->getReference()."</bolt> a été traité.<br> 
-                        Object du courrier : <bolt>".$courrier->getObject()."</bolt><br> 
+        $messageHtml = "<p>Nous vous informons que votre courrier portant la référence <strong>".$courrier->getReference()."</strong> a été traité.</p> 
+                        <p>Object du courrier : <strong>".$courrier->getObject()."</strong></p> 
                         <p>Vous êtes invité à vous présenter aux coordonnées suivantes pour la suite de votre démarche :</p> 
                         <p><strong>Adresse :</strong> {$adresse}</p> 
                         <p>Merci de vous munir d’une pièce d’identité lors de votre passage.</p>";
@@ -283,9 +283,9 @@ class CourriersService extends BaseService
     public function genererMessageInsertionCourrier(DetailPersonnes $detailPersonne,Courriers $courrier)
     {
         $nom = $detailPersonne->getName() . ' ' . $detailPersonne->getPrenom();
-        $objet = "Votre courrier ayant comme objet \"" . $courrier->getObject() . "\" a été bien enregistré.<b>";
-        $messageHtml = "<bolt>Référence : " . $courrier->getReference() . " </bolt><br>"
-            . "Vous pouvez suivre son traitement en ligne à l'adresse suivante : https://courrier.mesupres.mg";
+        $messageHtml = "<p>Votre courrier ayant comme objet \"" . $courrier->getObject() . "\" a été bien enregistré.</p>"
+        .   "<p><strong>Référence : " . $courrier->getReference() . " </strong></p>"
+        .   "<p>Vous pouvez suivre son traitement en ligne à l'adresse suivante : https://courrier.mesupres.mg</p>";
         return $this->mailService->getHtmlMail($nom, $messageHtml);
     }
     public function getStatistique(

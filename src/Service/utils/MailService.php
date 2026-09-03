@@ -22,9 +22,8 @@ class MailService
         return "
             <html>
                 <body style='font-family: Arial, sans-serif'>
-                    <h2>Bonjour $nom,</h2>
-                    <p>$message</p>
-                    <br>
+                    <p>Bonjour $nom,</p>
+                    $message
                     <p>Cordialement,<br>Mesupres</p>
                 </body>
             </html>
