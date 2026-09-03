@@ -42,10 +42,10 @@ class CourriersService extends BaseService
     public function generateReference(): string
     {
         $date = new \DateTimeImmutable();
-        $dateStr = $date->format('dmY');
+        $dateStr = (int)$date->format('dmY') + 1007;
         $count = $this->repo->countDailyCourriers($date);
 
-        return $dateStr . '/REF' . ($count + 1);
+        return $dateStr . '/' . ($count + 1);
     }
     public function countYearlyCourriers(?int $annee= null): int
     {
