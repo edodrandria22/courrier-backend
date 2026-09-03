@@ -14,7 +14,7 @@ class CourriersDto
     private ?bool $isConfidentiel = false;
     private ?string $observation = null;
 
-    #[Assert\NotBlank(message: "Le numero d' arrivée est obligatoire.")]
+    // #[Assert\NotBlank(message: "Le numero d' arrivée est obligatoire.")]
     #[Assert\Positive(message: "Le numero d' arrivée doit être positif.")]
     #[Assert\Type('integer', message: "Le numero d' arrivée doit être un entier.")]
     
