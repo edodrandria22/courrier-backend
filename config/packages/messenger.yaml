@@ -1,7 +1,10 @@
 framework:
     messenger:
         transports:
-           async_mail: '%env(MESSENGER_TRANSPORT_DSN)%'
+           async_mail: 
+             dsn: '%env(MESSENGER_TRANSPORT_DSN)%'
+             rate_limiter: email_limiter
+
 
         routing:
             'App\Dto\messages\SendEmailMessage': async_mail
