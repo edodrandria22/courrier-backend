@@ -209,11 +209,11 @@ class Messages extends BaseValidation
 
         // Date de départ (créée à la génération du message)
         $dateDepart = $expediteur
-            ? ($this->getCreatedAt()?->format('d/m/Y H:i') ?? '')
-            : '';
-        // Date d'arrivée — adapte le getter si tu as un champ dédié (ex: getDateArrivee())
+        ? ($this->formatDateFr($this->getCreatedAt()) ?? '')
+        : '';
+
         $dateArrivee = $destinataire
-            ? ($this->getIsReadAt()?->format('d/m/Y H:i') ?? 'En route')
+            ? ($this->formatDateFr($this->getIsReadAt()) ?? 'En route')
             : '';
 
         return "
@@ -224,5 +224,25 @@ class Messages extends BaseValidation
                 <td style='border:1px solid #ddd;padding:8px'>{$dateArrivee}</td>
             </tr>
         ";
+    }
+    private function formatDateFr(?\DateTimeInterface $date): ?string
+    {
+        if (!$date) {
+            return null;
+        }
+
+        $mois = [
+            1 => 'Janvier', 2 => 'Février', 3 => 'Mars', 4 => 'Avril',
+            5 => 'Mai', 6 => 'Juin', 7 => 'Juillet', 8 => 'Août',
+            9 => 'Septembre', 10 => 'Octobre', 11 => 'Novembre', 12 => 'Décembre',
+        ];
+
+        $jour = $date->format('j');
+        $moisNom = $mois[(int) $date->format('n')];
+        $annee = $date->format('Y');
+        $heure = $date->format('H');
+        $minute = $date->format('i');
+
+        return "{$jour} {$moisNom} {$annee} à {$heure}h{$minute}";
     }
 }
