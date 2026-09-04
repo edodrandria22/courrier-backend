@@ -199,27 +199,30 @@ class Messages extends BaseValidation
         $expediteur = $this->getExpediteur();
         $destinataire = $this->getDestinataire();
 
-        $destNom = $destinataire 
+        $expNom = $expediteur
+            ? trim(($expediteur->getNom() ?? '') . ' ' . ($expediteur->getPrenom() ?? ''))
+            : '';
+
+        $destNom = $destinataire
             ? trim(($destinataire->getNom() ?? '') . ' ' . ($destinataire->getPrenom() ?? ''))
-            : 'Inconnu';
+            : '';
 
-        // 👉 date du message (createdAt venant de BaseValidation)
-        $date = $this->getCreatedAt()?->format('d/m/Y H:i') ?? 'Date inconnue';
-
-        $expediteurLine = '';
-        if ($expediteur) {
-            $expNom = trim(($expediteur->getNom() ?? '') . ' ' . ($expediteur->getPrenom() ?? ''));
-            $expediteurLine = "<strong>Expéditeur :</strong> {$expNom} <br>";
-        }
+        // Date de départ (créée à la génération du message)
+        $dateDepart = $expediteur
+            ? ($this->getCreatedAt()?->format('d/m/Y H:i') ?? '')
+            : '';
+        // Date d'arrivée — adapte le getter si tu as un champ dédié (ex: getDateArrivee())
+        $dateArrivee = $destinataire
+            ? ($this->getIsReadAt()?->format('d/m/Y H:i') ?? 'En route')
+            : '';
 
         return "
-            <div style='padding:10px;border:1px solid #ddd;border-radius:8px;margin-bottom:10px'>
-                <div style='font-size:12px;color:#888;margin-bottom:5px'>
-                    {$date}
-                </div>
-                {$expediteurLine}
-                <strong>Destinataire :</strong> {$destNom}
-            </div>
+            <tr>
+                <td style='border:1px solid #ddd;padding:8px'>{$expNom}</td>
+                <td style='border:1px solid #ddd;padding:8px'>{$destNom}</td>
+                <td style='border:1px solid #ddd;padding:8px'>{$dateDepart}</td>
+                <td style='border:1px solid #ddd;padding:8px'>{$dateArrivee}</td>
+            </tr>
         ";
     }
 }
