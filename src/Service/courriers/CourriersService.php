@@ -249,7 +249,7 @@ class CourriersService extends BaseService
         
         return $valiny;
     }
-    function genererEmailSuviDetailPersonne(DetailPersonnes $detailPersonne,String $listeDiv)
+    private function genererEmailSuviDetailPersonne(DetailPersonnes $detailPersonne,Courriers $courrier,String $listeDiv)
     {
         if ($detailPersonne->getEmail() === null) {
             return ;
@@ -257,23 +257,75 @@ class CourriersService extends BaseService
         $nom = $detailPersonne->getName() . ' ' . $detailPersonne->getPrenom();
             
         $message=$this->mailService->getHtmlMail($nom, $listeDiv);
-        $this->mailService->sendEmail($detailPersonne->getEmail(), "Suivi du courier", $message);
+        $this->mailService->sendEmail($detailPersonne->getEmail(), "Suivi de votre courrier n° ".$courrier->getReference(), $message);
 
     }
-    public function genererEmailSuiviMessage(Courriers $courrier,array $listeMessage)
+    public function genererEmailSuiviMessage(Courriers $courrier, array $listeMessage)
     {
-        $listeDetailsPersonnes = $courrier->getDetailPersonnes();
+        $listeDetailsPersonnes = $this->detailPersonnesService->getByCourrierId($courrier->getId());
         if (empty($listeDetailsPersonnes)) {
             return;
         }
-        $listDiv = "";
-        foreach ($listeMessage as $message) {
-          $listDiv .= $message->getParticipantsHtml();  
-        }
-        
+
+        [$detenteur, $adresse] = $this->getDetenteurActuel($listeMessage);
+        $listDiv = $this->genererTableauHistorique($listeMessage);
+        $corpsEmail = $this->genererCorpsEmail($courrier, $detenteur, $adresse, $listDiv);
+
         foreach ($listeDetailsPersonnes as $detailPersonne) {
-            $this->genererEmailSuviDetailPersonne($detailPersonne, $listDiv);
+            $this->genererEmailSuviDetailPersonne($detailPersonne, $courrier, $corpsEmail);
         }
+    }
+
+    private function getDetenteurActuel(array $listeMessage): array
+    {
+        if (empty($listeMessage)) {
+            return ['', ''];
+        }
+
+        $destinataire = $listeMessage[0]->getDestinataire();
+        if (!$destinataire) {
+            return ['', ''];
+        }
+
+        $detenteur = trim(($destinataire->getNom() ?? '') . ' ' . ($destinataire->getPrenom() ?? ''));
+        $adresse = $destinataire->getAdresse() ?? '';
+
+        return [$detenteur, $adresse];
+    }
+
+    private function genererTableauHistorique(array $listeMessage): string
+    {
+        $lignes = '';
+        foreach ($listeMessage as $message) {
+            $lignes .= $message->getParticipantsHtml();
+        }
+
+        return "
+            <table style='border-collapse:collapse;width:100%;margin-bottom:10px'>
+                <thead>
+                    <tr>
+                        <th style='border:1px solid #ddd;padding:8px;text-align:left'>Expéditeur</th>
+                        <th style='border:1px solid #ddd;padding:8px;text-align:left'>Destinataire</th>
+                        <th style='border:1px solid #ddd;padding:8px;text-align:left'>Date de départ</th>
+                        <th style='border:1px solid #ddd;padding:8px;text-align:left'>Date d'arrivée</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {$lignes}
+                </tbody>
+            </table>
+        ";
+    }
+
+    private function genererCorpsEmail(Courriers $courrier, string $detenteur, string $adresse, string $listDiv): string
+    {
+        return "
+            <p>Voici la situation actuelle de votre courrier ayant comme objet : <strong>{$courrier->getObject()}</strong> :</p>
+            <p>Détenteur actuel : <strong>{$detenteur}</strong></p>
+            <p>Adresse : <strong>{$adresse}</strong></p>
+            <p>Historique du mouvement :</p>
+            {$listDiv}
+        ";
     }
     public function modifierObservationHistorique(int $idHistorique,Utilisateurs $utilisateur ,?string $observation): ?VueHistoriqueDetails
     {
