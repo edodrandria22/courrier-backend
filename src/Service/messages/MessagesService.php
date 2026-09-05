@@ -422,6 +422,9 @@ class MessagesService extends BaseService
         $conn->beginTransaction(); // Début de la transaction
         try {
             $courrier = $this->courriersService->getValidatedCourrier($id);
+            if ($courrier->getCloturePar()) {
+                throw new Exception("Le courrier est déjà cloturé.");
+            }
             $date = new DateTimeImmutable();
             $courrier->setDateValidation($date);
             $courrier->setCloturePar($user);
