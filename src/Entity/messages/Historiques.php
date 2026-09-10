@@ -86,7 +86,7 @@ class Historiques extends BaseEntite
 
     public function setNumero(?int $numero): self
     {
-        if($numero <= 0) {
+        if ($numero !== null && $numero <= 0) {
             throw new \InvalidArgumentException('Le numéro ne peut pas être négatif ou zéro');
         }
         $this->numero = $numero;

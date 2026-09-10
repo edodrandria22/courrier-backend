@@ -55,7 +55,7 @@ class MessageController extends BaseApiController
             $data = $request->request->all();
             $uploadedFiles = $request->files->get('fichiers', []);
 
-            $this->validatorService->validateRequiredFields($data, ['id', 'destId','numeroDepart']);
+            $this->validatorService->validateRequiredFields($data, ['id', 'destId']);
 
             $message = $this->messagesService->transfererMessageById(
                 messageId: (int) $data['id'],
@@ -63,7 +63,9 @@ class MessageController extends BaseApiController
                 nouveauDestinataireId: (int) $data['destId'],
                 observation: $data['observation'] ?? null,
                 bordureau: $data['bordureau'] ?? null,
-                numeroDepart: (int)$data['numeroDepart'],
+                numeroDepart: isset($data['numeroDepart']) && $data['numeroDepart'] !== ''
+                    ? (int) $data['numeroDepart']
+                    : null,
                 files: is_array($uploadedFiles) ? $uploadedFiles : [$uploadedFiles]
             );
             $excludes = ['createdAt', 'deletedAt'];
@@ -84,9 +86,9 @@ class MessageController extends BaseApiController
         try {
             $user = $this->getUserFromRequest($request);
             $data = $request->toArray();
-            $this->validatorService->validateRequiredFields($data, ['numeroArrivee']);
+            // $this->validatorService->validateRequiredFields($data, ['numeroArrivee']);
             
-            $numeroArrivee = $data['numeroArrivee'];
+            $numeroArrivee = $data['numeroArrivee'] ?? null;
             $message = $this->messagesService->lireMessage($id, $user, $numeroArrivee);
             $excludes = ['createdAt', 'deletedAt'];
             $data = $message->toArray($excludes);
