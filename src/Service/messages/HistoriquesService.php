@@ -64,12 +64,12 @@ class HistoriquesService extends BaseService
         $historique->setMessage($messages);
         $historique->setObservation($messages->getObservation());
         
-        $nbCourriers = $this->getNbCourrierByUser($utilisateur,$isSend) +1;
-        if($numero)
-        {
-            $nbCourriers = $numero;
-        }
-        $historique->setNumero($nbCourriers);   
+        // $nbCourriers = $this->getNbCourrierByUser($utilisateur,$isSend) +1;
+        // if($numero)
+        // {
+        //     $nbCourriers = $numero;
+        // }
+        $historique->setNumero($numero);   
         return $historique;
     }
     public function updateHistorique(Utilisateurs $utilisateur, Courriers $courrier, bool $isSend,Messages $messages, ?int $numeroDepart = null): Historiques
@@ -81,9 +81,11 @@ class HistoriquesService extends BaseService
         $historique->setIsSend($isSend);
         $historique->setMessage($messages);
         if($isSend  == true){
-            $nbCourriers = $this->getNbCourrierByUser($utilisateur,$isSend) +1;
-            $nbCourriers = $numeroDepart ?? $nbCourriers;
-            $historique->setNumero($nbCourriers);
+            // $nbCourriers = $this->getNbCourrierByUser($utilisateur,$isSend) +1;
+            // $nbCourriers = $numeroDepart ?? $nbCourriers;
+            // $historique->setNumero($nbCourriers);
+            $historique->setNumero($numeroDepart);
+            
         }
         return $historique;
     }
@@ -178,7 +180,7 @@ class HistoriquesService extends BaseService
             throw $e;
         }
     }
-    public function modifierHistoriqueVoirMessage(Utilisateurs $utilisateur,Messages $message,int $numeroArrivee): array
+    public function modifierHistoriqueVoirMessage(Utilisateurs $utilisateur,Messages $message,?int $numeroArrivee = null): array
     {
         $this->verifierUtilisateur($utilisateur, $message->getDestinataire(), "voir le message");
         // $numeroArrivee = $this->getNbCourrierByUser($utilisateur,false) +1;

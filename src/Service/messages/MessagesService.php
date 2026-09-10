@@ -185,7 +185,7 @@ class MessagesService extends BaseService
         $this->mercureService->sendNotification("lectureMessage",$data);
     }
 
-    public function lireMessage(int $messageId,Utilisateurs $user, int $numeroArrivee): Messages
+    public function lireMessage(int $messageId,Utilisateurs $user, ?int $numeroArrivee = null): Messages
     {
         $this->em->getConnection()->beginTransaction();
         try {
