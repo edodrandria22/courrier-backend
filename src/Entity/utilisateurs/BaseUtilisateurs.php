@@ -26,6 +26,8 @@ abstract class BaseUtilisateurs extends BaseEntite
     #[ORM\ManyToOne(targetEntity: Roles::class)]
     #[ORM\JoinColumn(nullable: false)]
     protected ?Roles $role = null;
+    #[ORM\Column(length: 255, nullable: true)]
+    protected ?string $sigle = null;
 
     public function getEmail(): ?string
     {
@@ -86,7 +88,15 @@ abstract class BaseUtilisateurs extends BaseEntite
     {
         return $this->adresse;
     }
-
+    public function getSigle(): ?string
+    {
+        return $this->sigle;
+    }
+    public function setSigle(?string $sigle): static
+    {
+        $this->sigle = $sigle;
+        return $this;
+    }
     public function setAdresse(?string $adresse): static
     {
         $this->adresse = $adresse;
@@ -105,7 +115,9 @@ abstract class BaseUtilisateurs extends BaseEntite
             $data['idRole'] = $this->getRole() ? $this->getRole()->getId() : null;
         }
         $data['nom'] = $this->getNom();
+        $data['adresse'] = $this->getAdresse();
         $data['prenom'] = $this->getPrenom();
+        $data['sigle'] = $this->getSigle();
 
         return $data;
     }
