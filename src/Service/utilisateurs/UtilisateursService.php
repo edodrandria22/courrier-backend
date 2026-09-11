@@ -64,7 +64,8 @@ class UtilisateursService extends BaseService
 
         $dto->getPrenom() !== null && $user->setPrenom($dto->getPrenom() ? mb_convert_case($dto->getPrenom(), MB_CASE_TITLE, "UTF-8") : null);
         $dto->getAdresse() !== null && $user->setAdresse($dto->getAdresse());
-
+        $dto->getSigle() !== null && $user->setSigle(mb_strtoupper($dto->getSigle(), 'UTF-8'));
+        
         $role = $this->roleRepository->getById($dto->getIdRole()) ?? throw new \InvalidArgumentException('Rôle introuvable');
         $user->setRole($role);
 
@@ -106,7 +107,7 @@ class UtilisateursService extends BaseService
         $user->setNom($nom);
         $user->setPrenom($prenom);
         $user->setAdresse($dto->getAdresse());
-        
+        $dto->getSigle() !== null && $user->setSigle(mb_strtoupper($dto->getSigle(), 'UTF-8'));
         return $this->createUser($user,$dto->getIdRole());
     }
     public function changerMdp(Utilisateurs $user,string $nouveauMdp): Utilisateurs
@@ -129,6 +130,7 @@ class UtilisateursService extends BaseService
         $newUser->setPrenom($user->getPrenom());
         $newUser->setAdresse($user->getAdresse());
         $newUser->setRole($user->getRole());
+        $newUser->setSigle($user->getSigle());
         
         return $newUser;
     }

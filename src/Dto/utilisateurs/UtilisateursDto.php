@@ -33,6 +33,9 @@ class UtilisateursDto
     )]
     #[Assert\Positive(message: "L'identifiant du rôle doit être positif.")]
     public ?int $idRole = null;
+    #[Assert\Length(max: 255)]
+    public ?string $sigle = null;
+
 
     // ===== GETTERS =====
 
@@ -64,6 +67,10 @@ class UtilisateursDto
     public function getIdRole(): ?int
     {
         return $this->idRole;
+    }
+    public function getSigle(): ?string
+    {
+        return $this->sigle;
     }
 
 }

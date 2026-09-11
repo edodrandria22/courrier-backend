@@ -178,4 +178,8 @@ message
     --numero de depart lors de l'envoie message -- ok -- 30 mn
     --heure doit etre heure local -- a faire -- 30 mn
     --recherche avec bordureau
+11/09/2026
+     --numero depart et arrivee optionel -- ok -- 60 mn
+     --sigle pour chaque entite -- a faire -- 30 mn
+     --recherche pour afficher seulement une seule reference -- a faire -- 90mn
 --whatsapp -- a faire -- 120 mn
