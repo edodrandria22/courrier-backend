@@ -377,6 +377,31 @@ class CourrierController extends BaseApiController
             return $this->jsonError($e->getMessage(),  400);
         }
     }
+    #[Route('/rechercheReference', name: 'api_courriers_recherche_reference', methods: ['POST'])]
+    #[TokenRequired]
+    public function rechercheReference(Request $request): JsonResponse
+    {
+        try {
+            $user = $this->getUserFromRequest($request);
+            $dto = $this->deserializeAndValidate(
+                $request,
+                RechercheCourriersDto::class
+            );
+            
+            $date = $dto->date ?? new DateTimeImmutable();
+            $limitParam = $request->query->get('limit');
+            $limit = $limitParam ? (int)$limitParam : ($_ENV['LIMIT_PAGINATIONS'] ?? 10);
+            $paginationCriteria = new PaginationCriteria($date, $limit);
+            $orderCriteria = new OrderCriteria();
+            $orderCriteria->addField(["historiqueId"]);
+            $result = $this->vueHistoriqueDetailsService->searchByDtoUniqueReference($user, $dto, $orderCriteria, $paginationCriteria);
+            $excludes = ['deletedAt','mdp'];
+            $data = $this->vueHistoriqueDetailsService->transformerArrayUtilisateur($result, $excludes);
+            return $this->jsonSuccess($data);
+        } catch (\Throwable $e) {
+            return $this->jsonError($e->getMessage(),  400);
+        }
+    }
     #[Route('/envoyer-email-suivre', name: 'api_courriers_envoyer_email_suivre', methods: ['POST'])]
     public function envoyerEmailSuivre(Request $request): JsonResponse
     {

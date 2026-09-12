@@ -129,11 +129,39 @@ class VueHistoriqueDetailPersonnesService extends BaseService
             $conditions[] = new ConditionCriteria('bordureau',$dto->bordureau, 'LIKE');
         }
 
-        
+
         return $this->search($conditions, $orderCriteria, $paginationCriteria);
     }
-    
-    
-    
+
+    public function searchByDtoUniqueReference(Utilisateurs $utilisateur, RechercheCourriersDto $dto, OrderCriteria $orderCriteria, PaginationCriteria $paginationCriteria): array
+    {
+        // Augmenter la limite pour compenser le filtrage par référence unique
+        $originalLimit = $paginationCriteria->getLimit();
+        $multiplier = 5; // Multiplier pour avoir assez de résultats après filtrage
+        $paginationCriteria->setLimit($originalLimit * $multiplier);
+        
+        $results = $this->searchByDto($utilisateur, $dto, $orderCriteria, $paginationCriteria);
+        
+        $uniqueReferences = [];
+        $filteredResults = [];
+        
+        foreach ($results as $result) {
+            $reference = $result->getReference();
+            if (!in_array($reference, $uniqueReferences, true)) {
+                $uniqueReferences[] = $reference;
+                $filteredResults[] = $result;
+                
+                // Arrêter si on a atteint la limite originale
+                if (count($filteredResults) >= $originalLimit) {
+                    break;
+                }
+            }
+        }
+        
+        // Restaurer la limite originale
+        $paginationCriteria->setLimit($originalLimit);
+        
+        return $filteredResults;
+    }
     
 }
