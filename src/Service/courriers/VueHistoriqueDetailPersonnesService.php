@@ -75,48 +75,45 @@ class VueHistoriqueDetailPersonnesService extends BaseService
         if ($this->notEmpty($dto->numeroDestinataire)) {
             $conditions[] = new ConditionCriteria('numeroDestinataire', $dto->numeroDestinataire, '=');
         }
-        
+
         if ($dto->isConfidentiel !== null) {
             $conditions[] = new ConditionCriteria('isConfidentiel', $dto->isConfidentiel, '=');
         }
 
         // Date courrier BETWEEN
         if ($dto->dateDebut && $dto->dateFin) {
-            $conditions[] = new ConditionCriteria(
-                'createdAt',
-                [$dto->dateDebut, $dto->dateFin],
-                'BETWEEN'
-            );
+            [$debut, $fin] = $this->normalizeDateRange($dto->dateDebut, $dto->dateFin);
+            $conditions[] = new ConditionCriteria('createdAt', [$debut, $fin], 'BETWEEN');
         } elseif ($dto->dateDebut) {
-            $conditions[] = new ConditionCriteria('createdAt', $dto->dateDebut, '>=');
+            $debut = (clone $dto->dateDebut)->format('Y-m-d') . ' 00:00:00';
+            $conditions[] = new ConditionCriteria('createdAt', $debut, '>=');
         } elseif ($dto->dateFin) {
-            $conditions[] = new ConditionCriteria('createdAt', $dto->dateFin, '<=');
+            $fin = (clone $dto->dateFin)->format('Y-m-d') . ' 23:59:59';
+            $conditions[] = new ConditionCriteria('createdAt', $fin, '<=');
         }
 
         // Date reception BETWEEN
         if ($dto->dateReceptionDebut && $dto->dateReceptionFin) {
-            $conditions[] = new ConditionCriteria(
-                'isReadAt',
-                [$dto->dateReceptionDebut, $dto->dateReceptionFin],
-                'BETWEEN'
-            );
+            [$debut, $fin] = $this->normalizeDateRange($dto->dateReceptionDebut, $dto->dateReceptionFin);
+            $conditions[] = new ConditionCriteria('isReadAt', [$debut, $fin], 'BETWEEN');
         } elseif ($dto->dateReceptionDebut) {
-            $conditions[] = new ConditionCriteria('isReadAt', $dto->dateReceptionDebut, '>=');
+            $debut = (clone $dto->dateReceptionDebut)->format('Y-m-d') . ' 00:00:00';
+            $conditions[] = new ConditionCriteria('isReadAt', $debut, '>=');
         } elseif ($dto->dateReceptionFin) {
-            $conditions[] = new ConditionCriteria('isReadAt', $dto->dateReceptionFin, '<=');
+            $fin = (clone $dto->dateReceptionFin)->format('Y-m-d') . ' 23:59:59';
+            $conditions[] = new ConditionCriteria('isReadAt', $fin, '<=');
         }
 
         // Date message BETWEEN
         if ($dto->dateMessageDebut && $dto->dateMessageFin) {
-            $conditions[] = new ConditionCriteria(
-                'dateMessage',
-                [$dto->dateMessageDebut, $dto->dateMessageFin],
-                'BETWEEN'
-            );
+            [$debut, $fin] = $this->normalizeDateRange($dto->dateMessageDebut, $dto->dateMessageFin);
+            $conditions[] = new ConditionCriteria('dateMessage', [$debut, $fin], 'BETWEEN');
         } elseif ($dto->dateMessageDebut) {
-            $conditions[] = new ConditionCriteria('dateMessage', $dto->dateMessageDebut, '>=');
+            $debut = (clone $dto->dateMessageDebut)->format('Y-m-d') . ' 00:00:00';
+            $conditions[] = new ConditionCriteria('dateMessage', $debut, '>=');
         } elseif ($dto->dateMessageFin) {
-            $conditions[] = new ConditionCriteria('dateMessage', $dto->dateMessageFin, '<=');
+            $fin = (clone $dto->dateMessageFin)->format('Y-m-d') . ' 23:59:59';
+            $conditions[] = new ConditionCriteria('dateMessage', $fin, '<=');
         }
 
         // Statut basé sur dateValidation
@@ -129,8 +126,27 @@ class VueHistoriqueDetailPersonnesService extends BaseService
             $conditions[] = new ConditionCriteria('bordureau',$dto->bordureau, 'LIKE');
         }
 
-
         return $this->search($conditions, $orderCriteria, $paginationCriteria);
+    }
+
+    /**
+     * Normalise une plage de dates : début à 00:00:00, fin à 23:59:59
+     *
+     * @return array{0: \DateTimeInterface, 1: \DateTimeInterface}
+     */
+    private function normalizeDateRange(\DateTimeInterface $debut, \DateTimeInterface $fin): array
+    {
+        $debutNormalise = \DateTime::createFromFormat(
+            'Y-m-d H:i:s',
+            $debut->format('Y-m-d') . ' 00:00:00'
+        );
+
+        $finNormalisee = \DateTime::createFromFormat(
+            'Y-m-d H:i:s',
+            $fin->format('Y-m-d') . ' 23:59:59'
+        );
+
+        return [$debutNormalise, $finNormalisee];
     }
 
     public function searchByDtoUniqueReference(Utilisateurs $utilisateur, RechercheCourriersDto $dto, OrderCriteria $orderCriteria, PaginationCriteria $paginationCriteria): array
