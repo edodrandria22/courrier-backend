@@ -50,6 +50,17 @@ class VueHistoriqueDetailsService extends BaseService
 
         return $data;
     }
+    public function searchByDtoUniqueReference(Utilisateurs $utilisateur, RechercheCourriersDto $dto, OrderCriteria $orderCriteria, PaginationCriteria $paginationCriteria): array
+    {
+        $data = $this->vueHistoriqueDetailPersonnesService->searchByDtoUniqueReference($utilisateur, $dto, $orderCriteria, $paginationCriteria);
+        foreach ($data as $historique) {
+            $historique->setDetailPersonnes(
+                $this->detailPersonnesService->getByCourrierId($historique->getId())
+            );
+        }
+
+        return $data;
+    }
     public function getHistoriques(
         Utilisateurs $user,
         OrderCriteria $orderCriteria,
