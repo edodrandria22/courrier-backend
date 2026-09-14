@@ -136,6 +136,10 @@ abstract class BaseRepository extends ServiceEntityRepository
                 '!=' => $qb->expr()->neq($field, ':' . $param),
 
                 'LIKE' => $qb->expr()->like($field, ':' . $param),
+                'ILIKE' => $qb->expr()->like(
+                    \sprintf('LOWER(%s)', $field),
+                    \sprintf('LOWER(:%s)', $param)
+                ),
 
                 '>' => $qb->expr()->gt($field, ':' . $param),
 
@@ -169,7 +173,7 @@ abstract class BaseRepository extends ServiceEntityRepository
 
             } elseif (!in_array($operator, ['IS NULL', 'IS NOT NULL'])) {
 
-                if ($operator === 'LIKE') {
+                if (in_array($operator, ['LIKE', 'ILIKE'])) {
                     $value = "%$value%";
                 }
 
