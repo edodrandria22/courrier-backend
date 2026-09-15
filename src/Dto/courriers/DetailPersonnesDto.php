@@ -17,6 +17,10 @@ class DetailPersonnesDto
 
     private ?string $telephone = null;
 
+    private ?int $matricule = null;
+
+    private ?string $employeur = null;
+
     // ===== GETTERS =====
 
     public function getName(): ?string
@@ -62,6 +66,28 @@ class DetailPersonnesDto
     public function setTelephone(?string $telephone): self
     {
         $this->telephone = $telephone;
+        return $this;
+    }
+    
+    public function getMatricule(): ?int
+    {
+        return $this->matricule;
+    }
+    
+    public function setMatricule(?int $matricule): self
+    {
+        $this->matricule = $matricule;
+        return $this;
+    }
+    
+    public function getEmployeur(): ?string
+    {
+        return $this->employeur;
+    }
+    
+    public function setEmployeur(?string $employeur): self
+    {
+        $this->employeur = $employeur;
         return $this;
     }
 }

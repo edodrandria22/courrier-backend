@@ -94,6 +94,8 @@ class CourriersService extends BaseService
             $detailPersonneEntity->setPrenom($prenom);
             $detailPersonneEntity->setEmail($detailPersonne->getEmail());
             $detailPersonneEntity->setTelephone($detailPersonne->getTelephone());
+            $detailPersonneEntity->setMatricule($detailPersonne->getMatricule());
+            $detailPersonneEntity->setEmployeur($detailPersonne->getEmployeur());
 
             $messageCourrier = $this->genererMessageInsertionCourrier($detailPersonneEntity, $courrier);
             $this->mailService->sendEmail($detailPersonneEntity->getEmail(),"Référence de suivi de votre courrier au Mesupres" ,$messageCourrier);

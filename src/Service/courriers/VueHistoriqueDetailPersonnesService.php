@@ -65,6 +65,15 @@ class VueHistoriqueDetailPersonnesService extends BaseService
         if ($this->notEmpty($dto->telephone)) {
             $conditions[] = new ConditionCriteria('telephone', $dto->telephone, 'LIKE');
         }
+        
+        if ($this->notEmpty($dto->matricule)) {
+            $conditions[] = new ConditionCriteria('matricule', $dto->matricule, '=');
+        }
+        
+        if ($this->notEmpty($dto->employeur)) {
+            $conditions[] = new ConditionCriteria('employeur', $dto->employeur, 'ILIKE');
+        }
+        
 
         if ($this->notEmpty($dto->numero)) {
             $conditions[] = new ConditionCriteria('numero', $dto->numero, '=');

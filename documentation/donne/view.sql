@@ -56,7 +56,9 @@ SELECT
     dp.name,
     dp.prenom,
     dp.email,
-    dp.telephone
+    dp.telephone,
+    dp.matricule,
+    dp.employeur
 
 FROM vue_historique_details v
 
