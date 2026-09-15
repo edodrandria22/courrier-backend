@@ -59,4 +59,6 @@ class RechercheCourriersDto
     public ?bool $isConfidentiel = null;
     #[Assert\Type("string")]
     public ?string $bordureau = null;
+    public ?int $matricule = null;
+    public ?string $employeur = null;
 }

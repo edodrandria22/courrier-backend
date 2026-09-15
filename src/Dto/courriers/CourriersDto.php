@@ -108,6 +108,8 @@ class CourriersDto
                 if (isset($item['prenom'])) $dto->setPrenom($item['prenom']);
                 if (isset($item['email'])) $dto->setEmail($item['email']);
                 if (isset($item['telephone'])) $dto->setTelephone($item['telephone']);
+                if (isset($item['matricule'])) $dto->setMatricule($item['matricule']);
+                if (isset($item['employeur'])) $dto->setEmployeur($item['employeur']);
                 
                 return $dto;
             }

@@ -20,8 +20,16 @@ class DetailPersonnes extends BaseEntite
     #[ORM\Column(type: "string", length: 255, nullable: true)]
     protected ?string $telephone = null;
     
+    #[ORM\Column(type: "integer", nullable: true)]
+    private ?int $matricule = null;
+
+    #[ORM\Column(type: "string", length: 255, nullable: true)]
+    protected ?string $employeur = null;
+    
     #[ORM\ManyToOne(targetEntity: Courriers::class)]
     #[ORM\JoinColumn(nullable: true)]
+
+
     protected ?Courriers $courrier = null;
     public function __construct()
     {
@@ -71,6 +79,25 @@ class DetailPersonnes extends BaseEntite
     public function setCourrier(?Courriers $courrier): self
     {
         $this->courrier = $courrier;
+        return $this;
+    }
+    public function getMatricule(): ?int
+    {
+        return $this->matricule;
+    }
+
+    public function setMatricule(?int $matricule): self
+    {
+        $this->matricule = $matricule;
+        return $this;
+    }
+    public function getEmployeur(): ?string
+    {
+        return $this->employeur;
+    }
+    public function setEmployeur(?string $employeur): self
+    {
+        $this->employeur = $employeur;
         return $this;
     }
 }

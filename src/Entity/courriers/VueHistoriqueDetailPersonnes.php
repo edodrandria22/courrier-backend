@@ -22,6 +22,13 @@ class VueHistoriqueDetailPersonnes extends BaseVueHistoriqueDetails
 
     #[ORM\Column(type: "string", length: 255, nullable: true)]
     protected ?string $telephone = null;
+    
+    #[ORM\Column(type: "string", length: 255, nullable: true)]
+    protected ?string $matricule = null;
+    
+    #[ORM\Column(type: "string", length: 255, nullable: true)]
+    protected ?string $employeur = null;
+    
     public function __construct()
     {
     }
@@ -61,6 +68,28 @@ class VueHistoriqueDetailPersonnes extends BaseVueHistoriqueDetails
     public function setTelephone(?string $telephone): self
     {
         $this->telephone = $telephone;
+        return $this;
+    }
+    
+    public function getMatricule(): ?string
+    {
+        return $this->matricule;
+    }
+    
+    public function setMatricule(?string $matricule): self
+    {
+        $this->matricule = $matricule;
+        return $this;
+    }
+    
+    public function getEmployeur(): ?string
+    {
+        return $this->employeur;
+    }
+    
+    public function setEmployeur(?string $employeur): self
+    {
+        $this->employeur = $employeur;
         return $this;
     }
 
