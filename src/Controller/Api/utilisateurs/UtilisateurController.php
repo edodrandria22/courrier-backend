@@ -60,7 +60,7 @@ class UtilisateurController extends BaseApiController
             );
             $user = $this->utilisateurService->saveDto($dto);
             
-           $excludes = ['createdAt', 'deletedAt','mdp'];
+           $excludes = ['deletedAt','mdp'];
             $data = $user->toArray($excludes);
             return $this->jsonSuccess($data);
 
@@ -99,7 +99,22 @@ class UtilisateurController extends BaseApiController
             );
             $user = $this->utilisateurService->updateUser($id, $dto);
             
-            $excludes = ['createdAt', 'deletedAt', 'mdp'];
+            $excludes = ['deletedAt', 'mdp'];
+            $data = $user->toArray($excludes);
+            return $this->jsonSuccess($data);
+            
+        } catch (\Exception $e) {
+            return $this->jsonError($e->getMessage(), 400);
+        }
+    }
+    #[Route('/{id}/inactif', name: 'api_utilisateur_inactif', methods: ['PUT'])]
+    #[TokenRequired(['Admin'])]
+    public function inactifUser(int $id): JsonResponse
+    {
+        try {
+            $user = $this->utilisateurService->setUserInactifOrActive($id);
+            
+            $excludes = ['deletedAt', 'mdp'];
             $data = $user->toArray($excludes);
             return $this->jsonSuccess($data);
             
@@ -197,6 +212,18 @@ class UtilisateurController extends BaseApiController
             return $this->jsonError($e->getMessage(),  400);
         }
     }
+    #[Route('/{id}', methods: ['DELETE'], requirements: ['id' => '\d+'])]
+    #[TokenRequired(['Admin'])]
+    public function deleteUser(int $id): JsonResponse
+    {
+        try {
+            $this->utilisateurService->deleteAdmin($id);
+            return $this->jsonSuccess(null);
+        } catch (\Exception $e) {
+            return $this->jsonError($e->getMessage(), 400);
+        }
+    }
+
 }
 
 

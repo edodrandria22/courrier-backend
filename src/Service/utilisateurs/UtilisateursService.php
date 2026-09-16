@@ -169,4 +169,33 @@ class UtilisateursService extends BaseService
         $rolesId = [1, 2];
         return $this->getAllUsersPaginatedByRoles($rolesId, $paginationCriteria);
     }
+    private function isRoleExacte(Utilisateurs $user,int $idRole, String $erreur):void{
+        if($user->getRole()->getId() !== $idRole) {
+            throw new Exception($erreur);
+        }
+    }
+    public function deleteAdmin(int $userId): void
+    {
+        if($userId==1)
+        {
+            throw new Exception("On ne peut pas supprimer le premier admin");
+        }
+        $user = $this->getById($userId);
+        $this->validationService->throwIfNull($user, "Utilisateur avec l'ID $userId introuvable.");
+        $this->isRoleExacte($user, 1, "Seul l'admin peut être supprimé");
+        $this->delete($user);
+    }
+    public function setUserInactifOrActive(int $userId): Utilisateurs
+    {
+        $user = $this->getById($userId);
+        $this->validationService->throwIfNull($user, "Utilisateur avec l'ID $userId introuvable.");
+        $dateInactif = $user->getDateInactif();
+        $this->isRoleExacte($user, 2, "Seul l'utilisateur peut être activé/désactivé");
+        if($dateInactif !== null) {
+            $user->setDateInactif(null);
+        } else {
+            $user->setDateInactif(new \DateTimeImmutable());
+        }
+        return $this->save($user);
+    }
 }
