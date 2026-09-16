@@ -34,7 +34,7 @@ class VueUtilisateursService extends BaseService
         $conditions[] = new ConditionCriteria('nomComplet', $nomJerena, 'like');
         $conditions[] = new ConditionCriteria('role', [2,3], 'in');
         $conditions[] = new ConditionCriteria('createdAt', $paginationCriteria->getValue(), '<');
-        $conditions[] = new ConditionCriteria('dateInactif', null, 'IS NOT NULL');
+        $conditions[] = new ConditionCriteria('dateInactif', null, 'IS NULL');
 
         
         return $this->search($conditions, $orderCriteria, $paginationCriteria);

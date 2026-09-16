@@ -150,26 +150,32 @@ class UtilisateurController extends BaseApiController
         $email = $data['email'];
         $plainPassword = $data['mdp'];
 
+        try {
+            // 🔑 Vérification du login via le repository
+            $user = $this->utilisateurService->login($email, $plainPassword);
 
-        // 🔑 Vérification du login via le repository
-        $user = $this->utilisateurService->login($email, $plainPassword);
+            if (!$user) {
+                return $this->jsonError('Identifiants invalides', 404);
+            }
 
-        if (!$user) {
-            return $this->jsonError('Identifiants invalides', 404);
+            $excludes = ['createdAt', 'deletedAt', 'mdp'];
+            $userArray = $user->toArray($excludes);
+
+            $tokenDuration = $this->params->get('jwt_token_duration');
+
+            $token = $this->jwtManager->createToken($userArray, $tokenDuration);
+            $tokenString = $token->toString();
+
+            $responseData = [
+                'membre' => $userArray,
+                'token' => $tokenString
+            ];
+
+            return $this->jsonSuccess($responseData);
+
+        } catch (\Exception $e) {
+            return $this->jsonError($e->getMessage(), 400);
         }
-
-        $excludes = ['createdAt', 'deletedAt','mdp'];
-        $userArray = $user->toArray($excludes);
-
-        $tokenDuration = $this->params->get('jwt_token_duration');
-
-        $token = $this->jwtManager->createToken($userArray, $tokenDuration);
-        $tokenString = $token->toString();
-        $data = [
-            'membre' => $userArray,
-            'token' => $tokenString
-        ];
-        return $this->jsonSuccess($data);
     }
     #[Route('/changerMdp', name: 'user_changer_mdp', methods: ['POST'])]
     #[TokenRequired]

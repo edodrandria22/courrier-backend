@@ -88,6 +88,9 @@ class UtilisateursService extends BaseService
     public function login(string $email, string $plainPassword): ?Utilisateurs
     {
         $user = $this->repository->login($email, $plainPassword);
+        if($user && $user->getDateInactif() !== null) {
+            throw new Exception("Utilisateur inactif");
+        }
 
         return $user;
     }
