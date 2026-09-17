@@ -14,4 +14,8 @@ INSERT INTO utilisateurs
 VALUES
 (2,3, NOW(), NULL, 'externe@gmail.com', 'externe', 'Externe', 'Externe');
 
-
+INSERT INTO entites (id,created_at, name)
+VALUES
+    (1,NOW(), 'Enseignant-chercheur'),
+    (2,NOW(), 'Chercheur-enseignant'),
+    (3,NOW(), 'PAT');

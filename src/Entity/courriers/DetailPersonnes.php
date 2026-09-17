@@ -5,6 +5,7 @@ namespace App\Entity\courriers;
 use App\Entity\utils\BaseEntite;
 use App\Repository\courriers\DetailPersonnesRepository;
 use Doctrine\ORM\Mapping as ORM;
+use App\Entity\courriers\Courriers;
 #[ORM\Entity(repositoryClass: DetailPersonnesRepository::class)]    
 class DetailPersonnes extends BaseEntite
 {
@@ -28,9 +29,11 @@ class DetailPersonnes extends BaseEntite
     
     #[ORM\ManyToOne(targetEntity: Courriers::class)]
     #[ORM\JoinColumn(nullable: true)]
-
-
     protected ?Courriers $courrier = null;
+
+    #[ORM\ManyToOne(targetEntity:Entites::class)]
+    #[ORM\JoinColumn(nullable: true)]
+    protected ?Entites $entites = null;
     public function __construct()
     {
     }
@@ -100,4 +103,14 @@ class DetailPersonnes extends BaseEntite
         $this->employeur = $employeur;
         return $this;
     }
+    public function getEntites(): ?Entites
+    {
+        return $this->entites;
+    }
+    public function setEntites(?Entites $entites): self
+    {
+        $this->entites = $entites;
+        return $this;
+    }
+    
 }

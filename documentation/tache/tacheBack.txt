@@ -187,5 +187,5 @@ message
 16/05/2026
     --suprrimer une admin -- ok -- 30mn
     --mettre une utilisateur actif ou inactif -- a faire -- 30mn
-    --modifier login seulement pour les compte actif -- a faire -- 30 mn
+    --modifier login seulement pour les compte actif -- ok -- 30 mn
 --whatsapp -- a faire -- 120 mn
