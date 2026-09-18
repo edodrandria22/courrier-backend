@@ -33,7 +33,7 @@ class DetailPersonnes extends BaseEntite
 
     #[ORM\ManyToOne(targetEntity:Entites::class)]
     #[ORM\JoinColumn(nullable: true)]
-    protected ?Entites $entites = null;
+    protected ?Entites $entite = null;
     public function __construct()
     {
     }
@@ -103,14 +103,22 @@ class DetailPersonnes extends BaseEntite
         $this->employeur = $employeur;
         return $this;
     }
-    public function getEntites(): ?Entites
+    public function getEntite(): ?Entites
     {
-        return $this->entites;
+        return $this->entite;
     }
-    public function setEntites(?Entites $entites): self
+    public function setEntite(?Entites $entite): self
     {
-        $this->entites = $entites;
+        $this->entite = $entite;
         return $this;
+    }
+     public function toArray(array $exclude = []): array
+    {
+        $data = parent::toArray($exclude);
+        $entite = $this->getEntite();
+        $data['entiteId'] = $entite?->getId();
+        $data['entite'] = $entite?->getName();
+        return $data;
     }
     
 }

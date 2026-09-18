@@ -58,7 +58,8 @@ SELECT
     dp.email,
     dp.telephone,
     dp.matricule,
-    dp.employeur
+    dp.employeur,
+    dp.entite_id
 
 FROM vue_historique_details v
 

@@ -61,4 +61,5 @@ class RechercheCourriersDto
     public ?string $bordureau = null;
     public ?int $matricule = null;
     public ?string $employeur = null;
+    public ?int $entiteId = null;
 }

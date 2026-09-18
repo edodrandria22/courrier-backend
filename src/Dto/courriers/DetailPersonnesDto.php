@@ -21,6 +21,8 @@ class DetailPersonnesDto
 
     private ?string $employeur = null;
 
+    private ?int $entiteId = null;
+
     // ===== GETTERS =====
 
     public function getName(): ?string
@@ -88,6 +90,17 @@ class DetailPersonnesDto
     public function setEmployeur(?string $employeur): self
     {
         $this->employeur = $employeur;
+        return $this;
+    }
+    
+    public function getEntiteId(): ?int
+    {
+        return $this->entiteId;
+    }
+    
+    public function setEntiteId(?int $entiteId): self
+    {
+        $this->entiteId = $entiteId !== null ? (int) $entiteId : null;
         return $this;
     }
 }

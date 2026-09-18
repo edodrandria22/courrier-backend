@@ -8,7 +8,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Routing\Annotation\Route;
 
 #[Route('/entites')]
-class NumeroDepartsController extends BaseApiController
+class EntitesController extends BaseApiController
 {
 
     public function __construct(
