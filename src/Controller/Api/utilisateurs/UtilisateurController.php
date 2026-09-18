@@ -60,7 +60,7 @@ class UtilisateurController extends BaseApiController
             );
             $user = $this->utilisateurService->saveDto($dto);
             
-           $excludes = ['createdAt', 'deletedAt','mdp'];
+           $excludes = ['deletedAt','mdp'];
             $data = $user->toArray($excludes);
             return $this->jsonSuccess($data);
 
@@ -99,7 +99,22 @@ class UtilisateurController extends BaseApiController
             );
             $user = $this->utilisateurService->updateUser($id, $dto);
             
-            $excludes = ['createdAt', 'deletedAt', 'mdp'];
+            $excludes = ['deletedAt', 'mdp'];
+            $data = $user->toArray($excludes);
+            return $this->jsonSuccess($data);
+            
+        } catch (\Exception $e) {
+            return $this->jsonError($e->getMessage(), 400);
+        }
+    }
+    #[Route('/{id}/inactif', name: 'api_utilisateur_inactif', methods: ['PUT'])]
+    #[TokenRequired(['Admin'])]
+    public function inactifUser(int $id): JsonResponse
+    {
+        try {
+            $user = $this->utilisateurService->setUserInactifOrActive($id);
+            
+            $excludes = ['deletedAt', 'mdp'];
             $data = $user->toArray($excludes);
             return $this->jsonSuccess($data);
             
@@ -135,26 +150,32 @@ class UtilisateurController extends BaseApiController
         $email = $data['email'];
         $plainPassword = $data['mdp'];
 
+        try {
+            // 🔑 Vérification du login via le repository
+            $user = $this->utilisateurService->login($email, $plainPassword);
 
-        // 🔑 Vérification du login via le repository
-        $user = $this->utilisateurService->login($email, $plainPassword);
+            if (!$user) {
+                return $this->jsonError('Identifiants invalides', 404);
+            }
 
-        if (!$user) {
-            return $this->jsonError('Identifiants invalides', 404);
+            $excludes = ['createdAt', 'deletedAt', 'mdp'];
+            $userArray = $user->toArray($excludes);
+
+            $tokenDuration = $this->params->get('jwt_token_duration');
+
+            $token = $this->jwtManager->createToken($userArray, $tokenDuration);
+            $tokenString = $token->toString();
+
+            $responseData = [
+                'membre' => $userArray,
+                'token' => $tokenString
+            ];
+
+            return $this->jsonSuccess($responseData);
+
+        } catch (\Exception $e) {
+            return $this->jsonError($e->getMessage(), 400);
         }
-
-        $excludes = ['createdAt', 'deletedAt','mdp'];
-        $userArray = $user->toArray($excludes);
-
-        $tokenDuration = $this->params->get('jwt_token_duration');
-
-        $token = $this->jwtManager->createToken($userArray, $tokenDuration);
-        $tokenString = $token->toString();
-        $data = [
-            'membre' => $userArray,
-            'token' => $tokenString
-        ];
-        return $this->jsonSuccess($data);
     }
     #[Route('/changerMdp', name: 'user_changer_mdp', methods: ['POST'])]
     #[TokenRequired]
@@ -197,6 +218,18 @@ class UtilisateurController extends BaseApiController
             return $this->jsonError($e->getMessage(),  400);
         }
     }
+    #[Route('/{id}', methods: ['DELETE'], requirements: ['id' => '\d+'])]
+    #[TokenRequired(['Admin'])]
+    public function deleteUser(int $id): JsonResponse
+    {
+        try {
+            $this->utilisateurService->deleteAdmin($id);
+            return $this->jsonSuccess(null);
+        } catch (\Exception $e) {
+            return $this->jsonError($e->getMessage(), 400);
+        }
+    }
+
 }
 
 

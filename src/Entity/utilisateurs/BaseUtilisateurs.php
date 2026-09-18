@@ -28,6 +28,9 @@ abstract class BaseUtilisateurs extends BaseEntite
     protected ?Roles $role = null;
     #[ORM\Column(length: 255, nullable: true)]
     protected ?string $sigle = null;
+    
+    #[ORM\Column(type: "datetime_immutable", nullable: true)]
+    protected ?\DateTimeImmutable $dateInactif = null;
 
     public function getEmail(): ?string
     {
@@ -102,6 +105,15 @@ abstract class BaseUtilisateurs extends BaseEntite
         $this->adresse = $adresse;
         return $this;
     }
+    public function setDateInactif(?\DateTimeImmutable $dateInactif): static
+    {
+        $this->dateInactif = $dateInactif;
+        return $this;
+    }
+    public function getDateInactif(): ?\DateTimeImmutable
+    {
+        return $this->dateInactif;
+    }
 
     public function toArray(array $exclude = []): array
     {
@@ -118,6 +130,7 @@ abstract class BaseUtilisateurs extends BaseEntite
         $data['adresse'] = $this->getAdresse();
         $data['prenom'] = $this->getPrenom();
         $data['sigle'] = $this->getSigle();
+        // $data['dateInactif'] = $this->getDateInactif()?->format('Y-m-d H:i:s');
 
         return $data;
     }

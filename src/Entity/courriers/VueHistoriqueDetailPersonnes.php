@@ -28,7 +28,10 @@ class VueHistoriqueDetailPersonnes extends BaseVueHistoriqueDetails
     
     #[ORM\Column(type: "string", length: 255, nullable: true)]
     protected ?string $employeur = null;
-    
+
+    #[ORM\Column(type: "integer", nullable: true)]
+    protected ?int $entiteId = null;
+
     public function __construct()
     {
     }
@@ -90,6 +93,17 @@ class VueHistoriqueDetailPersonnes extends BaseVueHistoriqueDetails
     public function setEmployeur(?string $employeur): self
     {
         $this->employeur = $employeur;
+        return $this;
+    }
+    
+    public function getEntiteId(): ?int
+    {
+        return $this->entiteId;
+    }
+    
+    public function setEntiteId(?int $entiteId): self
+    {
+        $this->entiteId = $entiteId !== null ? (int) $entiteId : null;
         return $this;
     }
 

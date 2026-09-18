@@ -27,7 +27,8 @@ class CourriersService extends BaseService
         private readonly MailService $mailService,
         private readonly VueHistoriqueDetailsService $vueHistoriqueDetailsService,
         private readonly DetailPersonnesService $detailPersonnesService,
-        private readonly HistoriquesService $historiquesService
+        private readonly HistoriquesService $historiquesService,
+        private readonly EntitesService $entitesService
     ) {
         parent::__construct($entityManager);
     }
@@ -96,6 +97,10 @@ class CourriersService extends BaseService
             $detailPersonneEntity->setTelephone($detailPersonne->getTelephone());
             $detailPersonneEntity->setMatricule($detailPersonne->getMatricule());
             $detailPersonneEntity->setEmployeur($detailPersonne->getEmployeur());
+
+            $entite = $this->entitesService->getById($detailPersonne->getEntiteId());
+            $this->validator->throwIfNull($entite, "Entité avec l'ID " . $detailPersonne->getEntiteId() . " introuvable.");
+            $detailPersonneEntity->setEntite($entite);
 
             $messageCourrier = $this->genererMessageInsertionCourrier($detailPersonneEntity, $courrier);
             $this->mailService->sendEmail($detailPersonneEntity->getEmail(),"Référence de suivi de votre courrier au Mesupres" ,$messageCourrier);

@@ -182,4 +182,10 @@ message
      --numero depart et arrivee optionel -- ok -- 60 mn
      --sigle pour chaque entite -- ok -- 30 mn
      --recherche pour afficher seulement une seule reference -- a faire -- 90 mn
+15/05/2026
+    --ajouter matricule et employeur a la detailPersonne et adaper les services -- ok -- 60 mn
+16/05/2026
+    --suprrimer une admin -- ok -- 30mn
+    --mettre une utilisateur actif ou inactif -- a faire -- 30mn
+    --modifier login seulement pour les compte actif -- ok -- 30 mn
 --whatsapp -- a faire -- 120 mn

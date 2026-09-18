@@ -110,6 +110,7 @@ class CourriersDto
                 if (isset($item['telephone'])) $dto->setTelephone($item['telephone']);
                 if (isset($item['matricule'])) $dto->setMatricule($item['matricule']);
                 if (isset($item['employeur'])) $dto->setEmployeur($item['employeur']);
+                if(isset($item['entiteId'])) $dto->setEntiteId($item['entiteId']);
                 
                 return $dto;
             }

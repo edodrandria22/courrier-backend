@@ -382,6 +382,10 @@ class MessagesService extends BaseService
         if ($courrier === null) {
             return;
         }
+        if($courrier->getCloturePar() !== null){
+            $this->courriersService->envoyerMailCloturer($courrier, $courrier->getCloturePar());
+            return;
+        }
         $messages = $this->getAllMessagesByCourrier($courrier->getId(),new OrderCriteria());
         $this->courriersService->genererEmailSuiviMessage($courrier, $messages);
     }
