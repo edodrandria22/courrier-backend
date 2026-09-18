@@ -3,6 +3,7 @@
 namespace App\Controller\Api\courriers;
 
 use App\Controller\Api\utils\BaseApiController;
+use App\Dto\utils\OrderCriteria;
 use App\Service\courriers\EntitesService;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Routing\Annotation\Route;
@@ -21,7 +22,7 @@ class EntitesController extends BaseApiController
     {
         try {
 
-            $entites = $this->entitesService->getAll();
+            $entites = $this->entitesService->getAll(new OrderCriteria("createdAt", "ASC"));
             $excludes = ["createdAt","deletedAt"];
             $data = $this->entitesService->transformerArray($entites, $excludes);
             return $this->jsonSuccess($data);
