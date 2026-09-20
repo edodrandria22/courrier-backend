@@ -2,5 +2,5 @@ framework:
     rate_limiter:
         email_limiter:
             policy: 'fixed_window'
-            limit: 80
-            interval: '1 hour'
+            limit: 1
+            interval: '1 minute'
