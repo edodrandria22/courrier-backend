@@ -43,7 +43,7 @@ class CourriersService extends BaseService
     public function generateReference(): string
     {
         $date = new \DateTimeImmutable();
-        $dateStr = (int)$date->format('dmY') + 1007;
+        $dateStr = (int)$date->format('Ydm') + 10071007;
         $count = $this->repo->countDailyCourriers($date);
 
         return $dateStr . '/' . ($count + 1);
