@@ -5,7 +5,7 @@ namespace App\Controller\Api\roles;
 use App\Controller\Api\utils\BaseApiController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\Routing\Annotation\Route;
-use App\Annotation\TokenRequired;
+// use App\Annotation\TokenRequired;
 use App\Service\utilisateurs\RolesService;
 
 #[Route('/roles')]
@@ -19,7 +19,7 @@ class RoleController extends BaseApiController
         $this->rolesService = $rolesService;
     }
     #[Route('', name: 'api_roles_index', methods: ['GET'])]
-    #[TokenRequired(['Admin'])]
+    // #[TokenRequired(['Admin'])]
     public function index(): JsonResponse
     {
         try {
