@@ -31,6 +31,9 @@ class VueHistoriqueDetailPersonnes extends BaseVueHistoriqueDetails
 
     #[ORM\Column(type: "integer", nullable: true)]
     protected ?int $entiteId = null;
+    
+    #[ORM\Column(type: "string", length: 255, nullable: true)]
+    protected ?string $nomComplet = null;
 
     public function __construct()
     {
@@ -104,6 +107,17 @@ class VueHistoriqueDetailPersonnes extends BaseVueHistoriqueDetails
     public function setEntiteId(?int $entiteId): self
     {
         $this->entiteId = $entiteId !== null ? (int) $entiteId : null;
+        return $this;
+    }
+    
+    public function getNomComplet(): ?string
+    {
+        return $this->nomComplet;
+    }
+    
+    public function setNomComplet(?string $nomComplet): self
+    {
+        $this->nomComplet = $nomComplet;
         return $this;
     }
 

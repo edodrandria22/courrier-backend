@@ -49,14 +49,14 @@ class VueHistoriqueDetailPersonnesService extends BaseService
         }
 
         if ($this->notEmpty($dto->nom)) {
-            $nom = mb_strtoupper($dto->nom, 'UTF-8');
-            $conditions[] = new ConditionCriteria('name', $nom, 'LIKE');
+            $nom = mb_strtolower($dto->nom, 'UTF-8');
+            $conditions[] = new ConditionCriteria('nomComplet', $nom, 'LIKE');
         }
 
-        if ($this->notEmpty($dto->prenom)) {
-            $prenom = $dto->prenom ? mb_convert_case($dto->prenom, MB_CASE_TITLE, "UTF-8") : null;
-            $conditions[] = new ConditionCriteria('prenom', $prenom, 'LIKE');
-        }
+        // if ($this->notEmpty($dto->prenom)) {
+        //     $prenom = $dto->prenom ? mb_convert_case($dto->prenom, MB_CASE_TITLE, "UTF-8") : null;
+        //     $conditions[] = new ConditionCriteria('prenom', $prenom, 'LIKE');
+        // }
 
         if ($this->notEmpty($dto->email)) {
             $conditions[] = new ConditionCriteria('email', $dto->email, 'LIKE');

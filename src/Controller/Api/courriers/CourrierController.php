@@ -370,7 +370,7 @@ class CourrierController extends BaseApiController
             $orderCriteria = new OrderCriteria();
             $orderCriteria->addField(["historiqueId"]);
             $result = $this->vueHistoriqueDetailsService->searchByDto($user, $dto, $orderCriteria, $paginationCriteria);
-            $excludes = ['deletedAt','mdp'];
+            $excludes = ['deletedAt','mdp','nomComplet'];
             $data = $this->vueHistoriqueDetailsService->transformerArrayUtilisateur($result, $excludes);
             return $this->jsonSuccess($data);
         } catch (\Throwable $e) {
@@ -395,7 +395,7 @@ class CourrierController extends BaseApiController
             $orderCriteria = new OrderCriteria();
             $orderCriteria->addField(["historiqueId"]);
             $result = $this->vueHistoriqueDetailsService->searchByDtoUniqueReference($user, $dto, $orderCriteria, $paginationCriteria);
-            $excludes = ['deletedAt','mdp'];
+            $excludes = ['deletedAt','mdp','nomComplet'];
             $data = $this->vueHistoriqueDetailsService->transformerArrayUtilisateur($result, $excludes);
             return $this->jsonSuccess($data);
         } catch (\Throwable $e) {

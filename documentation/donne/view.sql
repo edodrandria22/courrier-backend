@@ -59,7 +59,10 @@ SELECT
     dp.telephone,
     dp.matricule,
     dp.employeur,
-    dp.entite_id
+    dp.entite_id,
+    LOWER(
+        COALESCE(dp.name, '') || ' ' || COALESCE(dp.prenom, '')
+    ) AS nom_complet
 
 FROM vue_historique_details v
 
