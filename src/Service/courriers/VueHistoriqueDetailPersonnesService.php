@@ -74,7 +74,7 @@ class VueHistoriqueDetailPersonnesService extends BaseService
         }
         
         if ($this->notEmpty($dto->employeur)) {
-            $conditions[] = new ConditionCriteria('employeur', $dto->employeur, 'ILIKE');
+            $conditions[] = new ConditionCriteria('employeurId', $dto->employeur, '=');
         }
         
 

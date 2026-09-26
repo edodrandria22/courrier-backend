@@ -87,7 +87,7 @@ class DetailPersonnesDto
         return $this->employeurId;
     }
     
-    public function setEmployeurId(?string $employeurId): self
+    public function setEmployeurId(?int $employeurId): self
     {
         $this->employeurId = $employeurId;
         return $this;

@@ -97,7 +97,7 @@ class CourriersService extends BaseService
             $detailPersonneEntity->setEmail($detailPersonne->getEmail());
             $detailPersonneEntity->setTelephone($detailPersonne->getTelephone());
             $detailPersonneEntity->setMatricule($detailPersonne->getMatricule());
-            $employeur = $this->employeursService->getVerifierById($detailPersonne->getEmployeurId());
+            $employeur = $detailPersonne->getEmployeurId() ? $this->employeursService->getVerifierById($detailPersonne->getEmployeurId()) : null;
             $detailPersonneEntity->setEmployeur($employeur);
 
             $entite = $this->entitesService->getVerifierById($detailPersonne->getEntiteId());
