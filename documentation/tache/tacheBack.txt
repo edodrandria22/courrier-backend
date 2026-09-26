@@ -188,4 +188,8 @@ message
     --suprrimer une admin -- ok -- 30mn
     --mettre une utilisateur actif ou inactif -- a faire -- 30mn
     --modifier login seulement pour les compte actif -- ok -- 30 mn
---whatsapp -- a faire -- 120 mn
+25/05/2026
+    --recherche courrier par nom et prenom -- ok -- 30 mn
+    --ajouter role OM et supervisor -- a faire -- 30 mn
+    --creer entite courrierValidation -- a faire -- 60 mn
+    --creer service pour courrier validation -- a faire -- 60 mn
