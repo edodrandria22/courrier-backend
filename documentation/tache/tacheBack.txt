@@ -190,6 +190,11 @@ message
     --modifier login seulement pour les compte actif -- ok -- 30 mn
 25/05/2026
     --recherche courrier par nom et prenom -- ok -- 30 mn
-    --ajouter role OM et supervisor -- a faire -- 30 mn
-    --creer entite courrierValidation -- a faire -- 60 mn
-    --creer service pour courrier validation -- a faire -- 60 mn
+26/09/2026
+    --creer entite employeur , repository , service et controller --ok -- 30 mn
+    --changer employeur string en objet employeur sur le detailPersonne -- ok -- 30 mn
+    --modifer insertion detailPersonne -- ok -- 30mn
+--changer donnee dans le serveur en employeur -- a faire -- 60 mn
+--ajouter role OM et supervisor -- a faire -- 30 mn
+--creer entite courrierValidation -- a faire -- 60 mn
+--creer service pour courrier validation -- a faire -- 60 mn
