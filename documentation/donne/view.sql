@@ -58,7 +58,7 @@ SELECT
     dp.email,
     dp.telephone,
     dp.matricule,
-    dp.employeur,
+    dp.employeur_id,
     dp.entite_id,
     LOWER(
         COALESCE(dp.name, '') || ' ' || COALESCE(dp.prenom, '')
@@ -90,3 +90,4 @@ ORDER BY date_message DESC;
 
 
 
+SET client_encoding = 'UTF8';

@@ -97,3 +97,11 @@ UPDATE employeurs SET name = 'MESUPRES' WHERE id = 31;
 UPDATE employeurs SET name = 'Autre' WHERE id = 32;
 
 COMMIT;
+
+UPDATE detail_personnes set employeur_id = 4 where id = 8;
+UPDATE detail_personnes set employeur_id = 3 where id = 9;
+UPDATE detail_personnes set employeur_id = 3 where id = 10;
+UPDATE detail_personnes set employeur_id = 3 where id = 11;
+UPDATE detail_personnes set employeur_id = 1 where id = 12;
+UPDATE detail_personnes set employeur_id = 31 where id = 14;
+
