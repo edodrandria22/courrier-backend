@@ -28,7 +28,8 @@ class CourriersService extends BaseService
         private readonly VueHistoriqueDetailsService $vueHistoriqueDetailsService,
         private readonly DetailPersonnesService $detailPersonnesService,
         private readonly HistoriquesService $historiquesService,
-        private readonly EntitesService $entitesService
+        private readonly EntitesService $entitesService,
+        private readonly EmployeursService $employeursService
     ) {
         parent::__construct($entityManager);
     }
@@ -96,10 +97,10 @@ class CourriersService extends BaseService
             $detailPersonneEntity->setEmail($detailPersonne->getEmail());
             $detailPersonneEntity->setTelephone($detailPersonne->getTelephone());
             $detailPersonneEntity->setMatricule($detailPersonne->getMatricule());
-            $detailPersonneEntity->setEmployeur($detailPersonne->getEmployeur());
+            $employeur = $detailPersonne->getEmployeurId() ? $this->employeursService->getVerifierById($detailPersonne->getEmployeurId()) : null;
+            $detailPersonneEntity->setEmployeur($employeur);
 
-            $entite = $this->entitesService->getById($detailPersonne->getEntiteId());
-            $this->validator->throwIfNull($entite, "Entité avec l'ID " . $detailPersonne->getEntiteId() . " introuvable.");
+            $entite = $this->entitesService->getVerifierById($detailPersonne->getEntiteId());
             $detailPersonneEntity->setEntite($entite);
 
             $messageCourrier = $this->genererMessageInsertionCourrier($detailPersonneEntity, $courrier);

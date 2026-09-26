@@ -24,8 +24,9 @@ class DetailPersonnes extends BaseEntite
     #[ORM\Column(type: "integer", nullable: true)]
     private ?int $matricule = null;
 
-    #[ORM\Column(type: "string", length: 255, nullable: true)]
-    protected ?string $employeur = null;
+    #[ORM\ManyToOne(targetEntity:Employeurs::class)]
+    #[ORM\JoinColumn(nullable: true)]
+    protected ?Employeurs $employeur = null;
     
     #[ORM\ManyToOne(targetEntity: Courriers::class)]
     #[ORM\JoinColumn(nullable: true)]
@@ -94,11 +95,11 @@ class DetailPersonnes extends BaseEntite
         $this->matricule = $matricule;
         return $this;
     }
-    public function getEmployeur(): ?string
+    public function getEmployeur(): ?Employeurs
     {
         return $this->employeur;
     }
-    public function setEmployeur(?string $employeur): self
+    public function setEmployeur(?Employeurs $employeur): self
     {
         $this->employeur = $employeur;
         return $this;
@@ -118,6 +119,9 @@ class DetailPersonnes extends BaseEntite
         $entite = $this->getEntite();
         $data['entiteId'] = $entite?->getId();
         $data['entite'] = $entite?->getName();
+        $employeur = $this->getEmployeur();
+        $data['employeurId'] = $employeur?->getId();
+        $data['employeur'] = $employeur?->getName();
         return $data;
     }
     

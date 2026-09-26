@@ -19,7 +19,7 @@ class DetailPersonnesDto
 
     private ?int $matricule = null;
 
-    private ?string $employeur = null;
+    private ?int $employeurId = null;
 
     private ?int $entiteId = null;
 
@@ -82,14 +82,14 @@ class DetailPersonnesDto
         return $this;
     }
     
-    public function getEmployeur(): ?string
+    public function getEmployeurId(): ?int
     {
-        return $this->employeur;
+        return $this->employeurId;
     }
     
-    public function setEmployeur(?string $employeur): self
+    public function setEmployeurId(?int $employeurId): self
     {
-        $this->employeur = $employeur;
+        $this->employeurId = $employeurId;
         return $this;
     }
     
