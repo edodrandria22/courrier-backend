@@ -194,7 +194,14 @@ message
     --creer entite employeur , repository , service et controller --ok -- 30 mn
     --changer employeur string en objet employeur sur le detailPersonne -- ok -- 30 mn
     --modifer insertion detailPersonne -- ok -- 30mn
---changer donnee dans le serveur en employeur -- a faire -- 60 mn
+    --changer donnee dans le serveur en employeur -- ok -- 60 mn
+27/09/2026
+    --creer entite detailPersonneValidation -- ok -- 30mn
+    --creer entite courrierValidation -- ok -- 60 mn
+    --creer service pour courrier validation -- a faire -- 120 mn
+        --creer service pour sauvergarder une courrierValidation --30 mn
+            --creer dto -- ok -- 10 mn 
+            --service -- ok -- 20 mn
+        --valider une courrier validation -- a faire --30 mn
+    --modifier une courrier validation -- a faire -- 30 mn
 --ajouter role OM et supervisor -- a faire -- 30 mn
---creer entite courrierValidation -- a faire -- 60 mn
---creer service pour courrier validation -- a faire -- 60 mn

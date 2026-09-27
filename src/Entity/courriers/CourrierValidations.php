@@ -6,6 +6,8 @@ use Doctrine\ORM\Mapping as ORM;
 use App\Entity\utilisateurs\Utilisateurs;
 use App\Entity\utils\BaseEntite;
 use App\Repository\courriers\CourrierValidationsRepository;
+use Doctrine\Common\Collections\Collection;
+use Doctrine\Common\Collections\ArrayCollection;
 
 #[ORM\Entity(repositoryClass: CourrierValidationsRepository::class)]
 class CourrierValidations extends BaseEntite
@@ -34,10 +36,15 @@ class CourrierValidations extends BaseEntite
 
     #[ORM\Column(type: "text", nullable: true)]
     protected ?string $observationSuperviseur = null;
-
+    
+    #[ORM\Column(type: "integer", nullable: true)]
+    protected ?int $numeroDepart = null;
+    #[ORM\OneToMany(mappedBy: 'courrier', targetEntity: DetailPersonnesValidations::class, cascade: ['persist', 'remove'])]
+    private Collection $detailPersonnes;
 
     public function __construct()
     {
+        $this->detailPersonnes = new ArrayCollection();
     }
     public function getObject(): ?string
     {
@@ -132,7 +139,26 @@ class CourrierValidations extends BaseEntite
 
         return $this;
     }
+    public function getNumeroDepart(): ?int
+    {
+        return $this->numeroDepart;
+    }
 
+    public function setNumeroDepart(?int $numeroDepart): self
+    {
+        $this->numeroDepart = $numeroDepart;
+
+        return $this;
+    }
+    public function addDetailPersonne(DetailPersonnesValidations $detailPersonne): self
+    {
+        if (!$this->detailPersonnes->contains($detailPersonne)) {
+            $this->detailPersonnes->add($detailPersonne);
+            $detailPersonne->setCourrierValidation($this);
+        }
+
+        return $this;
+    }
 
     public function toArray(array $exclude = []): array
     {
