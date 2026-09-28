@@ -40,6 +40,10 @@ class CourrierValidations extends BaseEntite
     
     #[ORM\Column(type: "integer", nullable: true)]
     protected ?int $numeroDepart = null;
+    
+    #[ORM\Column(type: "integer", nullable: true)]
+    protected ?int $originId = null;
+
     #[ORM\OneToMany(mappedBy: 'courrier', targetEntity: DetailPersonnesValidations::class, cascade: ['persist', 'remove'])]
     private Collection $detailPersonnes;
     
@@ -148,7 +152,16 @@ class CourrierValidations extends BaseEntite
     {
         return $this->numeroDepart;
     }
+    public function getOriginId(): ?int
+    {
+        return $this->originId;
+    }
+    public function setOriginId(?int $originId): self
+    {
+        $this->originId = $originId;
 
+        return $this;
+    }
     public function setNumeroDepart(?int $numeroDepart): self
     {
         $this->numeroDepart = $numeroDepart;

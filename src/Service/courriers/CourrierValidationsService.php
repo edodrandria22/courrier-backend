@@ -63,6 +63,8 @@ class CourrierValidationsService extends BaseService
             $this->genererListeDetailPersonne($dto, $courrierValidation);
             $courrierValidation->setCreateur($utilisateur);
             $result = $this->save($courrierValidation);
+            $courrierValidation->setOriginId($result->getId());
+            $result = $this->save($courrierValidation);
             $this->fichiersValidationsService->persistFiles($fichiers, $courrierValidation);
 
             $this->em->getConnection()->commit();
@@ -73,37 +75,69 @@ class CourrierValidationsService extends BaseService
             throw $e;
         }
     }
-    public function updateDto(Utilisateurs $utilisateur,CourrierValidations $courrierValidation, CourriersValidationsDto $dto, array $fichiers = []): CourrierValidations
+    // public function updateDto(Utilisateurs $utilisateur,CourrierValidations $courrierValidation, CourriersValidationsDto $dto, array $fichiers = []): CourrierValidations
+    // {
+    //     $this->em->getConnection()->beginTransaction();
+    //     try {
+    //         if($courrierValidation->getCreateur()->getId() != $utilisateur->getId()){
+    //             throw new Exception("Seule l'auteur du courrier peut le modifier son courrier");
+    //         }
+    //         if ($courrierValidation->getDateValidation()) {
+    //             throw new Exception("Le courrier a déjà été validé, vous ne pouvez plus le modifier");
+    //         }
+    //         $courrierValidation->setObject($dto->getObject());
+    //         $courrierValidation->setVille($dto->getVille());
+    //         $courrierValidation->setDateDebut($dto->getDateDebut());
+    //         $courrierValidation->setDateFin($dto->getDateFin());
+    //         $courrierValidation->setObservation($dto->getObservation());
+    //         $courrierValidation->setNumeroDepart($dto->getNumeroDepart());
+    //         $this->detailPersonnesValidationsService->deleteDetailPersonneValidation($courrierValidation->getId());
+    //         $this->genererListeDetailPersonne($dto, $courrierValidation);
+    //         $result = $this->save($courrierValidation);
+    //         $this->fichiersValidationsService->persistFiles($fichiers, $courrierValidation);
+    //         $this->em->getConnection()->commit();
+    //         return $result;
+    //     } catch (Exception $e) {
+    //         $this->em->getConnection()->rollBack();
+    //         throw $e;
+    //     }
+    // }
+    public function updateDto(Utilisateurs $utilisateur,CourrierValidations $oldCourrierValidation, CourriersValidationsDto $dto, array $fichiers = []): CourrierValidations
     {
         $this->em->getConnection()->beginTransaction();
         try {
-            if($courrierValidation->getCreateur()->getId() != $utilisateur->getId()){
+            if($oldCourrierValidation->getCreateur()->getId() != $utilisateur->getId()){
                 throw new Exception("Seule l'auteur du courrier peut le modifier son courrier");
             }
-            if ($courrierValidation->getDateValidation()) {
+            if ($oldCourrierValidation->getDateValidation()) {
                 throw new Exception("Le courrier a déjà été validé, vous ne pouvez plus le modifier");
             }
+            $courrierValidation = new CourrierValidations();
             $courrierValidation->setObject($dto->getObject());
             $courrierValidation->setVille($dto->getVille());
             $courrierValidation->setDateDebut($dto->getDateDebut());
             $courrierValidation->setDateFin($dto->getDateFin());
             $courrierValidation->setObservation($dto->getObservation());
             $courrierValidation->setNumeroDepart($dto->getNumeroDepart());
-            $this->detailPersonnesValidationsService->deleteDetailPersonneValidation($courrierValidation->getId());
             $this->genererListeDetailPersonne($dto, $courrierValidation);
+            $courrierValidation->setCreateur($utilisateur);
+            $result = $this->save($courrierValidation);
+            $courrierValidation->setOriginId($oldCourrierValidation->getOriginId());
             $result = $this->save($courrierValidation);
             $this->fichiersValidationsService->persistFiles($fichiers, $courrierValidation);
+            $this->delete($oldCourrierValidation);
             $this->em->getConnection()->commit();
             return $result;
+
         } catch (Exception $e) {
             $this->em->getConnection()->rollBack();
             throw $e;
         }
     }
-    public function updateDtoId(Utilisateurs $utilisateur,int $id, CourriersValidationsDto $dto): CourrierValidations
+    public function updateDtoId(Utilisateurs $utilisateur,int $id, CourriersValidationsDto $dto, array $fichiers = []): CourrierValidations
     {
         $courrierValidation = $this->getVerifierById($id);
-        return $this->updateDto($utilisateur, $courrierValidation, $dto);
+        return $this->updateDto($utilisateur, $courrierValidation, $dto, $fichiers);
     }
     
     

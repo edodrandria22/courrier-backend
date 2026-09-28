@@ -6,7 +6,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 class CourriersValidationsDto
 {
-    #[Assert\NotBlank(message: "L'objet est obligatoire.")]
+    #[Assert\NotBlank(message: "L'object est obligatoire.")]
     private ?string $object = null;
     
     #[Assert\NotBlank(message: "La ville est obligatoire.")]

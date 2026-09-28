@@ -21,7 +21,7 @@ class CourrierValidationController extends BaseApiController
     }
 
     #[Route('', name: 'api_courriers_validation_list', methods: ['GET'])]
-    #[TokenRequired(['Utilisateur'])]
+    // #[TokenRequired(['Utilisateur'])]
     public function index(Request $request): JsonResponse
     {
         try {
@@ -30,9 +30,9 @@ class CourrierValidationController extends BaseApiController
             $date = $dateParam ? new DateTimeImmutable($dateParam) : new DateTimeImmutable();
             $limitParam = $request->query->get('limit');
             $limit = $limitParam ? (int)$limitParam : ($_ENV['LIMIT_PAGINATIONS'] ?? 10);
-            $courrier = $this->courrierValidationService->getAll();
-            $data = $this->courrierValidationService->transformerArray($courrier,["deletedAt"]);
-            return $this->jsonSuccess($courrier);
+            $courriers = $this->courrierValidationService->getAll();
+            $data = $this->courrierValidationService->transformerArray($courriers,["deletedAt"]);
+            return $this->jsonSuccess($data);
         } catch (\Throwable $e) {
             return $this->jsonError($e->getMessage(),  400);
         }
@@ -47,10 +47,6 @@ class CourrierValidationController extends BaseApiController
                 $request,
                 CourriersValidationsDto::class
             );
-            // $dto = $this->deserializeAndValidate(
-            //     $request,
-            //     CourriersValidationsDto::class
-            // );
             $uploadedFilesCin = $request->files->get('cin', null);
             $uploadedFilesPassport = $request->files->get('passeport', null);
             $fichiers[] = new FichierValidationDto('cin',$uploadedFilesCin);
@@ -65,18 +61,23 @@ class CourrierValidationController extends BaseApiController
             return $this->jsonError($e->getMessage(),  400);
         }
     }
-    #[Route('/{id}', name: 'api_courriers_update', methods: ['PUT'], requirements: ['id' => '\d+'])]
-    #[TokenRequired(['Utilisateur'])]
+    #[Route('/{id}', name: 'api_courriers_validation_update', methods: ['POST'], requirements: ['id' => '\d+'])]
+    #[TokenRequired(['OM'])]
     public function update(Request $request, int $id): JsonResponse
     {
         try {
             $user = $this->getUserFromRequest($request);
-            $dto = $this->deserializeAndValidate(
+            $dto = $this->deserializeFormDataAndValidate(
                 $request,
                 CourriersValidationsDto::class
             );
-            $courrier = $this->courrierValidationService->updateDtoId($user, $id, $dto);
-            $excludes = ['deletedAt','dateValidation','cloturerPar'];
+            $uploadedFilesCin = $request->files->get('cin', null);
+            $uploadedFilesPassport = $request->files->get('passeport', null);
+            $fichiers[] = new FichierValidationDto('cin',$uploadedFilesCin);
+            $fichiers[] = new FichierValidationDto('passeport',$uploadedFilesPassport);
+            $this->validateDtos($fichiers);
+            $courrier = $this->courrierValidationService->updateDtoId($user, $id, $dto, $fichiers);
+            $excludes = ['deletedAt'];
             $data = $courrier->toArray($excludes);
             return $this->jsonSuccess($data);
 

@@ -181,20 +181,16 @@ abstract class BaseApiController extends AbstractController
                 $property = $error->getPropertyPath();
                 $message = $error->getMessage();
 
-                $typeFichier = method_exists($dto, 'getTypeFichier')
-                    ? $dto->getTypeFichier()
-                    : $index;
-
                 $messages[] = sprintf(
-                    '%s - %s : %s',
-                    $typeFichier,
+                    '[%d] %s : %s',
+                    $index,
                     $property,
                     $message
                 );
             }
         }
 
-        if (!empty($messages)) {
+        if (count($messages) > 0) {
             throw new Exception(
                 'Erreur de validation : ' . implode(' | ', $messages)
             );
