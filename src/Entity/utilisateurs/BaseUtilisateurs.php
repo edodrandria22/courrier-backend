@@ -2,6 +2,7 @@
 
 namespace App\Entity\utilisateurs;
 
+use App\Entity\courriers\Employeurs;
 use Doctrine\ORM\Mapping as ORM;
 use App\Entity\utils\BaseEntite;
 
@@ -31,6 +32,10 @@ abstract class BaseUtilisateurs extends BaseEntite
     
     #[ORM\Column(type: "datetime_immutable", nullable: true)]
     protected ?\DateTimeImmutable $dateInactif = null;
+    
+    #[ORM\ManyToOne(targetEntity:Employeurs::class)]
+    #[ORM\JoinColumn(nullable: true)]
+    protected ?Employeurs $employeur = null;
 
     public function getEmail(): ?string
     {
@@ -114,6 +119,15 @@ abstract class BaseUtilisateurs extends BaseEntite
     {
         return $this->dateInactif;
     }
+    public function getEmployeur(): ?Employeurs
+    {
+        return $this->employeur;
+    }
+    public function setEmployeur(?Employeurs $employeur): self
+    {
+        $this->employeur = $employeur;
+        return $this;
+    }
 
     public function toArray(array $exclude = []): array
     {
@@ -130,6 +144,10 @@ abstract class BaseUtilisateurs extends BaseEntite
         $data['adresse'] = $this->getAdresse();
         $data['prenom'] = $this->getPrenom();
         $data['sigle'] = $this->getSigle();
+        $employeur = $this->getEmployeur();
+        $data['employeurId'] = $employeur?->getId();
+        $data['employeur'] = $employeur?->getName();
+
         // $data['dateInactif'] = $this->getDateInactif()?->format('Y-m-d H:i:s');
 
         return $data;

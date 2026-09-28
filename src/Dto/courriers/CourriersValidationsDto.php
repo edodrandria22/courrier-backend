@@ -8,6 +8,9 @@ class CourriersValidationsDto
 {
     #[Assert\NotBlank(message: "L'objet est obligatoire.")]
     private ?string $object = null;
+    
+    #[Assert\NotBlank(message: "La ville est obligatoire.")]
+    private ?string $ville = null;
 
     private ?\DateTimeImmutable $dateDebut = null;
 
@@ -32,6 +35,10 @@ class CourriersValidationsDto
     public function getObject(): ?string
     {
         return $this->object;
+    }
+    public function getVille(): ?string
+    {
+        return $this->ville;
     }
     public function getObservation(): ?string
     {
@@ -63,21 +70,36 @@ class CourriersValidationsDto
         $this->object = $object;
         return $this;
     }
+    public function setVille(?string $ville): self
+    {
+        $this->ville = $ville;
+        return $this;
+    }
     public function setObservation(?string $observation): self
     {
         $this->observation = $observation;
         return $this;
     }
 
-    public function setDateDebut(?\DateTime $dateDebut): self
+    public function setDateDebut(string|\DateTimeImmutable|null $dateDebut): self
     {
+        if (is_string($dateDebut)) {
+            $dateDebut = new \DateTimeImmutable($dateDebut);
+        }
+
         $this->dateDebut = $dateDebut;
+
         return $this;
     }
 
-    public function setDateFin(?\DateTime $dateFin): self
+    public function setDateFin(string|\DateTimeImmutable|null $dateFin): self
     {
+        if (is_string($dateFin)) {
+            $dateFin = new \DateTimeImmutable($dateFin);
+        }
+
         $this->dateFin = $dateFin;
+
         return $this;
     }
     public function setNumeroDepart(?int $numeroDepart): self 

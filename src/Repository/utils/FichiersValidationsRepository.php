@@ -2,15 +2,14 @@
 
 namespace App\Repository\utils;
 
-use App\Entity\utils\Fichiers;
-use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use App\Entity\utils\FichiersValidations;
 use Doctrine\Persistence\ManagerRegistry;
 
-class FichiersRepository extends ServiceEntityRepository
+class FichiersValidationsRepository extends BaseRepository
 {
     public function __construct(ManagerRegistry $registry)
     {
-        parent::__construct($registry, Fichiers::class);
+        parent::__construct($registry, FichiersValidations::class);
     }
 
     // Exemples de méthodes personnalisées

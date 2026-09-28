@@ -23,10 +23,6 @@ abstract class BaseDetailsPersonnes extends BaseEntite
     #[ORM\Column(type: "integer", nullable: true)]
     private ?int $matricule = null;
 
-    #[ORM\ManyToOne(targetEntity:Employeurs::class)]
-    #[ORM\JoinColumn(nullable: true)]
-    protected ?Employeurs $employeur = null;
-
     #[ORM\ManyToOne(targetEntity:Entites::class)]
     #[ORM\JoinColumn(nullable: true)]
     protected ?Entites $entite = null;
@@ -81,15 +77,6 @@ abstract class BaseDetailsPersonnes extends BaseEntite
         $this->matricule = $matricule;
         return $this;
     }
-    public function getEmployeur(): ?Employeurs
-    {
-        return $this->employeur;
-    }
-    public function setEmployeur(?Employeurs $employeur): self
-    {
-        $this->employeur = $employeur;
-        return $this;
-    }
     public function getEntite(): ?Entites
     {
         return $this->entite;
@@ -105,9 +92,6 @@ abstract class BaseDetailsPersonnes extends BaseEntite
         $entite = $this->getEntite();
         $data['entiteId'] = $entite?->getId();
         $data['entite'] = $entite?->getName();
-        $employeur = $this->getEmployeur();
-        $data['employeurId'] = $employeur?->getId();
-        $data['employeur'] = $employeur?->getName();
         return $data;
     }
     

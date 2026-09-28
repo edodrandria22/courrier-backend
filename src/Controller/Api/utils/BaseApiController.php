@@ -164,5 +164,43 @@ abstract class BaseApiController extends AbstractController
 
         return $dto;
     }
+    /**
+     * Valide un tableau de DTO
+     *
+     * @param array $dtos Tableau contenant des DTO
+     * @throws Exception
+     */
+    protected function validateDtos(array $dtos): array
+    {
+        $messages = [];
+
+        foreach ($dtos as $index => $dto) {
+            $errors = $this->validator->validate($dto);
+
+            foreach ($errors as $error) {
+                $property = $error->getPropertyPath();
+                $message = $error->getMessage();
+
+                $typeFichier = method_exists($dto, 'getTypeFichier')
+                    ? $dto->getTypeFichier()
+                    : $index;
+
+                $messages[] = sprintf(
+                    '%s - %s : %s',
+                    $typeFichier,
+                    $property,
+                    $message
+                );
+            }
+        }
+
+        if (!empty($messages)) {
+            throw new Exception(
+                'Erreur de validation : ' . implode(' | ', $messages)
+            );
+        }
+
+        return $dtos;
+    }
 
 }

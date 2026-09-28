@@ -12,6 +12,7 @@ use App\Service\utils\BaseService;
 use App\Service\utils\ValidationService;
 use Doctrine\ORM\EntityManagerInterface;
 use App\Repository\utilisateurs\UtilisateursRepository;
+use App\Service\courriers\EmployeursService;
 use Exception;
 
 class UtilisateursService extends BaseService
@@ -20,16 +21,18 @@ class UtilisateursService extends BaseService
     private RolesRepository $roleRepository;
     
     private ValidationService $validationService;
+    private EmployeursService $employeurService;
     
 
 
-    public function __construct(EntityManagerInterface $em, UtilisateursRepository $utilisateurRepository, RolesRepository $roleRepository, ValidationService $validationService)
+    public function __construct(EntityManagerInterface $em, UtilisateursRepository $utilisateurRepository, RolesRepository $roleRepository, ValidationService $validationService, EmployeursService $employeurService)
     {
         $this->em = $em;
         $this->repository = $utilisateurRepository;
         $this->roleRepository = $roleRepository;
         $this->validationService = $validationService;
-         parent::__construct($em);
+        $this->employeurService = $employeurService;
+        parent::__construct($em);
     }
     protected function getRepository()
     {
@@ -68,6 +71,8 @@ class UtilisateursService extends BaseService
         
         $role = $this->roleRepository->getById($dto->getIdRole()) ?? throw new \InvalidArgumentException('Rôle introuvable');
         $user->setRole($role);
+        $employeur = $dto->employeurId ? $this->employeurService->getVerifierById($dto->employeurId) : null;
+        $user->setEmployeur($employeur);
 
         $dto->getMdp() && $user->setMdp(password_hash($dto->getMdp(), PASSWORD_BCRYPT));
 
@@ -110,6 +115,8 @@ class UtilisateursService extends BaseService
         $user->setNom($nom);
         $user->setPrenom($prenom);
         $user->setAdresse($dto->getAdresse());
+        $employeur = $dto->employeurId ? $this->employeurService->getVerifierById($dto->employeurId) : null;
+        $user->setEmployeur($employeur);
         $dto->getSigle() !== null && $user->setSigle(mb_strtoupper($dto->getSigle(), 'UTF-8'));
         return $this->createUser($user,$dto->getIdRole());
     }

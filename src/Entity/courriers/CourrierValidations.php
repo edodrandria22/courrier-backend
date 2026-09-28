@@ -5,6 +5,7 @@ namespace App\Entity\courriers;
 use Doctrine\ORM\Mapping as ORM;
 use App\Entity\utilisateurs\Utilisateurs;
 use App\Entity\utils\BaseEntite;
+use App\Entity\utils\FichiersValidations;
 use App\Repository\courriers\CourrierValidationsRepository;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -41,10 +42,14 @@ class CourrierValidations extends BaseEntite
     protected ?int $numeroDepart = null;
     #[ORM\OneToMany(mappedBy: 'courrier', targetEntity: DetailPersonnesValidations::class, cascade: ['persist', 'remove'])]
     private Collection $detailPersonnes;
+    
+    #[ORM\OneToMany(mappedBy: 'courrierValidation', targetEntity: FichiersValidations::class, cascade: ['persist', 'remove'])]
+    private Collection $fichiersValidations;
 
     public function __construct()
     {
         $this->detailPersonnes = new ArrayCollection();
+        $this->fichiersValidations = new ArrayCollection();
     }
     public function getObject(): ?string
     {
@@ -160,6 +165,35 @@ class CourrierValidations extends BaseEntite
         return $this;
     }
 
+    /**
+     * @return Collection<int, FichiersValidations>
+     */
+    public function getFichiersvalidations(): Collection
+    {
+        return $this->fichiersValidations;
+    }
+
+    public function addFichier(FichiersValidations $fichier): self
+    {
+        if (!$this->fichiersValidations->contains($fichier)) {
+            $this->fichiersValidations->add($fichier);
+            $fichier->setCourrierValidation($this);
+        }
+
+        return $this;
+    }
+
+    public function removeFichier(FichiersValidations $fichier): self
+    {
+        if ($this->fichiersValidations->removeElement($fichier)) {
+            // set the owning side to null (unless already changed)
+            if ($fichier->getCourrierValidation() === $this) {
+                $fichier->setCourrierValidation(null);
+            }
+        }
+
+        return $this;
+    }
     public function toArray(array $exclude = []): array
     {
         $data = parent::toArray($exclude);

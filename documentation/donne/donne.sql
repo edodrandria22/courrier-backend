@@ -3,6 +3,10 @@ SET client_encoding = 'UTF8';
 INSERT INTO roles (id, name,created_at) VALUES (1, 'Admin', NOW());
 INSERT INTO roles (id, name,created_at) VALUES (2, 'Utilisateur',NOW());
 INSERT INTO roles (id, name,created_at) VALUES (3, 'Externe',NOW());
+INSERT INTO roles (id, name,created_at) VALUES (4, 'OM',NOW());
+INSERT INTO roles (id, name,created_at) VALUES (5, 'Superviseur',NOW());
+
+
 
 
 INSERT INTO utilisateurs

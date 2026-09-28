@@ -202,6 +202,11 @@ message
         --creer service pour sauvergarder une courrierValidation --30 mn
             --creer dto -- ok -- 10 mn 
             --service -- ok -- 20 mn
+28/09/2026
+        --test api -- a faire -- 60 mn
         --valider une courrier validation -- a faire --30 mn
-    --modifier une courrier validation -- a faire -- 30 mn
---ajouter role OM et supervisor -- a faire -- 30 mn
+    --ajouter role OM et supervisor -- ok -- 30 mn
+    --ajouter employeur sur la creation d'un utilisateur -- ok -- 30 mn
+    --creer entite/repository fichiersValidations -- ok -- 30 mn
+    --ajouter une fichier validation sur le courrier validation -- ok -- 30 mn
+ --modifier une courrier validation -- a faire -- 30 mn

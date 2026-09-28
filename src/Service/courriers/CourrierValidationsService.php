@@ -9,6 +9,7 @@ use App\Dto\courriers\CourriersValidationsDto;
 use App\Entity\courriers\CourrierValidations;
 use App\Entity\courriers\DetailPersonnesValidations;
 use App\Entity\utilisateurs\Utilisateurs;
+use App\Service\utils\FichiersValidationsService;
 use Exception;
 class CourrierValidationsService extends BaseService
 {
@@ -17,7 +18,7 @@ class CourrierValidationsService extends BaseService
         EntityManagerInterface $entityManager,
         private readonly DetailPersonnesValidationsService $detailPersonnesValidationsService,
         private readonly EntitesService $entitesService,
-        private readonly EmployeursService $employeursService
+        private readonly FichiersValidationsService $fichiersValidationsService
     ) {
         parent::__construct($entityManager);
     }
@@ -39,8 +40,6 @@ class CourrierValidationsService extends BaseService
             $detailPersonneEntity->setEmail($detailPersonne->getEmail());
             $detailPersonneEntity->setTelephone($detailPersonne->getTelephone());
             $detailPersonneEntity->setMatricule($detailPersonne->getMatricule());
-            $employeur = $detailPersonne->getEmployeurId() ? $this->employeursService->getVerifierById($detailPersonne->getEmployeurId()) : null;
-            $detailPersonneEntity->setEmployeur($employeur);
 
             $entite = $this->entitesService->getVerifierById($detailPersonne->getEntiteId());
             $detailPersonneEntity->setEntite($entite);
@@ -50,12 +49,13 @@ class CourrierValidationsService extends BaseService
         }
         
     }
-    public function saveDto(Utilisateurs $utilisateur,CourriersValidationsDto $dto): CourrierValidations
+    public function saveDto(Utilisateurs $utilisateur,CourriersValidationsDto $dto, array $fichiers = []): CourrierValidations
     {
         $this->em->getConnection()->beginTransaction();
         try {
             $courrierValidation = new CourrierValidations();
             $courrierValidation->setObject($dto->getObject());
+            $courrierValidation->setVille($dto->getVille());
             $courrierValidation->setDateDebut($dto->getDateDebut());
             $courrierValidation->setDateFin($dto->getDateFin());
             $courrierValidation->setObservation($dto->getObservation());
@@ -63,6 +63,8 @@ class CourrierValidationsService extends BaseService
             $this->genererListeDetailPersonne($dto, $courrierValidation);
             $courrierValidation->setCreateur($utilisateur);
             $result = $this->save($courrierValidation);
+            $this->fichiersValidationsService->persistFiles($fichiers, $courrierValidation);
+
             $this->em->getConnection()->commit();
             return $result;
             
@@ -71,7 +73,7 @@ class CourrierValidationsService extends BaseService
             throw $e;
         }
     }
-    public function updateDto(Utilisateurs $utilisateur,CourrierValidations $courrierValidation, CourriersValidationsDto $dto): CourrierValidations
+    public function updateDto(Utilisateurs $utilisateur,CourrierValidations $courrierValidation, CourriersValidationsDto $dto, array $fichiers = []): CourrierValidations
     {
         $this->em->getConnection()->beginTransaction();
         try {
@@ -82,6 +84,7 @@ class CourrierValidationsService extends BaseService
                 throw new Exception("Le courrier a déjà été validé, vous ne pouvez plus le modifier");
             }
             $courrierValidation->setObject($dto->getObject());
+            $courrierValidation->setVille($dto->getVille());
             $courrierValidation->setDateDebut($dto->getDateDebut());
             $courrierValidation->setDateFin($dto->getDateFin());
             $courrierValidation->setObservation($dto->getObservation());
@@ -89,6 +92,7 @@ class CourrierValidationsService extends BaseService
             $this->detailPersonnesValidationsService->deleteDetailPersonneValidation($courrierValidation->getId());
             $this->genererListeDetailPersonne($dto, $courrierValidation);
             $result = $this->save($courrierValidation);
+            $this->fichiersValidationsService->persistFiles($fichiers, $courrierValidation);
             $this->em->getConnection()->commit();
             return $result;
         } catch (Exception $e) {

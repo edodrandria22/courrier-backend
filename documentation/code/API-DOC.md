@@ -12,12 +12,14 @@
 
 ```json
 {
-  "email": "jean.dupont@example.com",
-  "mdp": "MotDePasse123",
-  "nom": "Dupont",
-  "prenom": "Jean",
+  "email": "om@gmail.com",
+  "mdp": "testtest",
+  "nom": "OM",
+  "prenom": "Om",
   "adresse": "12 rue de la République, 75001 Paris",
-  "idRole": 2
+  "idRole": 4,
+  "sigle": "OM",
+  "employeurId":1
 }
 ```
 **Response:**

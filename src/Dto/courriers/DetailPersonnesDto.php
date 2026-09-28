@@ -76,9 +76,14 @@ class DetailPersonnesDto
         return $this->matricule;
     }
     
-    public function setMatricule(?int $matricule): self
+    public function setMatricule(string|int|null $matricule): self
     {
+        if (is_string($matricule)) {
+            $matricule = (int) $matricule;
+        }
+
         $this->matricule = $matricule;
+
         return $this;
     }
     
@@ -87,8 +92,12 @@ class DetailPersonnesDto
         return $this->employeurId;
     }
     
-    public function setEmployeurId(?int $employeurId): self
+    public function setEmployeurId(string|int|null $employeurId): self
     {
+        if (is_string($employeurId)) {
+            $employeurId = (int) $employeurId;
+        }
+        
         $this->employeurId = $employeurId;
         return $this;
     }
