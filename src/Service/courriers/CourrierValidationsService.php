@@ -149,36 +149,58 @@ class CourrierValidationsService extends BaseService
         $courrierValidation->setObservationSuperviseur($remarque);
         return $this->save($courrierValidation);
     }
+    private const MOIS = [
+        1 => 'janvier', 2 => 'février', 3 => 'mars', 4 => 'avril',
+        5 => 'mai', 6 => 'juin', 7 => 'juillet', 8 => 'août',
+        9 => 'septembre', 10 => 'octobre', 11 => 'novembre', 12 => 'décembre',
+    ];
+
     private function getDescription(CourrierValidations $courrierValidation): string
     {
-        $debut = $courrierValidation->getDateDebut();
-        $fin   = $courrierValidation->getDateFin();
+        $periode = $this->formatPeriode(
+            $courrierValidation->getDateDebut(),
+            $courrierValidation->getDateFin()
+        );
 
-        $mois = [
-            1 => 'janvier', 2 => 'février', 3 => 'mars', 4 => 'avril',
-            5 => 'mai', 6 => 'juin', 7 => 'juillet', 8 => 'août',
-            9 => 'septembre', 10 => 'octobre', 11 => 'novembre', 12 => 'décembre',
-        ];
+        return "Demande d'ordre de mission à " . $courrierValidation->getVille() . " " . $periode;
+    }
 
-        $jourDebut  = (int) $debut->format('j');
-        $jourFin    = (int) $fin->format('j');
-        $moisDebut  = $mois[(int) $debut->format('n')];
-        $moisFin    = $mois[(int) $fin->format('n')];
-        $anneeDebut = $debut->format('Y');
-        $anneeFin   = $fin->format('Y');
+    private function formatPeriode(\DateTimeInterface $debut, \DateTimeInterface $fin): string
+    {
+        $memeAnnee = $debut->format('Y') === $fin->format('Y');
+        $memeMois  = $debut->format('n') === $fin->format('n');
 
-        if ($anneeDebut === $anneeFin && $moisDebut === $moisFin) {
+        if ($memeAnnee && $memeMois) {
             // du 10 au 25 avril 2025
-            $periode = "du $jourDebut au $jourFin $moisFin $anneeFin";
-        } elseif ($anneeDebut === $anneeFin) {
-            // du 28 avril au 5 mai 2025
-            $periode = "du $jourDebut $moisDebut au $jourFin $moisFin $anneeFin";
-        } else {
-            // du 28 décembre 2025 au 3 janvier 2026
-            $periode = "du $jourDebut $moisDebut $anneeDebut au $jourFin $moisFin $anneeFin";
+            return sprintf(
+                'du %d au %s',
+                (int) $debut->format('j'),
+                $this->formatDate($fin)
+            );
         }
 
-        return "Demande de l'ordre de mission à " . $courrierValidation->getVille() . " " . $periode;
+        if ($memeAnnee) {
+            // du 28 avril au 5 mai 2025
+            return sprintf(
+                'du %d %s au %s',
+                (int) $debut->format('j'),
+                self::MOIS[(int) $debut->format('n')],
+                $this->formatDate($fin)
+            );
+        }
+
+        // du 28 décembre 2025 au 3 janvier 2026
+        return sprintf('le %s au %s', $this->formatDate($debut), $this->formatDate($fin));
+    }
+
+    private function formatDate(\DateTimeInterface $date): string
+    {
+        return sprintf(
+            '%d %s %s',
+            (int) $date->format('j'),
+            self::MOIS[(int) $date->format('n')],
+            $date->format('Y')
+        );
     }
     private function transformerEnCourrier(CourrierValidations $courrierValidation): Courriers
     {
