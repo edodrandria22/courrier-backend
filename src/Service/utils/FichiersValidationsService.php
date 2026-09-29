@@ -3,10 +3,12 @@
 namespace App\Service\utils;
 
 use App\Dto\FichierValidationDto;
+use App\Dto\utils\ConditionCriteria;
 use App\Entity\courriers\CourrierValidations;
 use App\Entity\utils\FichiersValidations;
 use App\Repository\utils\FichiersValidationsRepository;
 use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
 
 class FichiersValidationsService extends BaseService
 {
@@ -54,6 +56,41 @@ class FichiersValidationsService extends BaseService
             }
         }
         $this->em->flush();
+        return $result;
+    }
+ 
+    public function loadFromBlob(FichiersValidations $fichier): UploadedFile
+    {
+        // Création d'un fichier temporaire sur le disque
+        $tmpPath = tempnam(sys_get_temp_dir(), 'fichier_validation_');
+
+        // Écriture du contenu binaire dans ce fichier temporaire
+        file_put_contents($tmpPath, $fichier->getBinaire());
+
+        // Reconstruction de l'UploadedFile
+        return new UploadedFile(
+            $tmpPath,
+            $fichier->getNom(),
+            $fichier->getType(),
+            null,   // taille de l'erreur (UPLOAD_ERR_OK par défaut)
+            true    // mode "test" : bypass de is_uploaded_file()
+        );
+    }
+    public function getByCourrierValidationId(int $courrierValidationId): array
+    {
+        
+         $conditions = [
+            new ConditionCriteria('courrierValidation', $courrierValidationId, '='),
+        ];
+        return $this->search($conditions);
+    }
+    public function getByCourrierValidationIdUploaded(int $courrierValidationId): array
+    {
+        $courrierValidations = $this->getByCourrierValidationId($courrierValidationId);
+        $result = [];
+        foreach ($courrierValidations as $courrierValidation) {
+            $result[] = $this->loadFromBlob($courrierValidation);
+        }
         return $result;
     }
 }

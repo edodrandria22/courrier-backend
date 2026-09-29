@@ -85,7 +85,39 @@ class CourrierValidationController extends BaseApiController
             return $this->jsonError($e->getMessage(),  400);
         }
     }
+    #[Route('/{id}/remarque', name: 'api_courriers_validation_add_remarque', methods: ['POST', 'PUT'], requirements: ['id' => '\d+'])]
+    #[TokenRequired(['Superviseur','Admin'])]
+    public function addRemarque(Request $request, int $id): JsonResponse
+    {
+        try {
+            $data = $request->toArray();
+            $remarque = $data['remarque'] ?? null;
+            if (!$remarque) {
+                return $this->jsonError('La remarque est obligatoire', 400);
+            }
+            $courrier = $this->courrierValidationService->addRemarque($id, $remarque);
+            $excludes = ['deletedAt'];
+            $data = $courrier->toArray($excludes);
+            return $this->jsonSuccess($data);
 
+        } catch (\Throwable $e) {
+            return $this->jsonError($e->getMessage(),  400);
+        }
+    }
+    #[Route('/{id}/valider', name: 'api_courriers_validation_valider', methods: ['POST'], requirements: ['id' => '\d+'])]
+    #[TokenRequired(['Superviseur','Admin'])]
+    public function valider(Request $request, int $id): JsonResponse
+    {
+        try {
+            $courrier = $this->courrierValidationService->validerCourrierValidation($id);
+            $excludes = ['deletedAt'];
+            $data = $courrier->toArray($excludes);
+            return $this->jsonSuccess($data);
+
+        } catch (\Throwable $e) {
+            return $this->jsonError($e->getMessage(),  400);
+        }
+    }
+}
         
 
-}

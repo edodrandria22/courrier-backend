@@ -203,10 +203,18 @@ message
             --creer dto -- ok -- 10 mn 
             --service -- ok -- 20 mn
 28/09/2026
-        --test api -- a faire -- 60 mn
-        --valider une courrier validation -- a faire --30 mn
+        --test api -- ok -- 60 mn 
     --ajouter role OM et supervisor -- ok -- 30 mn
     --ajouter employeur sur la creation d'un utilisateur -- ok -- 30 mn
     --creer entite/repository fichiersValidations -- ok -- 30 mn
     --ajouter une fichier validation sur le courrier validation -- ok -- 30 mn
- --modifier une courrier validation -- a faire -- 30 mn
+    --modifier une courrier validation -- ok -- 30 mn
+29/09/2026    
+    --ajouter une remarque sur une courrier validation -- ok -- 30 mn
+    --valider une courrier validation -- a faire --60 mn
+        --transformer une courrier validation en courrier -- a faire -- 30mn
+        --transformer une courrier validation en message -- a faire -- 60 mn
+            --transformer une fichierValidation en fichier -- a faire -- 30 mn
+            --creer une nouvelle message -- a faire -- 30 mn
+
+-- factoriser messageService -- a faire -- 60 mn

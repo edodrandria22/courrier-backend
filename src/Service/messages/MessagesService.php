@@ -347,7 +347,7 @@ class MessagesService extends BaseService
             $data['courrier']= $this->vueHistoriqueDetailService->tranformerUtilisateur($vueCourriers,$excludes);
             $this->mercureService->sendNotification("message",$data);
 
-            $this->sendNotificationMessage($message, $excludes);
+            $this->sendNotificationMessage($nouveauMessage, $excludes);
 
             $this->em->getConnection()->commit();
 
@@ -480,5 +480,65 @@ class MessagesService extends BaseService
         // Transfert du message
         return $this->recupererMessageExterne($message, $utisateurExterne, $nouveauDestinataire, $observation, $files);
     }
-    
+    public function transfererOm(
+        Courriers $courrier,
+        Utilisateurs $nouveauDestinataire,
+        ?string $observation = null,
+        ?string $bordureau = null,
+        ?int $numeroDepart = null,
+        array $files = []
+    ): Messages {
+        $this->em->getConnection()->beginTransaction();
+        $utilisateur = $courrier->getCreateur();
+        try {
+            // Envoi du nouveau message
+            $nouveauMessage = $this->envoyerMessage(
+                $utilisateur->getId(),
+                $nouveauDestinataire->getId(),
+                $courrier->getId(),
+                $observation,
+                $bordureau,
+                $files
+            );
+            // Mise à jour de la date de validation
+            $this->save($nouveauMessage);
+            $excludes = ['deletedAt','observation'];    
+            $historiques= $this->historiquesService->tranformerMessageEnHistorique($nouveauMessage,$numeroDepart);
+
+            if (count($historiques) < 2) {
+                throw new Exception('Le message doit avoir au moins 2 historiques');
+            }
+            $nouveauMessage->setNumeroExpediteur($historiques[0]->getNumero());
+            $this->save($nouveauMessage);
+        
+            $data = $nouveauMessage->toArray($excludes);
+            $vueCourriers = $this->vueHistoriqueDetailService->getByHistoriqueId($historiques[1]->getId());
+            if($vueCourriers == null){
+                throw new Exception('Vue courrier non trouvée');
+            }
+            $data['courrier']= $this->vueHistoriqueDetailService->tranformerUtilisateur($vueCourriers,$excludes);
+            $this->mercureService->sendNotification("message",$data);
+
+            $this->sendNotificationMessage($nouveauMessage, $excludes);
+
+            $this->em->getConnection()->commit();
+
+            return $nouveauMessage;
+        } catch (\Throwable $e) {
+            $this->em->getConnection()->rollBack();
+            throw $e;
+        }
+    }
+    public function tranfererOmChezSag(
+        Courriers $courrier,
+        ?string $observation = null,
+        ?string $bordureau = null,
+        ?int $numeroDepart = null,
+        array $files = []
+    ) : Messages
+    {
+        $nouveauDestinataire = $this->utilisateursService->getVerifierById(5);
+        return $this->transfererOm($courrier,$nouveauDestinataire, $observation, $bordureau, $numeroDepart, $files);
+
+    }
 }

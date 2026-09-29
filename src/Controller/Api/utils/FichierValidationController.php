@@ -21,7 +21,7 @@ class FichierValidationController extends BaseApiController
     /**
      * Télécharge le binaire d'un fichier spécifique par son ID
      */
-    #[Route('/{id}/download', name: 'api_fichiers_download', methods: ['GET'], requirements: ['id' => '\d+'])]
+    #[Route('/{id}/download', name: 'api_fichiers_validation_download', methods: ['GET'], requirements: ['id' => '\d+'])]
     #[TokenRequired]
     public function download(int $id, Request $request): Response
     {
