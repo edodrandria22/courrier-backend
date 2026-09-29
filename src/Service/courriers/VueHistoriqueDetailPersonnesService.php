@@ -31,12 +31,10 @@ class VueHistoriqueDetailPersonnesService extends BaseService
     public function searchByDto(Utilisateurs $utilisateur, RechercheCourriersDto $dto, OrderCriteria $orderCriteria, PaginationCriteria $paginationCriteria): array
     {
         $conditions = [];
-        if ($utilisateur->getRole()->getName() !== 'Admin') {
-            $conditions[] = new ConditionCriteria('utilisateurId', $utilisateur->getId(), '=');
-        }
-        else{
-            $conditions[] = new ConditionCriteria('isSend', false, '=');
-        }
+        $roleName = $utilisateur->getRole()?->getName() ;
+        $conditions[] = !\in_array($roleName, ['Admin', 'Superviseur'], true)
+            ? new ConditionCriteria('utilisateurId', $utilisateur->getId(), '=')
+            : new ConditionCriteria('isSend', false, '=');
 
         $conditions[] = new ConditionCriteria('dateMessage', $paginationCriteria->getValue(), '<');
 
