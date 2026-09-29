@@ -28,27 +28,44 @@ class FichiersValidationsService extends BaseService
         return $this->repo;
     }
     
-    public function saveToBlob(FichierValidationDto $dto): FichiersValidations
-    {
-        $fichier = new FichiersValidations();
-        $file = $dto->getFichier();
-        // Lecture du contenu binaire
-        $binaryContent = file_get_contents($file->getPathname());
+    private const ALLOWED_MIME_TYPES = [
+        'application/pdf',
+        'image/jpeg',
+        'image/png',
+        'image/gif',
+        'image/webp',
+        'image/bmp',
+    ];
 
+    public function saveToBlob(FichierValidationDto $dto, bool $isAccepteTous = true): FichiersValidations
+    {
+        $file = $dto->getFichier();
+
+        if (!$isAccepteTous) {
+            $this->validateMimeType($file);
+        }
+
+        $fichier = new FichiersValidations();
         $fichier->setNom($file->getClientOriginalName())
             ->setType($file->getMimeType())
             ->setTypeFichier($dto->getTypeFichier())
-            ->setBinaire($binaryContent);
-    
+            ->setBinaire(file_get_contents($file->getPathname()));
 
         return $fichier;
     }
-    public function persistFiles(array $files, CourrierValidations $courrierValidation): array
+
+    private function validateMimeType(UploadedFile $file): void
+    {
+        if (!in_array($file->getMimeType(), self::ALLOWED_MIME_TYPES, true)) {
+            throw new \Exception('Le type de fichier n\'est pas autorisé. Seuls les images et PDF sont acceptés.');
+        }
+    }
+    public function persistFiles(array $files, CourrierValidations $courrierValidation, bool $isAccepteTous = true): array
     {
         $result =[];
         foreach ($files as $file) {
             if ($file instanceof FichierValidationDto) {
-                $fichierEntity = $this->saveToBlob($file);
+                $fichierEntity = $this->saveToBlob($file, $isAccepteTous);
                 $fichierEntity->setCourrierValidation($courrierValidation);   
                 $this->em->persist($fichierEntity);
                 $courrierValidation->addFichier($fichierEntity);

@@ -69,7 +69,7 @@ class CourrierValidationsService extends BaseService
             $result = $this->save($courrierValidation);
             $courrierValidation->setOriginId($result->getId());
             $result = $this->save($courrierValidation);
-            $this->fichiersValidationsService->persistFiles($fichiers, $courrierValidation);
+            $this->fichiersValidationsService->persistFiles($fichiers, $courrierValidation, false);
 
             $this->em->getConnection()->commit();
             return $result;

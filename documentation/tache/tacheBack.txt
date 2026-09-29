@@ -212,9 +212,9 @@ message
 29/09/2026    
     --ajouter une remarque sur une courrier validation -- ok -- 30 mn
     --valider une courrier validation -- a faire --60 mn
-        --transformer une courrier validation en courrier -- a faire -- 30mn
-        --transformer une courrier validation en message -- a faire -- 60 mn
-            --transformer une fichierValidation en fichier -- a faire -- 30 mn
-            --creer une nouvelle message -- a faire -- 30 mn
+        --transformer une courrier validation en courrier -- ok -- 30mn
+        --transformer une courrier validation en message -- ok -- 60 mn
+            --transformer une fichierValidation en fichier -- ok -- 30 mn
+            --creer une nouvelle message -- ok -- 30 mn
 
 -- factoriser messageService -- a faire -- 60 mn
