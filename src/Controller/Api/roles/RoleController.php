@@ -23,7 +23,7 @@ class RoleController extends BaseApiController
     public function index(): JsonResponse
     {
         try {
-            $rolesId= [1,2];
+            $rolesId= [1,2,4,5];
             $roles = $this->rolesService->getByRole($rolesId);
             $excludes = ["createdAt","deletedAt"];
             $data = $this->rolesService->transformerArray($roles, $excludes);

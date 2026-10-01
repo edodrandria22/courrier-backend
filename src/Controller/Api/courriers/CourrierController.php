@@ -79,7 +79,7 @@ class CourrierController extends BaseApiController
         }
     }
     #[Route('/getAllbyUserSend', name: 'api_courriers_get_all_by_user_recu', methods: ['GET'])]
-    #[TokenRequired(['Utilisateur'])]
+    #[TokenRequired(['Utilisateur','Om'])]
     public function getAllbyUserRecu(Request $request): JsonResponse
     {
         try {

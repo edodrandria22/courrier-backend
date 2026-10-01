@@ -176,7 +176,7 @@ class UtilisateursService extends BaseService
     }
     public function getAllUsersPaginated(PaginationCriteria $paginationCriteria): array
     {
-        $rolesId = [1, 2];
+        $rolesId = [1, 2,4,5];
         return $this->getAllUsersPaginatedByRoles($rolesId, $paginationCriteria);
     }
     private function isRoleExacte(Utilisateurs $user,int $idRole, String $erreur):void{

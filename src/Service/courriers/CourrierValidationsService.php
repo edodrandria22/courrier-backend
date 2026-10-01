@@ -2,10 +2,13 @@
 
 namespace App\Service\courriers;
 
+use App\Dto\utils\OrderCriteria;
 use App\Repository\courriers\CourrierValidationsRepository;
 use App\Service\utils\BaseService;
 use Doctrine\ORM\EntityManagerInterface;
 use App\Dto\courriers\CourriersValidationsDto;
+use App\Dto\utils\ConditionCriteria;
+use App\Dto\utils\PaginationCriteria;
 use App\Entity\courriers\Courriers;
 use App\Entity\courriers\CourrierValidations;
 use App\Entity\courriers\DetailPersonnesValidations;
@@ -221,7 +224,7 @@ class CourrierValidationsService extends BaseService
         $this->save($courrier);
         return $courrier;
     }
-    public function validerCourrierValidation(int $id): Courriers
+    public function validerCourrierValidation(int $id): CourrierValidations
     {
         $this->em->getConnection()->beginTransaction();
         try{
@@ -232,11 +235,50 @@ class CourrierValidationsService extends BaseService
             $files = $this->fichiersValidationsService->getByCourrierValidationIdUploaded($courrierValidation->getId());
             $this->messagesService->tranfererOmChezSag($courrier,$courrierValidation->getObservation(),null,$courrierValidation->getNumeroDepart(),$files);
             $this->em->getConnection()->commit();
-            return $courrier;
+            return $courrierValidation;
         } catch (Exception $e) {
             $this->em->getConnection()->rollBack();
             throw $e;
         }
+    }
+    public function getByUser(Utilisateurs $user, ?\DateTimeImmutable $date = null, int $limit = 10, ?string $isValid = null): array
+    {
+        $pagination = new PaginationCriteria($date, $limit);
+        $conditions = [
+            new ConditionCriteria('createur', $user->getId(), '='),
+            new ConditionCriteria('createdAt', $pagination->getValue(), '<'),
+        ];
+        $isValidBool = $this->parseIsValid($isValid);
+        if ($isValidBool !== null) {
+            $conditions[] = new ConditionCriteria('dateValidation', $isValidBool ? null : null, $isValidBool ? 'IS NOT NULL' : 'IS NULL');
+        }
+        return $this->search($conditions, new OrderCriteria(), $pagination);
+    }
+
+    private function parseIsValid(?string $isValid): ?bool
+    {
+        return match($isValid) {
+            'true' => true,
+            'false' => false,
+            default => null,
+        };
+    }
+    public function tranformerEnJson(CourrierValidations $courrierValidation):array{
+        $excludes = ["deletedAt"];
+        $excludesFiles = [...$excludes, "createdAt"];
+        $result = $courrierValidation->toArray($excludes);
+        $listeFiles = $this->fichiersValidationsService->getByCourrierValidationId($courrierValidation->getId());
+        $detailPersonnes = $this->detailPersonnesValidationsService->getByCourrierValidationId($courrierValidation->getId());
+        $result['files'] = $this->fichiersValidationsService->transformerArray($listeFiles,$excludesFiles);
+        $result['detailPersonnes'] = $this->detailPersonnesValidationsService->transformerArray($detailPersonnes,[...$excludesFiles,"id"]);
+        return $result;
+    }
+    public function transformerArrayEnJson(array $array):array{
+        $result = [];
+        foreach($array as $item){
+            $result[] = $this->tranformerEnJson($item);
+        }
+        return $result;
     }
     
     

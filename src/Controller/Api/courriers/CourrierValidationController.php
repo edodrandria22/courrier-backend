@@ -4,13 +4,14 @@ namespace App\Controller\Api\courriers;
 
 use App\Controller\Api\utils\BaseApiController;
 use App\Dto\FichierValidationDto;
-use DateTimeImmutable;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
 use App\Annotation\TokenRequired;
 use App\Dto\courriers\CourriersValidationsDto;
 use App\Service\courriers\CourrierValidationsService;
+use DateTimeImmutable;
+
 #[Route('/courriersValidations')]
 class CourrierValidationController extends BaseApiController
 {
@@ -21,7 +22,7 @@ class CourrierValidationController extends BaseApiController
     }
 
     #[Route('', name: 'api_courriers_validation_list', methods: ['GET'])]
-    // #[TokenRequired(['Utilisateur'])]
+    #[TokenRequired(['Om'])]
     public function index(Request $request): JsonResponse
     {
         try {
@@ -29,16 +30,18 @@ class CourrierValidationController extends BaseApiController
             $dateParam = $request->query->get('date');
             $date = $dateParam ? new DateTimeImmutable($dateParam) : new DateTimeImmutable();
             $limitParam = $request->query->get('limit');
+            $isValid = $request->query->get('isValid');
             $limit = $limitParam ? (int)$limitParam : ($_ENV['LIMIT_PAGINATIONS'] ?? 10);
-            $courriers = $this->courrierValidationService->getAll();
-            $data = $this->courrierValidationService->transformerArray($courriers,["deletedAt"]);
+            $courriersValidations = $this->courrierValidationService->getByUser($user,$date,$limit,$isValid);
+            // $courriersValidations = $this->courrierValidationService->getAll();
+            $data = $this->courrierValidationService->transformerArrayEnJson($courriersValidations);
             return $this->jsonSuccess($data);
         } catch (\Throwable $e) {
             return $this->jsonError($e->getMessage(),  400);
         }
     }
     #[Route('', name: 'api_courriers_validation_creer', methods: ['POST'])]
-    #[TokenRequired(['OM'])]
+    #[TokenRequired(['Om'])]
     public function creer(Request $request): JsonResponse
     {
         try {
@@ -47,14 +50,16 @@ class CourrierValidationController extends BaseApiController
                 $request,
                 CourriersValidationsDto::class
             );
-            $uploadedFilesCin = $request->files->get('cin', null);
-            $uploadedFilesPassport = $request->files->get('passeport', null);
-            $fichiers[] = new FichierValidationDto('cin',$uploadedFilesCin);
-            $fichiers[] = new FichierValidationDto('passeport',$uploadedFilesPassport);
+            $uploadedFilesDemande = $request->files->get('demande', null);
+            $uploadedFilesInvition = $request->files->get('lettreInvitation', null);
+            $uploadedFilePlanVol = $request->files->get('planVol', null);
+
+            $fichiers[] = new FichierValidationDto('demande',$uploadedFilesDemande);
+            $fichiers[] = new FichierValidationDto('lettreInvitation',$uploadedFilesInvition);
+            $fichiers[] = new FichierValidationDto('planVol',$uploadedFilePlanVol);
             $this->validateDtos($fichiers);
             $courrierValidation = $this->courrierValidationService->saveDto($user,$dto,$fichiers);
-            $excludes = ['deletedAt'];
-            $data = $courrierValidation->toArray($excludes);
+            $data = $this->courrierValidationService->tranformerEnJson($courrierValidation);
             return $this->jsonSuccess($data);
 
         } catch (\Throwable $e) {
@@ -62,7 +67,7 @@ class CourrierValidationController extends BaseApiController
         }
     }
     #[Route('/{id}', name: 'api_courriers_validation_update', methods: ['POST'], requirements: ['id' => '\d+'])]
-    #[TokenRequired(['OM'])]
+    #[TokenRequired(['Om'])]
     public function update(Request $request, int $id): JsonResponse
     {
         try {
@@ -71,21 +76,23 @@ class CourrierValidationController extends BaseApiController
                 $request,
                 CourriersValidationsDto::class
             );
-            $uploadedFilesCin = $request->files->get('cin', null);
-            $uploadedFilesPassport = $request->files->get('passeport', null);
-            $fichiers[] = new FichierValidationDto('cin',$uploadedFilesCin);
-            $fichiers[] = new FichierValidationDto('passeport',$uploadedFilesPassport);
+            $uploadedFilesDemande = $request->files->get('demande', null);
+            $uploadedFilesInvition = $request->files->get('lettreInvitation', null);
+            $uploadedFilePlanVol = $request->files->get('planVol', null);
+
+            $fichiers[] = new FichierValidationDto('demande',$uploadedFilesDemande);
+            $fichiers[] = new FichierValidationDto('lettreInvitation',$uploadedFilesInvition);
+            $fichiers[] = new FichierValidationDto('planVol',$uploadedFilePlanVol);
             $this->validateDtos($fichiers);
             $courrier = $this->courrierValidationService->updateDtoId($user, $id, $dto, $fichiers);
-            $excludes = ['deletedAt'];
-            $data = $courrier->toArray($excludes);
+            $data = $this->courrierValidationService->tranformerEnJson($courrier);
             return $this->jsonSuccess($data);
 
         } catch (\Throwable $e) {
             return $this->jsonError($e->getMessage(),  400);
         }
     }
-    #[Route('/{id}/remarque', name: 'api_courriers_validation_add_remarque', methods: ['POST', 'PUT'], requirements: ['id' => '\d+'])]
+    #[Route('/{id}/remarque', name: 'api_courriers_validation_add_remarque', methods: ['POST'], requirements: ['id' => '\d+'])]
     #[TokenRequired(['Superviseur','Admin'])]
     public function addRemarque(Request $request, int $id): JsonResponse
     {
@@ -96,8 +103,7 @@ class CourrierValidationController extends BaseApiController
                 return $this->jsonError('La remarque est obligatoire', 400);
             }
             $courrier = $this->courrierValidationService->addRemarque($id, $remarque);
-            $excludes = ['deletedAt'];
-            $data = $courrier->toArray($excludes);
+            $data = $this->courrierValidationService->tranformerEnJson($courrier);
             return $this->jsonSuccess($data);
 
         } catch (\Throwable $e) {
@@ -110,8 +116,7 @@ class CourrierValidationController extends BaseApiController
     {
         try {
             $courrier = $this->courrierValidationService->validerCourrierValidation($id);
-            $excludes = ['deletedAt'];
-            $data = $courrier->toArray($excludes);
+            $data = $this->courrierValidationService->tranformerEnJson($courrier);
             return $this->jsonSuccess($data);
 
         } catch (\Throwable $e) {

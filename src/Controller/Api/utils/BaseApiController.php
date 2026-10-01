@@ -174,7 +174,7 @@ abstract class BaseApiController extends AbstractController
     {
         $messages = [];
 
-        foreach ($dtos as $index => $dto) {
+        foreach ($dtos as $dto) {
             $errors = $this->validator->validate($dto);
 
             foreach ($errors as $error) {
@@ -182,8 +182,8 @@ abstract class BaseApiController extends AbstractController
                 $message = $error->getMessage();
 
                 $messages[] = sprintf(
-                    '[%d] %s : %s',
-                    $index,
+                    '%s - %s : %s',
+                    $dto->getTypeFichier(),
                     $property,
                     $message
                 );
