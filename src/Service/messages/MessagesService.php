@@ -22,7 +22,6 @@ use Exception;
 use Doctrine\ORM\EntityManagerInterface;
 
 use App\Service\utils\FichiersService;
-use App\Service\utils\MailService;
 use Override;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 
@@ -37,8 +36,7 @@ class MessagesService extends BaseService
         private readonly ValidationService $validationService,
         private readonly HistoriquesService $historiquesService,
         private readonly VueHistoriqueDetailsService $vueHistoriqueDetailService,
-        private readonly MercureService $mercureService,
-        private readonly MailService $mailService,
+        private readonly MercureService $mercureService
     ) {
         parent::__construct($em);
     }  

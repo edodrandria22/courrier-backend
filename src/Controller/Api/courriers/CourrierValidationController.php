@@ -22,7 +22,7 @@ class CourrierValidationController extends BaseApiController
     }
 
     #[Route('', name: 'api_courriers_validation_list', methods: ['GET'])]
-    #[TokenRequired(['Om'])]
+    #[TokenRequired(['Om','Admin','Superviseur'])]
     public function index(Request $request): JsonResponse
     {
         try {

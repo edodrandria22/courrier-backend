@@ -216,5 +216,6 @@ message
         --transformer une courrier validation en message -- ok -- 60 mn
             --transformer une fichierValidation en fichier -- ok -- 30 mn
             --creer une nouvelle message -- ok -- 30 mn
-
+02/10/2026
+    --mercure pendant l'insertion et update -- ok -- 30 mn    
 -- factoriser messageService -- a faire -- 60 mn

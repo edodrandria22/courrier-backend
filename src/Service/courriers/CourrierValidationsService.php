@@ -13,6 +13,7 @@ use App\Entity\courriers\Courriers;
 use App\Entity\courriers\CourrierValidations;
 use App\Entity\courriers\DetailPersonnesValidations;
 use App\Entity\utilisateurs\Utilisateurs;
+use App\Service\mercure\MercureService;
 use App\Service\messages\MessagesService;
 use App\Service\utils\FichiersValidationsService;
 use Exception;
@@ -25,7 +26,8 @@ class CourrierValidationsService extends BaseService
         private readonly EntitesService $entitesService,
         private readonly FichiersValidationsService $fichiersValidationsService,
         private readonly CourriersService $courriersService,
-        private readonly MessagesService $messagesService
+        private readonly MessagesService $messagesService,
+        private readonly MercureService $mercureService,
     ) {
         parent::__construct($entityManager);
     }
@@ -73,8 +75,10 @@ class CourrierValidationsService extends BaseService
             $courrierValidation->setOriginId($result->getId());
             $result = $this->save($courrierValidation);
             $this->fichiersValidationsService->persistFiles($fichiers, $courrierValidation, false);
-
+            $data = $this->tranformerEnJson($result);
+            $this->mercureService->sendNotification("courrierValidationInsert",$data);
             $this->em->getConnection()->commit();
+
             return $result;
             
         } catch (Exception $e) {
@@ -120,6 +124,7 @@ class CourrierValidationsService extends BaseService
                 throw new Exception("Le courrier a déjà été validé, vous ne pouvez plus le modifier");
             }
             $courrierValidation = new CourrierValidations();
+            $courrierValidation->setCreatedAt($oldCourrierValidation->getCreatedAt());
             $courrierValidation->setObject($dto->getObject());
             $courrierValidation->setVille($dto->getVille());
             $courrierValidation->setDateDebut($dto->getDateDebut());
@@ -131,8 +136,10 @@ class CourrierValidationsService extends BaseService
             $result = $this->save($courrierValidation);
             $courrierValidation->setOriginId($oldCourrierValidation->getOriginId());
             $result = $this->save($courrierValidation);
-            $this->fichiersValidationsService->persistFiles($fichiers, $courrierValidation);
+            $this->fichiersValidationsService->persistFiles($fichiers, $result);
             $this->delete($oldCourrierValidation);
+            $data = $this->tranformerEnJson($result);
+            $this->mercureService->sendNotification("courrierValidationUpdate",$data);
             $this->em->getConnection()->commit();
             return $result;
 
@@ -150,6 +157,8 @@ class CourrierValidationsService extends BaseService
     {
         $courrierValidation = $this->getVerifierById($id);
         $courrierValidation->setObservationSuperviseur($remarque);
+        $data = $this->tranformerEnJson($courrierValidation);
+        $this->mercureService->sendNotification("courrierValidationRemarque",$data);
         return $this->save($courrierValidation);
     }
     private const MOIS = [
@@ -235,6 +244,8 @@ class CourrierValidationsService extends BaseService
             $files = $this->fichiersValidationsService->getByCourrierValidationIdUploaded($courrierValidation->getId());
             $this->messagesService->tranfererOmChezSag($courrier,$courrierValidation->getObservation(),null,$courrierValidation->getNumeroDepart(),$files);
             $this->em->getConnection()->commit();
+            $data = $this->tranformerEnJson($courrierValidation);
+            $this->mercureService->sendNotification("courrierValidationValider",$data);
             return $courrierValidation;
         } catch (Exception $e) {
             $this->em->getConnection()->rollBack();
@@ -245,9 +256,11 @@ class CourrierValidationsService extends BaseService
     {
         $pagination = new PaginationCriteria($date, $limit);
         $conditions = [
-            new ConditionCriteria('createur', $user->getId(), '='),
             new ConditionCriteria('createdAt', $pagination->getValue(), '<'),
         ];
+        if($user->getRole()->getId() === 4) {
+            $conditions[] = new ConditionCriteria('createur', $user->getId(), '=');
+        }
         $isValidBool = $this->parseIsValid($isValid);
         if ($isValidBool !== null) {
             $conditions[] = new ConditionCriteria('dateValidation', $isValidBool ? null : null, $isValidBool ? 'IS NOT NULL' : 'IS NULL');
