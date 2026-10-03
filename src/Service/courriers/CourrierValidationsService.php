@@ -64,6 +64,7 @@ class CourrierValidationsService extends BaseService
         try {
             $courrierValidation = new CourrierValidations();
             $courrierValidation->setObject($dto->getObject());
+            $courrierValidation->setPays($dto->getPays());
             $courrierValidation->setVille($dto->getVille());
             $courrierValidation->setDateDebut($dto->getDateDebut());
             $courrierValidation->setDateFin($dto->getDateFin());
@@ -126,6 +127,7 @@ class CourrierValidationsService extends BaseService
             $courrierValidation = new CourrierValidations();
             $courrierValidation->setCreatedAt($oldCourrierValidation->getCreatedAt());
             $courrierValidation->setObject($dto->getObject());
+            $courrierValidation->setPays($dto->getPays());
             $courrierValidation->setVille($dto->getVille());
             $courrierValidation->setDateDebut($dto->getDateDebut());
             $courrierValidation->setDateFin($dto->getDateFin());
@@ -174,9 +176,8 @@ class CourrierValidationsService extends BaseService
             $courrierValidation->getDateFin()
         );
 
-        return "De se rendre à " . $courrierValidation->getVille() . " " . $periode;
+        return "De se rendre à ". $courrierValidation->getVille() . " (" . $courrierValidation->getPays() . ") " . $periode;
     }
-
     private function formatPeriode(\DateTimeInterface $debut, \DateTimeInterface $fin): string
     {
         $memeAnnee = $debut->format('Y') === $fin->format('Y');

@@ -9,6 +9,9 @@ class CourriersValidationsDto
     #[Assert\NotBlank(message: "L'object est obligatoire.")]
     private ?string $object = null;
     
+    #[Assert\NotBlank(message: "Le pays est obligatoire.")]
+    private ?string $pays = null;
+    
     #[Assert\NotBlank(message: "La ville est obligatoire.")]
     private ?string $ville = null;
 
@@ -35,6 +38,10 @@ class CourriersValidationsDto
     public function getObject(): ?string
     {
         return $this->object;
+    }
+    public function getPays(): ?string
+    {
+        return $this->pays;
     }
     public function getVille(): ?string
     {
@@ -73,6 +80,11 @@ class CourriersValidationsDto
     public function setVille(?string $ville): self
     {
         $this->ville = $ville;
+        return $this;
+    }
+    public function setPays(?string $pays): self
+    {
+        $this->pays = $pays;
         return $this;
     }
     public function setObservation(?string $observation): self

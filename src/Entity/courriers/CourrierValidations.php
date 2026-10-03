@@ -15,6 +15,8 @@ class CourrierValidations extends BaseEntite
 {
     #[ORM\Column(type: "text", nullable: false)]
     protected ?string $object = null;
+    #[ORM\Column(type: "text", nullable: true)]
+    protected ?string $pays = null;
 
     #[ORM\Column(type: "text", nullable: true)]
     protected ?string $ville = null;
@@ -63,6 +65,17 @@ class CourrierValidations extends BaseEntite
     public function setObject(?string $object): self
     {
         $this->object = $object;
+
+        return $this;
+    }
+    public function getPays(): ?string
+    {
+        return $this->pays;
+    }
+
+    public function setPays(?string $pays): self
+    {
+        $this->pays = $pays;
 
         return $this;
     }
