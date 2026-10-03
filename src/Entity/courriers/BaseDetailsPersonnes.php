@@ -21,7 +21,7 @@ abstract class BaseDetailsPersonnes extends BaseEntite
     protected ?string $telephone = null;
     
     #[ORM\Column(type: "integer", nullable: true)]
-    private ?int $matricule = null;
+    protected ?int $matricule = null;
 
     #[ORM\ManyToOne(targetEntity:Entites::class)]
     #[ORM\JoinColumn(nullable: true)]
