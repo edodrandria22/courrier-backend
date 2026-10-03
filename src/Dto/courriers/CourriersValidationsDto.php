@@ -17,6 +17,10 @@ class CourriersValidationsDto
 
     private ?\DateTimeImmutable $dateDebut = null;
 
+    #[Assert\GreaterThanOrEqual(
+        propertyPath: 'dateDebut',
+        message: 'La date de fin doit être supérieure ou égale à la date de début.'
+    )]
     private ?\DateTimeImmutable $dateFin = null;
     private ?string $observation = null;
 
