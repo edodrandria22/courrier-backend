@@ -527,7 +527,7 @@ class MessagesService extends BaseService
             throw $e;
         }
     }
-    public function tranfererOmChezSag(
+    public function tranfererOmChezSg(
         Courriers $courrier,
         ?string $observation = null,
         ?string $bordureau = null,
@@ -535,7 +535,7 @@ class MessagesService extends BaseService
         array $files = []
     ) : Messages
     {
-        $nouveauDestinataire = $this->utilisateursService->getVerifierById(5);
+        $nouveauDestinataire = $this->utilisateursService->getVerifierById(4);
         return $this->transfererOm($courrier,$nouveauDestinataire, $observation, $bordureau, $numeroDepart, $files);
 
     }

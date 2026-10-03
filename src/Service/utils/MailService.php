@@ -24,7 +24,7 @@ class MailService
                 <body style='font-family: Arial, sans-serif'>
                     <p>Bonjour $nom,</p>
                     $message
-                    <p>Cordialement,<br>Mesupres</p>
+                    <p>Cordialement,<br>Ministère de l'Enseignement Superieur et de la Recherche Scientifique</p>
                 </body>
             </html>
         ";

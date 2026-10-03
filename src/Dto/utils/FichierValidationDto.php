@@ -11,6 +11,10 @@ class FichierValidationDto
     public ?string $typeFichier = null;
 
     #[Assert\NotNull(message: "Le fichier est obligatoire.")]
+    #[Assert\File(
+        maxSize: '5M',
+        maxSizeMessage: 'Le fichier ne doit pas dépasser 5 Mo.'
+    )]
     public ?UploadedFile $fichier = null;
 
     public function getTypeFichier(): ?string

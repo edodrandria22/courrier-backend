@@ -71,7 +71,7 @@ class UtilisateursService extends BaseService
         
         $role = $this->roleRepository->getById($dto->getIdRole()) ?? throw new \InvalidArgumentException('Rôle introuvable');
         $user->setRole($role);
-        $employeur = $dto->employeurId ? $this->employeurService->getVerifierById($dto->employeurId) : null;
+        $employeur = $dto->idEmployeur ? $this->employeurService->getVerifierById($dto->idEmployeur) : null;
         $user->setEmployeur($employeur);
 
         $dto->getMdp() && $user->setMdp(password_hash($dto->getMdp(), PASSWORD_BCRYPT));
@@ -115,7 +115,7 @@ class UtilisateursService extends BaseService
         $user->setNom($nom);
         $user->setPrenom($prenom);
         $user->setAdresse($dto->getAdresse());
-        $employeur = $dto->employeurId ? $this->employeurService->getVerifierById($dto->employeurId) : null;
+        $employeur = $dto->idEmployeur ? $this->employeurService->getVerifierById($dto->idEmployeur) : null;
         $user->setEmployeur($employeur);
         $dto->getSigle() !== null && $user->setSigle(mb_strtoupper($dto->getSigle(), 'UTF-8'));
         return $this->createUser($user,$dto->getIdRole());

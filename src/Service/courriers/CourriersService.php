@@ -83,7 +83,11 @@ class CourriersService extends BaseService
         $courrier->delete();
         $this->save($courrier);
     }
-    
+    public function envoyerMailDetailPersonne(DetailPersonnes $detailPersonne,Courriers $courrier): void
+    {
+        $messageCourrier = $this->genererMessageInsertionCourrier($detailPersonne, $courrier);
+        $this->mailService->sendEmail($detailPersonne->getEmail(),"Référence de suivi de votre courrier au Mesupres" ,$messageCourrier);
+    }
     public function genererListeDetailPersonne(CourriersDto $dto,Courriers $courrier): void
     {
         foreach ($dto->getDetailPersonnes() as $detailPersonne) {
@@ -103,8 +107,7 @@ class CourriersService extends BaseService
             $entite = $this->entitesService->getVerifierById($detailPersonne->getEntiteId());
             $detailPersonneEntity->setEntite($entite);
 
-            $messageCourrier = $this->genererMessageInsertionCourrier($detailPersonneEntity, $courrier);
-            $this->mailService->sendEmail($detailPersonneEntity->getEmail(),"Référence de suivi de votre courrier au Mesupres" ,$messageCourrier);
+            $this->envoyerMailDetailPersonne($detailPersonneEntity, $courrier);
             $courrier->addDetailPersonne($detailPersonneEntity);
         }
         
@@ -228,8 +231,10 @@ class CourriersService extends BaseService
         $adresse = $utilisateur->getAdresse();
         $messageHtml = "<p>Nous vous informons que votre courrier portant la référence <strong>".$courrier->getReference()."</strong> a été traité.</p> 
                         <p>Object du courrier : <strong>".$courrier->getObject()."</strong></p> 
-                        <p>Vous êtes invité à vous présenter aux coordonnées suivantes pour la suite de votre démarche :</p> 
+                        <br>
+                        <p>Merci de vous présenter à l'adresse suivante :</p> 
                         <p><strong>Adresse :</strong> {$adresse}</p> 
+                        <br>
                         <p>Merci de vous munir d’une pièce d’identité lors de votre passage.</p>";
         return $this->mailService->getHtmlMail($nom, $messageHtml);
     }
@@ -312,10 +317,8 @@ class CourriersService extends BaseService
             <table style='border-collapse:collapse;width:100%;margin-bottom:10px'>
                 <thead>
                     <tr>
-                        <th style='border:1px solid #ddd;padding:8px;text-align:left'>Expéditeur</th>
-                        <th style='border:1px solid #ddd;padding:8px;text-align:left'>Destinataire</th>
-                        <th style='border:1px solid #ddd;padding:8px;text-align:left'>Date de départ</th>
-                        <th style='border:1px solid #ddd;padding:8px;text-align:left'>Date d'arrivée</th>
+                        <th style='border:1px solid #ddd;padding:8px;text-align:left'>Detenteur</th>
+                        <th style='border:1px solid #ddd;padding:8px;text-align:left'>Date</th>
                     </tr>
                 </thead>
                 <tbody>

@@ -35,7 +35,7 @@ class UtilisateursDto
     public ?int $idRole = null;
     #[Assert\Length(max: 255)]
     public ?string $sigle = null;
-    public ?int $employeurId = null;
+    public ?int $idEmployeur = null;
 
 
     // ===== GETTERS =====

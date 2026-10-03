@@ -174,7 +174,7 @@ class CourrierValidationsService extends BaseService
             $courrierValidation->getDateFin()
         );
 
-        return "Demande d'ordre de mission à " . $courrierValidation->getVille() . " " . $periode;
+        return "De se rendre à " . $courrierValidation->getVille() . " " . $periode;
     }
 
     private function formatPeriode(\DateTimeInterface $debut, \DateTimeInterface $fin): string
@@ -228,6 +228,7 @@ class CourrierValidationsService extends BaseService
         $detailsPersonnesValidation = $this->detailPersonnesValidationsService->getByCourrierValidationId($courrierValidation->getId());
         foreach ($detailsPersonnesValidation as $detailPersonneValidation) {
             $detailPersonne = $this->detailPersonnesValidationsService->transformerEnDetailPersonne($detailPersonneValidation, $courrier);
+            $this->courriersService->envoyerMailDetailPersonne($detailPersonne, $courrier);
             $courrier->addDetailPersonne($detailPersonne);
         }
         $this->save($courrier);
@@ -242,7 +243,7 @@ class CourrierValidationsService extends BaseService
             $courrierValidation->setDateValidation(new \DateTimeImmutable());
             $courrierValidation = $this->save($courrierValidation);
             $files = $this->fichiersValidationsService->getByCourrierValidationIdUploaded($courrierValidation->getId());
-            $this->messagesService->tranfererOmChezSag($courrier,$courrierValidation->getObservation(),null,$courrierValidation->getNumeroDepart(),$files);
+            $this->messagesService->tranfererOmChezSg($courrier,$courrierValidation->getObservation(),null,$courrierValidation->getNumeroDepart(),$files);
             $this->em->getConnection()->commit();
             $data = $this->tranformerEnJson($courrierValidation);
             $this->mercureService->sendNotification("courrierValidationValider",$data);

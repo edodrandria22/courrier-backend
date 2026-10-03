@@ -218,9 +218,7 @@ class Messages extends BaseValidation
 
         return "
             <tr>
-                <td style='border:1px solid #ddd;padding:8px'>{$expNom}</td>
                 <td style='border:1px solid #ddd;padding:8px'>{$destNom}</td>
-                <td style='border:1px solid #ddd;padding:8px'>{$dateDepart}</td>
                 <td style='border:1px solid #ddd;padding:8px'>{$dateArrivee}</td>
             </tr>
         ";
