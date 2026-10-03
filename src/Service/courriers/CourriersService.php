@@ -230,7 +230,7 @@ class CourriersService extends BaseService
         $nom = $detailPersonne->getName() . ' ' . $detailPersonne->getPrenom();
         $adresse = $utilisateur->getAdresse();
         $messageHtml = "<p>Nous vous informons que votre courrier portant la référence <strong>".$courrier->getReference()."</strong> a été traité.</p> 
-                        <p>Object du courrier : <strong>".$courrier->getObject()."</strong></p> 
+                        <p>Objet du courrier : <strong>".$courrier->getObject()."</strong></p> 
                         <br>
                         <p>Merci de vous présenter à l'adresse suivante :</p> 
                         <p><strong>Adresse :</strong> {$adresse}</p> 
