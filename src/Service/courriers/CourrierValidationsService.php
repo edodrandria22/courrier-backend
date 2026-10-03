@@ -114,6 +114,12 @@ class CourrierValidationsService extends BaseService
     //         throw $e;
     //     }
     // }
+    private function isValideCourrierValidation(CourrierValidations $courrierValidation, String $message): void
+    {
+        if ($courrierValidation->getDateValidation()) {
+                throw new Exception("Le courrier a déjà été validé, vous ne pouvez plus le ".$message);
+            }
+    }
     public function updateDto(Utilisateurs $utilisateur,CourrierValidations $oldCourrierValidation, CourriersValidationsDto $dto, array $fichiers = []): CourrierValidations
     {
         $this->em->getConnection()->beginTransaction();
@@ -121,9 +127,7 @@ class CourrierValidationsService extends BaseService
             if($oldCourrierValidation->getCreateur()->getId() != $utilisateur->getId()){
                 throw new Exception("Seule l'auteur du courrier peut le modifier son courrier");
             }
-            if ($oldCourrierValidation->getDateValidation()) {
-                throw new Exception("Le courrier a déjà été validé, vous ne pouvez plus le modifier");
-            }
+            $this->isValideCourrierValidation($oldCourrierValidation, "modifier");
             $courrierValidation = new CourrierValidations();
             $courrierValidation->setCreatedAt($oldCourrierValidation->getCreatedAt());
             $courrierValidation->setObject($dto->getObject());
@@ -158,6 +162,7 @@ class CourrierValidationsService extends BaseService
     public function addRemarque(int $id, string $remarque): CourrierValidations
     {
         $courrierValidation = $this->getVerifierById($id);
+        $this->isValideCourrierValidation($courrierValidation, "ajouter une remarque");
         $courrierValidation->setObservationSuperviseur($remarque);
         $data = $this->tranformerEnJson($courrierValidation);
         $this->mercureService->sendNotification("courrierValidationRemarque",$data);
