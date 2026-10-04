@@ -2,7 +2,7 @@
 
 namespace App\Service\utils;
 
-use App\Dto\FichierValidationDto;
+use App\Dto\utils\FichierValidationDto;
 use App\Dto\utils\ConditionCriteria;
 use App\Entity\courriers\CourrierValidations;
 use App\Entity\utils\FichiersValidations;
