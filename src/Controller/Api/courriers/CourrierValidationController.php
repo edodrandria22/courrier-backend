@@ -3,7 +3,7 @@
 namespace App\Controller\Api\courriers;
 
 use App\Controller\Api\utils\BaseApiController;
-use App\Dto\FichierValidationDto;
+use App\Dto\utils\FichierValidationDto;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
