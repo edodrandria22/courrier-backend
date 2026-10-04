@@ -334,6 +334,7 @@ class CourriersService extends BaseService
             <p>Voici la situation actuelle de votre courrier ayant comme objet : <strong>{$courrier->getObject()}</strong> :</p>
             <p>Détenteur actuel : <strong>{$detenteur}</strong></p>
             <p>Adresse : <strong>{$adresse}</strong></p>
+            <p>Traitement : en cours. </p>
             <p>Historique du mouvement :</p>
             {$listDiv}
         ";
