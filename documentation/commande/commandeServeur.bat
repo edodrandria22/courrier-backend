@@ -55,6 +55,12 @@ CREATE USER mesupres WITH PASSWORD 'mesupres';
 sudo apt update
 sudo apt install php8.2-amqp -y
 
+#Pour installer composer
+composer install 
+sudo apt update
+sudo apt install php8.2-xml
+
+
 #Pour telecharger mercure
 cd /tmp
 wget https://github.com/dunglas/mercure/releases/download/v0.24.2/mercure_Linux_x86_64.tar.gz
@@ -173,3 +179,7 @@ sudo ln -s /etc/nginx/sites-available/mesupres /etc/nginx/sites-enabled/mesupres
 
 #Pour verifier la configuration
 sudo nginx -t
+
+sudo ufw allow 3000/tcp
+sudo ufw status
+sudo ss -lntp | grep :3000
