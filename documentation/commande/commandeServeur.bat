@@ -143,7 +143,7 @@ sudo npm install -g pm2
 #Pour creer le serveur
 npm run build
 pm2 start npm --name "courrier-front" -- start -- --hostname 0.0.0.0
-pm2 start "php -S 0.0.0.0:8000 -t public" --name courrier-backend
+pm2 start "php -S 0.0.0.0:8000 -t public" --name rapport-backend
 pm2 start "php bin/console messenger:consume async_mail -vv" --name "symfony-messenger"
 
 #Pour lancer le serveur 
@@ -180,6 +180,6 @@ sudo ln -s /etc/nginx/sites-available/mesupres /etc/nginx/sites-enabled/mesupres
 #Pour verifier la configuration
 sudo nginx -t
 
-sudo ufw allow 3000/tcp
+sudo ufw allow 8000/tcp
 sudo ufw status
 sudo ss -lntp | grep :3000

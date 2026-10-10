@@ -456,7 +456,11 @@ class MessagesService extends BaseService
         ?string $observation = null,
         array $files = []
     ): Messages {
+        $date = new DateTimeImmutable();
+        $message->setIsReadAt($message->getIsReadAt() ?? $date);
         $expediteurPrecedent = $message->getExpediteur();
+        $excludes = ['deletedAt','observation'];
+        $this->sendNotificationMessage($message, $excludes);
         $this->validerTranfers($expediteurPrecedent, $nouveauDestinataire);
         return $this->transfererMessage($message, $utisateurExterne, $nouveauDestinataire, $observation, null, null, $files);
 

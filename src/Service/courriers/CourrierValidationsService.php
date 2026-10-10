@@ -87,6 +87,7 @@ class CourrierValidationsService extends BaseService
             throw $e;
         }
     }
+    
     // public function updateDto(Utilisateurs $utilisateur,CourrierValidations $courrierValidation, CourriersValidationsDto $dto, array $fichiers = []): CourrierValidations
     // {
     //     $this->em->getConnection()->beginTransaction();
