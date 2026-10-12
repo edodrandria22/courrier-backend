@@ -39,7 +39,7 @@ class VueHistoriqueDetailPersonnesService extends BaseService
         $conditions[] = new ConditionCriteria('dateMessage', $paginationCriteria->getValue(), '<');
 
         if ($this->notEmpty($dto->reference)) {
-            $conditions[] = new ConditionCriteria('reference',$dto->reference, 'LIKE');
+            $conditions[] = new ConditionCriteria('reference',$dto->reference, '=');
         }
 
         if ($this->notEmpty($dto->object)) {
