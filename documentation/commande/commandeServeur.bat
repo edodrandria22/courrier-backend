@@ -183,3 +183,43 @@ sudo nginx -t
 sudo ufw allow 8000/tcp
 sudo ufw status
 sudo ss -lntp | grep :3000
+
+#Pour allouer l'espace
+#Pour regarder les espaces 
+lsblk
+
+#Pour regarder les espaces libres
+df -h /
+
+#Étape 1 — Agrandir vda3
+
+# Cette étape modifie la partition. Vérifie d'abord :
+
+sudo fdisk -l /dev/vda
+
+#Ensuite, vérifie que growpart existe :
+which growpart
+#Si tu obtiens :
+
+/usr/bin/growpart
+
+sudo growpart /dev/vda 3
+
+lsblk 
+## ca doit etre 1000G
+
+#Étape 2 — Agrandir le volume physique LVM
+sudo pvresize /dev/vda3
+
+sudo vgs
+
+#Étape 3 — Donner tout l'espace à /
+
+#Maintenant :
+
+sudo lvextend -l +100%FREE /dev/ubuntu-vg/ubuntu-lv
+
+#Pour verifier
+sudo lvs
+
+#Étape 4 — Agrandir le système de fichiers
