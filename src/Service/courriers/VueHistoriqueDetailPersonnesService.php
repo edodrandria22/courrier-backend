@@ -45,6 +45,9 @@ class VueHistoriqueDetailPersonnesService extends BaseService
         if ($this->notEmpty($dto->object)) {
             $conditions[] = new ConditionCriteria('object', $dto->object, 'ILIKE');
         }
+        if ($this->notEmpty($dto->description)) {
+            $conditions[] = new ConditionCriteria('description', $dto->description, 'ILIKE');
+        }
 
         if ($this->notEmpty($dto->nom)) {
             $nom = mb_strtolower($dto->nom, 'UTF-8');

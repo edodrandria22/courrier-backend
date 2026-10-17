@@ -13,6 +13,9 @@ class RechercheCourriersDto
     public ?string $object = null;
 
     #[Assert\Type("string")]
+    public ?string $description = null;
+
+    #[Assert\Type("string")]
     public ?string $nom = null;
 
     #[Assert\Type("string")]
