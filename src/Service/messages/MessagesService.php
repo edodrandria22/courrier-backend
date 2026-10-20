@@ -554,14 +554,14 @@ class MessagesService extends BaseService
         $this->save($message);
         
     }
-    private function getMessagesByCourrierWithPagination(int $courrierId): array
+    private function getMessagesByCourrierWithPagination(Courriers $courrier): array
     {
         $date = new DateTimeImmutable();
         $limit = $_ENV['LIMIT_PAGINATIONS'] ?? 10;
         $paginationCriteria = new PaginationCriteria($date, $limit);
         $orderCriteria = new OrderCriteria();
 
-        return $this->getMessagesByCourrier($courrierId, $orderCriteria, $paginationCriteria);
+        return $this->getMessagesByCourrier($courrier->getId(), $orderCriteria, $paginationCriteria);
     }
 
     private function validateCanDeleteLastMessage(array $listeMessages, int $messageId): void
@@ -576,6 +576,13 @@ class MessagesService extends BaseService
         }
     }
 
+    private function validateCourrierNotClotured(Courriers $courrier): void
+    {
+        if ($courrier->getCloturePar() !== null) {
+            throw new Exception("Le courrier est déjà clôturé, impossible de supprimer un message");
+        }
+    }
+
     private function resetPreviousMessageTreatment(array $listeMessages): void
     {
         $avantDernier = $listeMessages[1];
@@ -587,8 +594,9 @@ class MessagesService extends BaseService
         $this->em->getConnection()->beginTransaction();
         try {
             $message = $this->getVerifierById($id);
-            $listeMessages = $this->getMessagesByCourrierWithPagination($message->getCourrier()->getId());
-            
+            $courrier = $message->getCourrier();
+            $this->validateCourrierNotClotured($courrier);
+            $listeMessages = $this->getMessagesByCourrierWithPagination($courrier);
             $this->validateCanDeleteLastMessage($listeMessages, $id);
             $this->resetPreviousMessageTreatment($listeMessages);
             $this->deleteMessage($message);
