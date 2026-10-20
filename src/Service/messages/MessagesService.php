@@ -543,4 +543,60 @@ class MessagesService extends BaseService
         return $this->transfererOm($courrier,$nouveauDestinataire, $observation, $bordureau, $numeroDepart, $files);
 
     }
+    public function deleteMessage(Messages $message): void{
+        
+        $message->setDeletedAt(new DateTimeImmutable());
+
+        $historiques = $this->historiquesService->getByMessageId($message->getId());
+        foreach ($historiques as $historique) {
+            $this->historiquesService->delete($historique);
+        }
+        $this->save($message);
+        
+    }
+    private function getMessagesByCourrierWithPagination(int $courrierId): array
+    {
+        $date = new DateTimeImmutable();
+        $limit = $_ENV['LIMIT_PAGINATIONS'] ?? 10;
+        $paginationCriteria = new PaginationCriteria($date, $limit);
+        $orderCriteria = new OrderCriteria();
+
+        return $this->getMessagesByCourrier($courrierId, $orderCriteria, $paginationCriteria);
+    }
+
+    private function validateCanDeleteLastMessage(array $listeMessages, int $messageId): void
+    {
+        if (\count($listeMessages) < 2) {
+            throw new Exception("Le courrier doit contenir au moins 2 messages pour supprimer le dernier");
+        }
+
+        $dernierMessage = $listeMessages[0];
+        if ($dernierMessage->getId() !== $messageId) {
+            throw new Exception("Seule le dernier message du courrier peut supprimer");
+        }
+    }
+
+    private function resetPreviousMessageTreatment(array $listeMessages): void
+    {
+        $avantDernier = $listeMessages[1];
+        $avantDernier->setIsTraiterAt(null);
+        $this->save($avantDernier);
+    }
+
+    public function deleteMessageById(int $id): void{
+        $this->em->getConnection()->beginTransaction();
+        try {
+            $message = $this->getVerifierById($id);
+            $listeMessages = $this->getMessagesByCourrierWithPagination($message->getCourrier()->getId());
+            
+            $this->validateCanDeleteLastMessage($listeMessages, $id);
+            $this->resetPreviousMessageTreatment($listeMessages);
+            $this->deleteMessage($message);
+            
+            $this->em->getConnection()->commit();
+        } catch (\Throwable $e) {
+            $this->em->getConnection()->rollBack();
+            throw $e;
+        }
+    }
 }

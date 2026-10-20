@@ -29,11 +29,11 @@ class HistoriquesService extends BaseService
     }
     public function getByUserAndCourrier(Utilisateurs $user,Courriers $courrier): ?Historiques
     {
-        $conditions = [
-            new ConditionCriteria('utilisateur', $user->getId(), '='),
-            new ConditionCriteria('courrier', $courrier->getId(), '='),
-        ];
-        return $this->search($conditions)[0] ?? null;
+            $conditions = [
+                new ConditionCriteria('utilisateur', $user->getId(), '='),
+                new ConditionCriteria('courrier', $courrier->getId(), '='),
+            ];
+            return $this->search($conditions)[0] ?? null;
     }
     public function getHistoriques(Utilisateurs $user, OrderCriteria $orderCriteria,PaginationCriteria $paginationCriteria,bool $isSend): array
     {
@@ -192,8 +192,13 @@ class HistoriquesService extends BaseService
         $this->save($historiqueExpediteur);
         return [$historiqueExpediteur, $historiqueRecepteur];
     }
-    
-
+    public function getByMessageId(int $messageId):  array
+    {
+        $conditions = [
+            new ConditionCriteria('message', $messageId, '='),
+        ];
+        return $this->search($conditions);
+    }
     
     
 }

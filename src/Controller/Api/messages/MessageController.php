@@ -157,5 +157,16 @@ class MessageController extends BaseApiController
             return $this->jsonError($e->getMessage(), $e->getCode() ?: 400);
         }
     }
+    #[Route('/{id}', name: 'api_messages_delete', methods: ['DELETE'], requirements: ['id' => '\d+'])]
+    #[TokenRequired(['Admin'])]
+    public function delete(int $id): JsonResponse
+    {
+        try {
+            $this->messagesService->deleteMessageById($id);
+            return $this->jsonSuccess(["success" => true]);
+        } catch (\Throwable $e) {
+            return $this->jsonError($e->getMessage(), $e->getCode() ?: 400);
+        }
+    }
 
 }
