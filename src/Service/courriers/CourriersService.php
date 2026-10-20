@@ -371,8 +371,7 @@ class CourriersService extends BaseService
     }
     public function getNbCourrierLu(Utilisateurs $utilisateurs) : int{
         return $this->vueHistoriqueDetailsService->getNbCourrierLu($utilisateurs);
-    }
-  
+    }  
     
   
     

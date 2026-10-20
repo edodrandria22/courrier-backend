@@ -223,3 +223,12 @@ sudo lvextend -l +100%FREE /dev/ubuntu-vg/ubuntu-lv
 sudo lvs
 
 #Étape 4 — Agrandir le système de fichiers
+#Avant de faire cette étape, regarde le type de système de fichiers :
+
+df -T /
+
+#Si c'est ext4 :
+sudo resize2fs /dev/ubuntu-vg/ubuntu-lv
+
+#Si c'est xfs :
+sudo xfs_growfs /

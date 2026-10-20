@@ -469,6 +469,20 @@ class CourrierController extends BaseApiController
             return $this->jsonError($e->getMessage(),  400);
         }
     }
+    #[Route('/{id}', name: 'api_courriers_delete', methods: ['DELETE'], requirements: ['id' => '\d+'])]
+    #[TokenRequired(['Admin'])]
+    public function delete(Request $request, int $id): JsonResponse
+    {
+        try {
+            $user = $this->getUserFromRequest($request);
+            $this->courriersService->supprimerCourrier($id);
+            return $this->jsonSuccess(["success" => true]);
+  
+        } catch (\Throwable $e) {
+            return $this->jsonError($e->getMessage(),  400);
+        }
+    }
+
 
     
 
