@@ -80,6 +80,10 @@ class CourriersService extends BaseService
     {
         $courrier = $this->getValidatedCourrier($id);
 
+        if ($courrier->getCloturePar() !== null) {
+            throw new Exception("Le courrier est déjà clôturé, impossible de le supprimer");
+        }
+
         $courrier->delete();
         $this->save($courrier);
     }
