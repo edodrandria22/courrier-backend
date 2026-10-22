@@ -587,6 +587,7 @@ class MessagesService extends BaseService
     {
         $avantDernier = $listeMessages[1];
         $avantDernier->setIsTraiterAt(null);
+        $avantDernier->setDateValidation(null);
         $this->save($avantDernier);
     }
 
