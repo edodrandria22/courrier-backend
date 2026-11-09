@@ -22,7 +22,7 @@ class CourriersRepository extends BaseRepository
             ->select('COUNT(c.id)')
             ->where('c.createdAt >= :start')
             ->andWhere('c.createdAt < :end')
-            ->andWhere('c.deletedAt IS NULL')
+            // ->andWhere('c.deletedAt IS NULL')
             ->setParameter('start', $start)
             ->setParameter('end', $end)
             ->getQuery()

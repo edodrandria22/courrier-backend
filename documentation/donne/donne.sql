@@ -62,6 +62,11 @@ VALUES
     (30, NOW(), NULL, 'CNELA'),
     (31, NOW(), NULL, 'MESUPRES'),
     (32, NOW(), NULL, 'Autre');
+INSERT INTO employeurs (id, created_at, deleted_at, name)
+VALUES
+(33, NOW(), NULL, U&'Universit\00E9 de Bongolava'),
+(34, NOW(), NULL, U&'Universit\00E9 de Fitovinany');
+
 
 SET client_encoding = 'UTF8';
 
