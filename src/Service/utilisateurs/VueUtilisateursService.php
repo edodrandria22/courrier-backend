@@ -31,7 +31,8 @@ class VueUtilisateursService extends BaseService
         $nomJerena =  strtolower($nomPrenom);
         $conditions = [];
         $conditions[] = new ConditionCriteria('id', $user->getId(), '!=');
-        $conditions[] = new ConditionCriteria('nomComplet', $nomJerena, 'like');
+        // $conditions[] = new ConditionCriteria('nomComplet', $nomJerena, 'like');
+        $conditions[] = new ConditionCriteria('sigle', $nomJerena, 'ilike');
         $conditions[] = new ConditionCriteria('role', [2,3], 'in');
         $conditions[] = new ConditionCriteria('createdAt', $paginationCriteria->getValue(), '<');
         $conditions[] = new ConditionCriteria('dateInactif', null, 'IS NULL');
