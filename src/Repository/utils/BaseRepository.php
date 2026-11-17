@@ -139,7 +139,7 @@ abstract class BaseRepository extends ServiceEntityRepository
                 'ILIKE' => $qb->expr()->like(
                     \sprintf('LOWER(%s)', $field),
                     \sprintf('LOWER(:%s)', $param)
-                ),
+            ),
 
                 '>' => $qb->expr()->gt($field, ':' . $param),
 

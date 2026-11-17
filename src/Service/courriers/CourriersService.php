@@ -335,11 +335,12 @@ class CourriersService extends BaseService
     private function genererCorpsEmail(Courriers $courrier, string $detenteur, string $adresse, string $listDiv): string
     {
         return "
-            <p>Voici la situation actuelle de votre courrier ayant comme objet : <strong>{$courrier->getObject()}</strong> :</p>
-            <p>Détenteur actuel : <strong>{$detenteur}</strong></p>
-            <p>Adresse : <strong>{$adresse}</strong></p>
-            <p>Traitement : en cours. </p>
-            <p>Historique du mouvement :</p>
+            <p>Voici la situation actuelle de votre courrier ayant comme objet : <strong>{$courrier->getObject()}</strong>.</p>
+            <p>Situation : <strong> en cours</strong>.</p>
+            <p>Détenteur actuel : <strong>{$detenteur}</strong>.</p>
+            <p>Adresse : <strong>{$adresse}</strong>.</p>
+            <br>
+            <p><u><strong>Historique du mouvement : </strong></u></p>
             {$listDiv}
         ";
     }

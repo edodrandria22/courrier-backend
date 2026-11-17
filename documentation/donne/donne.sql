@@ -114,3 +114,4 @@ UPDATE detail_personnes set employeur_id = 3 where id = 11;
 UPDATE detail_personnes set employeur_id = 1 where id = 12;
 UPDATE detail_personnes set employeur_id = 31 where id = 14;
 
+update utilisateurs set sigle = 'EXTERNE' where id = 2;
